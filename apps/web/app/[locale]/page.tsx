@@ -134,8 +134,8 @@ export default async function HomePage({ params }: HomePageProps) {
                         {stepIconMap[item.icon] || '📋'}
                       </div>
                       <div className="text-xs font-bold text-indigo-600 mb-2">{String(item.step).padStart(2, '0')}</div>
-                      <h3 className="text-xl font-semibold text-slate-900 mb-3">{item.title}</h3>
-                      <p className="text-slate-600">{item.description}</p>
+                      <h3 className="text-lg sm:text-xl font-semibold text-slate-900 mb-3 truncate">{item.title}</h3>
+                      <p className="text-slate-600 text-sm">{item.description}</p>
                     </div>
                   ))
                 : [
@@ -146,8 +146,8 @@ export default async function HomePage({ params }: HomePageProps) {
                     <div key={i} className="relative text-center">
                       <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-600 text-white text-2xl mb-6 relative z-10">{item.icon}</div>
                       <div className="text-xs font-bold text-indigo-600 mb-2">{item.step}</div>
-                      <h3 className="text-xl font-semibold text-slate-900 mb-3">{item.title}</h3>
-                      <p className="text-slate-600">{item.description}</p>
+                      <h3 className="text-lg sm:text-xl font-semibold text-slate-900 mb-3 truncate">{item.title}</h3>
+                      <p className="text-slate-600 text-sm">{item.description}</p>
                     </div>
                   ))
               }
