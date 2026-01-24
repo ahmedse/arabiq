@@ -1,0 +1,80 @@
+{
+  "nav": {
+    "solutions": "Solutions",
+    "industries": "Industries",
+    "caseStudies": "Case Studies",
+    "demos": "Demos",
+    "contact": "Contact",
+    "about": "About",
+    "login": "Sign in"
+  },
+  "home": {
+    "hero": {
+      "title": "Digital Twins Powered by Arabic AI",
+      "subtitle": "Enable your business to exist in immersive 3D digital space. Built for the Arab world, powered by cutting-edge AI.",
+      "cta": {
+        "primary": "Get Started",
+        "secondary": "Watch Demo"
+      },
+      "trust": {
+        "award": "Award-winning platform",
+        "global": "Serving MENA region",
+        "fast": "Deploy in days"
+      }
+    },
+    "stats": {
+      "projects": {
+        "value": "500+",
+        "label": "Digital Twins"
+      },
+      "clients": {
+        "value": "100+",
+        "label": "Happy Clients"
+      },
+      "satisfaction": {
+        "value": "98%",
+        "label": "Satisfaction"
+      },
+      "countries": {
+        "value": "12",
+        "label": "Countries"
+      }
+    },
+    "solutions": {
+      "title": "Our Solutions",
+      "subtitle": "Comprehensive digital twin solutions powered by AI and built for the Arab market",
+      "learn_more": "Learn more",
+      "view_all": "View all solutions"
+    },
+    "why": {
+      "title": "Why Choose Arabiq?",
+      "subtitle": "The leading digital twin platform designed specifically for the Arab world",
+      "fast": {
+        "title": "Lightning Fast",
+        "description": "Deploy your digital twin in days, not months. Our proven process gets you live quickly."
+      },
+      "bilingual": {
+        "title": "Arabic-First Design",
+        "description": "True bilingual experience with RTL support and Arabic AI that understands your market."
+      },
+      "ai": {
+        "title": "AI-Powered",
+        "description": "Leverage cutting-edge AI for voice narration, chatbots, recommendations, and analytics."
+      }
+    },
+    "cta": {
+      "title": "Ready to transform your business?",
+      "subtitle": "Join hundreds of companies that trust us to build their digital presence",
+      "primary": "Get in touch",
+      "secondary": "View demos"
+    }
+  },
+  "common": {
+    "learnMore": "Learn more",
+    "getStarted": "Get Started",
+    "readMore": "Read more",
+    "viewAll": "View all",
+    "comingSoon": "Coming Soon"
+  }
+}
+

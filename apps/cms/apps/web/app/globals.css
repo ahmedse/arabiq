@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors - Stripe-inspired design tokens */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-900: #1e3a5f;
+  
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+  
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  
+  /* Fonts */
+  --font-family-sans: var(--font-inter), sans-serif;
+  --font-family-arabic: var(--font-ibm-plex-arabic), sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+
+  /* Arabic font for RTL */
+  [dir="rtl"] {
+    font-family: var(--font-ibm-plex-arabic), sans-serif;
+  }
+}
