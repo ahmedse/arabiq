@@ -50,6 +50,50 @@ need_cmd() {
   }
 }
 
+# Helper: find a PID listening on a TCP port (returns pid or empty)
+find_pid_by_port() {
+  local port="$1"
+  if command -v lsof >/dev/null 2>&1; then
+    lsof -ti tcp:"${port}" 2>/dev/null || true
+  elif command -v ss >/dev/null 2>&1; then
+    ss -ltnp 2>/dev/null | awk -v P=$port '$4 ~ ":"P"$" { sub(/.*pid=/,"",$0); sub(/,.*$/,"",$0); print $0 }' | awk -F"pid=" '{print $2}' | awk -F"," '{print $1}' || true
+  else
+    echo "" # cannot determine
+  fi
+}
+
+# Kill a PID gently and escalate to SIGKILL if necessary
+kill_pid_graceful() {
+  local pid="$1"
+  if [[ -z "$pid" ]]; then return; fi
+  if kill -0 "$pid" >/dev/null 2>&1; then
+    echo "Stopping process pid=$pid..."
+    kill "$pid" >/dev/null 2>&1 || true
+    for _ in {1..10}; do
+      sleep 0.2
+      if ! kill -0 "$pid" >/dev/null 2>&1; then
+        echo "Process $pid stopped"
+        return 0
+      fi
+    done
+    echo "Process $pid did not stop, sending SIGKILL"
+    kill -9 "$pid" >/dev/null 2>&1 || true
+  fi
+}
+
+# If port is busy, try to identify and kill the process listening on it
+kill_port_if_busy() {
+  local port="$1"
+  local pid
+  pid="$(find_pid_by_port "$port")"
+  if [[ -n "$pid" ]]; then
+    echo "Port $port is in use by pid=$pid - killing it"
+    kill_pid_graceful "$pid"
+    return 0
+  fi
+  return 1
+}
+
 # Pidfile helpers
 web_pidfile() { echo "$RUN_DIR/web.pid"; }
 cms_pidfile() { echo "$RUN_DIR/cms.pid"; }
@@ -117,6 +161,22 @@ start_service() {
     return 1
   fi
 
+  # determine default port for common services
+  local port=""
+  case "$name" in
+    web) port="3000" ;;
+    cms) port="1337" ;;
+  esac
+
+  # if port busy, forcibly free it
+  if [[ -n "$port" ]]; then
+    if pid="$(find_pid_by_port "$port")" && [[ -n "$pid" ]]; then
+      echo "Port $port appears busy (pid=$pid) — freeing it before starting $name."
+      kill_pid_graceful "$pid"
+      sleep 0.3
+    fi
+  fi
+
   local pid
   pid="$(read_pidfile "$pidfile")"
   if [[ -n "$pid" ]] && is_running_pid "$pid"; then
@@ -137,15 +197,41 @@ start_service() {
         set +a
       fi
     done
+    # start the process
     nohup bash -lc "$cmd" >>"$logfile" 2>&1 &
     echo $! >"$pidfile"
   )
 
   echo "$name: started (pid=$(read_pidfile "$pidfile"))"
   echo "logs: $logfile"
+  # show last 200 lines for quick feedback
+  if [[ -f "$logfile" ]]; then
+    echo "--- last 200 log lines for $name ---"
+    tail -n 200 "$logfile" || true
+  fi
 }
 
 # Service-specific wrappers
+# Wait for the CMS to become healthy (polls /admin/init). Returns 0 if healthy, 1 if timeout
+wait_for_cms() {
+  local timeout_secs="${1:-60}"
+  local start_ts
+  start_ts=$(date +%s)
+
+  echo "Waiting for CMS to become healthy (timeout ${timeout_secs}s)..."
+  while true; do
+    if curl -s http://127.0.0.1:1337/admin/init >/dev/null 2>&1; then
+      echo "cms: healthy"
+      return 0
+    fi
+    if (( $(date +%s) - start_ts >= timeout_secs )); then
+      echo "cms: did not become healthy after ${timeout_secs}s" >&2
+      return 1
+    fi
+    sleep 1
+  done
+}
+
 start_web() {
   local mode="$1"
   local cmd
@@ -154,6 +240,17 @@ start_web() {
   else
     cmd="pnpm build && PORT=3000 pnpm start"
   fi
+
+  # Optionally wait for CMS before starting web. Default: true when starting both services together.
+  if [[ "${WAIT_FOR_CMS:-true}" == "true" ]]; then
+    # Wait up to 60s for CMS (non-fatal: we still start web if CMS doesn't come up)
+    if wait_for_cms 60; then
+      echo "Proceeding to start web after CMS healthy"
+    else
+      echo "Warning: CMS did not become healthy; starting web anyway"
+    fi
+  fi
+
   start_service "web" "$WEB_DIR" "$mode" "$(web_pidfile)" "$(web_logfile)" "$cmd"
 }
 
@@ -318,7 +415,7 @@ case "$cmd" in
     case "$service" in
       web) start_web "$mode" ;;
       cms) start_cms "$mode" ;;
-      all|"") start_web "$mode"; start_cms "$mode" ;;
+      all|"") start_cms "$mode"; start_web "$mode" ;;
       *) echo "Unknown service: $service" >&2; exit 1 ;;
     esac
     ;;
@@ -335,7 +432,7 @@ case "$cmd" in
     case "$service" in
       web) stop_web; start_web "$mode" ;;
       cms) stop_cms; start_cms "$mode" ;;
-      all|"") stop_web; stop_cms; start_web "$mode"; start_cms "$mode" ;;
+      all|"") stop_web; stop_cms; start_cms "$mode"; if wait_for_cms 60; then start_web "$mode"; else start_web "$mode"; fi ;;
       *) echo "Unknown service: $service" >&2; exit 1 ;;
     esac
     ;;
@@ -347,7 +444,7 @@ case "$cmd" in
       *) echo "Unknown service: $service" >&2; exit 1 ;;
     esac
     ;;
-  logs)
+  log|logs)
     case "$service" in
       web) logs_web "$@" ;;
       cms) logs_cms "$@" ;;
