@@ -16,14 +16,15 @@
     "rootDir": "."
   },
   "include": [
-    // Include root files
-    "./",
-    // Include all ts files
-    "./**/*.ts",
-    // Include all js files
-    "./**/*.js",
-    // Force the JSON files in the src folder to be included
-    "src/**/*.json"
+    // Include config files
+    "./config/**/*",
+    // Include src files
+    "./src/**/*",
+    // Include types
+    "./types/**/*",
+    // Include root-level TS/JS files
+    "./*.ts",
+    "./*.js"
   ],
 
   "exclude": [
