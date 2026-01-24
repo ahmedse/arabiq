@@ -175,4 +175,8 @@ dist
 build
 .strapi-updater.json
 .strapi-cloud.json
+
+# Allow committing DB backups
+!.tmp/*.db
+!.tmp/*.sqlite
 >>>>>>> 6786bd4 (chore(cms): shorten process-steps descriptions (EN + AR))
