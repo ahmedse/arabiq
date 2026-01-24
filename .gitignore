@@ -42,3 +42,7 @@ coverage/
 
 # Local runtime
 .pnp/
+
+# Allow CMS DB backups (keep secrets ignored)
+!apps/cms/.tmp/*.sqlite
+!apps/cms/.tmp/*.db
