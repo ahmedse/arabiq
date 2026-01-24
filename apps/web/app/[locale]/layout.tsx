@@ -73,22 +73,11 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   ];
 
   const headerNav = headerNavItems.length > 0 ? headerNavItems : defaultHeaderNav;
-  const footerCompany = footerCompanyItems.length > 0 ? footerCompanyItems : [
-    { id: 1, label: lang === "ar" ? "من نحن" : "About Us", href: "/about", location: "footer-company", order: 1, isExternal: false },
-    { id: 2, label: lang === "ar" ? "تواصل معنا" : "Contact", href: "/contact", location: "footer-company", order: 2, isExternal: false },
-  ];
-  const footerProducts = footerProductsItems.length > 0 ? footerProductsItems : [
-    { id: 1, label: lang === "ar" ? "الحلول" : "Solutions", href: "/solutions", location: "footer-products", order: 1, isExternal: false },
-    { id: 2, label: lang === "ar" ? "العروض" : "Demos", href: "/demos", location: "footer-products", order: 2, isExternal: false },
-  ];
-  const footerResources = footerResourcesItems.length > 0 ? footerResourcesItems : [
-    { id: 1, label: lang === "ar" ? "قصص النجاح" : "Case Studies", href: "/case-studies", location: "footer-resources", order: 1, isExternal: false },
-    { id: 2, label: lang === "ar" ? "القطاعات" : "Industries", href: "/industries", location: "footer-resources", order: 2, isExternal: false },
-  ];
-  const footerSocial = footerSocialItems.length > 0 ? footerSocialItems : [
-    { id: 1, label: "Twitter", href: "https://twitter.com/arabiq", location: "footer-social", order: 1, isExternal: true },
-    { id: 2, label: "LinkedIn", href: "https://linkedin.com/company/arabiq", location: "footer-social", order: 2, isExternal: true },
-  ];
+  // Use Strapi-provided footer lists directly; fallbacks removed so CMS controls the footer
+  const footerCompany = footerCompanyItems;
+  const footerProducts = footerProductsItems;
+  const footerResources = footerResourcesItems;
+  const footerSocial = footerSocialItems;
 
   return (
     <div
@@ -149,17 +138,17 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       {/* Stripe-style footer - from Strapi */}
       <footer className="border-t border-slate-200 bg-slate-50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-start">
             {/* Company */}
             <div>
-              <h3 className="text-sm font-semibold text-slate-900 mb-4">
+              <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
                 {lang === "ar" ? "الشركة" : "Company"}
               </h3>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-2 text-sm text-slate-600">
                 {footerCompany.map((item) => (
                   <li key={item.id}>
                     <Link
-                      className="text-slate-600 hover:text-slate-900 transition-colors"
+                      className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
                       href={item.isExternal ? item.href : `/${locale}${item.href}`}
                       {...(item.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     >
@@ -172,14 +161,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             
             {/* Products */}
             <div>
-              <h3 className="text-sm font-semibold text-slate-900 mb-4">
+              <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
                 {lang === "ar" ? "المنتجات" : "Products"}
               </h3>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-2 text-sm text-slate-600">
                 {footerProducts.map((item) => (
                   <li key={item.id}>
                     <Link
-                      className="text-slate-600 hover:text-slate-900 transition-colors"
+                      className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
                       href={item.isExternal ? item.href : `/${locale}${item.href}`}
                       {...(item.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     >
@@ -192,14 +181,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             
             {/* Resources */}
             <div>
-              <h3 className="text-sm font-semibold text-slate-900 mb-4">
+              <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
                 {lang === "ar" ? "الموارد" : "Resources"}
               </h3>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-2 text-sm text-slate-600">
                 {footerResources.map((item) => (
                   <li key={item.id}>
                     <Link
-                      className="text-slate-600 hover:text-slate-900 transition-colors"
+                      className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
                       href={item.isExternal ? item.href : `/${locale}${item.href}`}
                       {...(item.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     >
@@ -212,14 +201,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             
             {/* Social / Connect */}
             <div>
-              <h3 className="text-sm font-semibold text-slate-900 mb-4">
+              <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
                 {lang === "ar" ? "تواصل معنا" : "Connect"}
               </h3>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-2 text-sm text-slate-600">
                 {footerSocial.map((item) => (
                   <li key={item.id}>
                     <Link
-                      className="text-slate-600 hover:text-slate-900 transition-colors"
+                      className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
