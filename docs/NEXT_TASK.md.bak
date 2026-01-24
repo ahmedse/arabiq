@@ -1,0 +1,396 @@
+# NEXT_TASK
+
+## Project Lead Plan (Web-first)
+Goal: Transform arabiq.tech into a compelling, bilingual (EN/AR) marketing website showcasing Arabiq's AI-powered digital-twin platform vision (Vmall, AI Suite, Commerce)
+
+Design Inspiration: **Stripe.com** (clean, premium, spacious, excellent gradients)
+
+Team (2 agents):
+- Agent-1: Frontend (UI components, pages, styling)
+- Agent-2: Backend (CMS content, integrations, auth)
+
+---
+
+## CURRENT TASK #15 — Home Page Hero + Content Display Fix
+
+**Status:** 🔴 NEW  
+**Priority:** HIGH  
+**Assigned to:** Worker Agent
+
+### Scope
+`apps/cms/seed.mjs` — Update seed script with bilingual content aligned with Arabiq's business plan
+
+### Context
+Task 13 complete! Design system is ready. Now we need to populate Strapi with **real content** that matches Arabiq's actual business offerings:
+- **Vmall Platform** (3D virtual malls/shops)
+- **Arabiq AI Suite** (Arabic voice, chat, vision APIs)
+- **Arabiq Commerce** (E-commerce backend)
+- **Integration Layer** (WooCommerce, Shopify bridges)
+- **Digital Twin Production** (Matterport scanning)
+- **VFair Edition** (Virtual exhibitions)
+Reference Documents
+- `/home/ahmed/arabiq/docs/IMPLEMENTATION-GUIDE.md` — Contains all content specs
+- `/home/ahmed/arabiq/docs/ARABIQ-WEBSITE-PLAN.md` — Solutions, Industries, Case Studies detailsk Blue: #1e3a5f
+  Accent Cyan: #06b6d4
+  Gold (AR): #f59e0b
+  ```
+
+### Deliverables
+
+#### Update seed.mjs with Business-Aligned Content
+
+**File:** `apps/cms/seed.mjs`
+
+Replace existing content with the following (all entries need **EN + AR** versions):
+
+#### 1. Site Settings (1 entry, both locales)
+
+**EN:**
+```javascript
+await upsertSingleType('site-setting', {
+  title: 'Arabiq - AI-Powered Digital Twin Platform',
+  description: 'Build the Arab world\'s AI-powered digital-twin platform. Enable businesses to exist twice: once physical, once in immersive 3D digital space.',
+  contactEmail: 'info@arabiq.tech',
+  contactPhone: '+20 123 456 7890',
+  locale: 'en'
+});
+```
+
+**AR:**
+```javascript
+await upsertSingleType('site-setting', {
+  title: 'Arabiq - منصة التوأم الرقمي المدعومة بالذكاء الاصطناعي',
+  description: 'نبني منصة التوأم الرقمي المدعومة بالذكاء الاصطناعي الأولى في العالم العربي. نمكّن الشركات من الوجود مرتين: مرة في العالم الحقيقي ومرة في مساحة رقمية ثلاثية الأبعاد.',
+  contactEmail: 'info@arabiq.tech',
+  contactPhone: '+20 123 456 7890',
+  locale: 'ar'
+});
+```
+
+#### 2. Solutions (6 entries, each with EN + AR)
+
+**Solution 1: Vmall Platform**
+- **Slug:** `vmall-platform`
+- **EN Title:** Vmall Platform
+- **AR Title:** منصة Vmall
+- **EN Summary:** Create and host virtual malls, shops, and exhibitions using Matterport + AI technology
+- **AR Summary:** أنشئ واستضف مولات افتراضية ومتاجر ومعارض باستخدام تقنية Matterport والذكاء الاصطناعي
+- **EN Description:** Full markdown with features, benefits, use cases
+- **AR Description:** نفس المحتوى بالعربية
+
+**Solution 2: Arabiq AI Suite**
+- **Slug:** `arabiq-ai-suite`
+- **EN Title:** Arabiq AI Suite
+- **AR Title:** مجموعة Arabiq للذكاء الاصطناعي
+- **EN Summary:** Arabic AI modules: voice, chat, vision, recommendations, and analytics
+- **AR Summary:** وحدات ذكاء اصطناعي عربية: صوت، دردشة، رؤية، توصيات، وتحليلات
+
+**Solution 3: Arabiq Commerce**
+- **Slug:** `arabiq-commerce`
+- **EN Title:** Arabiq Commerce
+- **AR Title:** Arabiq للتجارة الإلكترونية
+- **EN Summary:** Complete e-commerce backend with products, carts, and payment processing
+- **AR Summary:** منصة تجارة إلكترونية كاملة مع منتجات وسلال وتوتريات دفع
+
+**Solution 4: System Integration**
+- **Slug:** `system-integration`
+- **EN Title:** System Integration
+- **AR Title:** التكامل مع الأنظمة
+- **EN Summary:** Seamless bridges with WooCommerce, Shopify, Odoo, and ERPNext
+- **AR Summary:** جسور سلسة مع WooCommerce و Shopify و Odoo و ERPNext
+
+**Solution 5: Digital Twin Production**
+- **Slug:** `digital-twin-production`
+- **EN Title:** Digital Twin Production
+- **AR Title:** إنتاج التوأم الرقمي
+- **EN Summary:** Professional Matterport scanning, post-production, and hosting services
+- **AR Summary:** خدمات مسح احترافية بتقنية Matterport ومعالجة واستضافة
+
+**Solution 6: VFair Edition**
+- **Slug:** `vfair-edition`
+- **EN Title:** VFair Edition
+- **AR Title:** نسخة VFair
+- **EN Summary:** Virtual fairs and exhibitions platform for events and conferences
+- **AR Summary:** منصة معارض وفعاليات افتراضية للمؤتمرات والفعاليات
+
+#### 3. Industries (6 entries, each with EN + AR)
+
+**Industry 1: Retail & E-commerce**
+- **Slug:** `retail-ecommerce`
+- **EN Title:** Retail & E-commerce
+- **AR Title:** التجزئة والتجارة الإلكترونية
+
+**Industry 2: Real Estate**
+- **Slug:** `real-estate`
+- **EN Title:** Real Estate
+- **AR Title:** العقارات
+
+**Industry 3: Tourism & Hospitality**
+- **Slug:** `tourism-hospitality`
+- **EN Title:** Tourism & Hospitality
+- **AR Title:** السياحة والضيافة
+
+**Industry 4: Events & Exhibitions**
+- **Slug:** `events-exhibitions`
+- **EN Title:** Events & Exhibitions
+- **AR Title:** الفعاليات والمعارض
+
+**Industry 5: Education**
+- **Slug:** `education`
+- **EN Title:** Education
+- **AR Title:** التعليم
+
+**Industry 6: Healthcare**
+- **Slug:** `healthcare`
+- **EN Title:** Healthcare
+- **AR Title:** الرعاية الصحية
+
+#### 4. Case Studies (3 entries from Implementation Guide)
+
+**Case Study 1: Suites Egypt**
+- **Slug:** `suites-egypt-digital-showroom`
+- **EN Title:** Suites Egypt — Luxury Real Estate Goes Virtual
+- **AR Title:** Suites Egypt — العقارات الفاخرة تذهب إلى العالم الافتراضي
+- **Client:** Suites Egypt
+- **Industry:** Real Estate
+- **Results:** +85% qualified leads, +60% cost reduction, +40% faster sales
+
+**Case Study 2: Cairo Fashion Hub**
+- **Slug:** `cairo-fashion-hub-vmall`
+- **EN Title:** Cairo Fashion Hub — Egypt's First Virtual Mall
+- **AR Title:** Cairo Fashion Hub — أول مول افتراضي في مصر
+- **Client:** Cairo Fashion Hub
+- **Industry:** Retail
+- **Results:** +120% online sales, 8,500+ virtual shoppers
+
+**Case Study 3: Alexandria Museum**
+- **Slug:** `alexandria-museum-digital-twin`
+- **EN Title:** Alexandria Museum — Bringing History to Life
+- **AR Title:** متحف الإسكندرية — إحياء التاريخ
+- **Client:** Alexandria Heritage Museum
+- **Industry:** Tourism
+- **Results:** 50,000+ virtual visitors, 200+ schools using platform
+
+#### 5. Demos (Keep "Coming Soon" approach)
+
+Update demos to show they're under development:
+- **Slug:** `ai-chat-assistant`
+- **Title EN:** AI Chat Assistant (Coming Soon)
+- **Title AR:** مساعد الدردشة بالذكاء الاصطناعي (قريبًا)
+- **Summary:** Interactive demo coming soon
+
+Repeat for other demos (vmall-showroom, voice-narration-demo)
+
+### Implementation Steps
+
+1. **Backup current seed.mjs:**
+```bash
+cd /home/ahmed/arabiq/apps/cms
+cp seed.mjs seed.mjs.backup
+```
+
+2. **Update seed.mjs:**
+   - Replace content arrays with business-aligned entries
+   - Add Arabic locale versions for ALL entries
+   - Use full content from Implementation Guide
+   - Ensure all slugs are consistent
+
+3. **Test the seed script:**
+```bash
+# Make sure you have the Strapi token
+node seed.mjs "$(cat /home/ahmed/strapi-token.txt)"
+```
+
+4. **Verify in Strapi admin:**
+   - Check each content type has entries
+   - Verify both EN and AR versions exist
+   - Test switching locales in Strapi UI
+
+5. **Test in Next.js:**
+```bash
+# App should already be running
+# Visit: http://localhost:3000/en
+# Visit: http://localhost:3000/ar
+# Verify content displays correctly
+```
+
+**File:** `apps/web/lib/utils.ts` (create new)
+```typescript
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+**File:** `apps/web/components/ui/button.tsx` (create new)
+
+Stripe-inspired button with variants:
+```typescript
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        primary: "bg-primary-600 text-white hover:bg-primary-700 shadow-sm",
+        secondary: "bg-white border-2 border-slate-300 text-slate-900 hover:bg-slate-50",
+        accent: "bg-accent-500 text-white hover:bg-accent-600",
+        ghost: "text-slate-700 hover:bg-slate-100",
+      },
+      size: {
+        sm: "px-4 py-2 text-sm",
+        md: "px-6 py-3 text-base",
+        lg: "px-8 py-4 text-lg",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+    },
+  }
+);
+
+interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+export function Button({ className, variant, size, ...props }: ButtonProps) {
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  );
+}
+```
+
+**File:** `apps/web/components/ui/card.tsx` (create new)
+```typescript
+import { cn } from "@/lib/utils";
+
+export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+```
+
+**File:** `apps/web/components/ui/container.tsx` (create new)
+```typescript
+import { cn } from "@/lib/utils";
+
+export function Container({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn("mx-auto max-w-7xl px-4 sm:px-6 lg:px-8", className)}
+      {...props}
+    />
+  );
+}
+```
+
+#### 7. Update Global CSS
+
+**File:** `apps/web/app/globals.css`
+
+Add smooth scrolling and enhanced base styles:
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+
+  /* Arabic font for RTL */
+  [dir="rtl"] {
+    font-family: var(--font-ibm-plex-arabic), sans-serif;
+  }
+}
+```
+
+### Definition of Done
+- [ ] seed.mjs updated with all 6 Solutions (EN + AR)
+- [ ] seed.mjs updated with all 6 Industries (EN + AR)
+- [ ] seed.mjs updated with 3 Case Studies (EN + AR) 
+- [ ] seed.mjs updated with Site Settings (EN + AR)
+- [ ] Demos marked as "Coming Soon"
+- [ ] Seed script runs successfully
+- [ ] Strapi admin shows all bilingual content
+- [ ] Next.js app displays real content on /en
+- [ ] Next.js app displays Arabic content on /ar
+- [ ] All slugs match between CMS and frontend
+
+### Content Quality Standards
+- **Solutions:** 2-3 paragraphs describing features, benefits, use cases
+- **Industries:** 2-3 paragraphs describing industry challenges and solutions
+- **Case Studies:** Challenge, Solution, Results format with specific metrics
+- **Arabic translations:** Professional, not machine-translated tone
+- **Markdown:** Use proper headings (##, ###), lists, bold text
+
+### Testing Checklist
+```bash
+# 1. Backup
+cd /home/ahmed/arabiq/apps/cms
+cp seed.mjs seed.mjs.backup
+
+# 2. Update seed.mjs (worker does this)
+
+# 3. Run seed
+node seed.mjs "$(cat /home/ahmed/strapi-token.txt)"
+
+# 4. Verify in browser
+# - http://localhost:1337/admin (Strapi)
+# - http://localhost:3000/en/solutions (Next.js)
+# - http://localhost:3000/ar/solutions (Next.js)
+```
+
+### Important Notes
+- Use **exact content** from IMPLEMENTATION-GUIDE.md (Case Studies section)
+- Keep same function structure in seed.mjs (upsertCollectionBySlug, upsertSingleType)
+- Icon field: use emoji or leave empty (🤖, ☁️, 💻, etc.)
+- All content must be **published** (publishedAt: nowIso)
+- Ensure locale parameter is set correctly ('en' or 'ar')
+
+### When Done
+Update `docs/NEXT_TASK-RESULTS.md` with:
+
+**Task ID:** 14  
+**Summary:** CMS Content - Updated seed.mjs with business-aligned bilingual content (6 Solutions, 6 Industries, 3 Case Studies, Site Settings, all EN+AR)  
+**Files changed:**
+- apps/cms/seed.mjs (replaced content)
+- apps/cms/seed.mjs.backup (created)
+
+**Content created:** (list totals)
+- Site Settings: 2 locales (EN, AR)
+- Solutions: 6 entries × 2 locales = 12 total
+- Industries: 6 entries × 2 locales = 12 total  
+- Case Studies: 3 entries × 2 locales = 6 total
+- Demos: 3 entries × 2 locales = 6 total (marked Coming Soon)
+
+**Testing results:**
+- Seed script execution: (success/fail)
+- Strapi admin verification: (pass/fail)
+- Next.js EN pages: (pass/fail)
+- Next.js AR pages: (pass/fail)
+
+**Blockers:** (if any)  
+**Follow-up needed:** (if any)
