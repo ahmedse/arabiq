@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "features",
+  "info": {
+    "singularName": "feature",
+    "pluralName": "features",
+    "displayName": "Feature"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {"type": "string", "required": true, "pluginOptions": {"i18n": {"localized": true}}},
+    "description": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "icon": {"type": "string", "default": "star"},
+    "order": {"type": "integer", "default": 0}
+  }
+}

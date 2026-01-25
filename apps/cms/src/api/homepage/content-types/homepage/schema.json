@@ -1,0 +1,53 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "Homepage"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "heroTitle": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "heroSubtitle": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "heroPrimaryCta": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "heroSecondaryCta": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "heroBadge": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "trustAward": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "trustGlobal": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "trustFast": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "showStatsSection": {"type": "boolean", "default": true},
+    "showTrustedBySection": {"type": "boolean", "default": true},
+    "trustedByTitle": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "showHowItWorksSection": {"type": "boolean", "default": true},
+    "howItWorksTitle": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "howItWorksSubtitle": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "showFeaturesSection": {"type": "boolean", "default": true},
+    "featuresTitle": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "featuresSubtitle": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "showSolutionsSection": {"type": "boolean", "default": true},
+    "solutionsTitle": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "solutionsSubtitle": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "showIndustriesSection": {"type": "boolean", "default": true},
+    "industriesTitle": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "industriesSubtitle": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "showCaseStudiesSection": {"type": "boolean", "default": true},
+    "caseStudiesTitle": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "caseStudiesSubtitle": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "showDemosSection": {"type": "boolean", "default": true},
+    "demosTitle": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "demosSubtitle": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "showCtaSection": {"type": "boolean", "default": true},
+    "ctaTitle": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "ctaSubtitle": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "ctaPrimaryButton": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}},
+    "ctaSecondaryButton": {"type": "string", "pluginOptions": {"i18n": {"localized": true}}}
+  }
+}

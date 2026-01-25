@@ -93,6 +93,14 @@ export default {
 
       const contentTypes = [
         'api::site-setting.site-setting',
+        'api::homepage.homepage',
+        'api::about-page.about-page',
+        'api::contact-page.contact-page',
+        'api::nav-item.nav-item',
+        'api::feature.feature',
+        'api::stat.stat',
+        'api::process-step.process-step',
+        'api::trusted-company.trusted-company',
         'api::solution.solution',
         'api::industry.industry',
         'api::case-study.case-study',

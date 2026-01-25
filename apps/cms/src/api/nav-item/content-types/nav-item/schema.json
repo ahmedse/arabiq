@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nav_items",
+  "info": {
+    "singularName": "nav-item",
+    "pluralName": "nav-items",
+    "displayName": "Nav Item"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "href": {
+      "type": "string",
+      "required": true
+    },
+    "location": {
+      "type": "enumeration",
+      "enum": ["header", "footer", "footer-company", "footer-products", "footer-resources", "footer-social"],
+      "default": "header",
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "isExternal": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "demos",
+  "info": {
+    "singularName": "demo",
+    "pluralName": "demos",
+    "displayName": "Demo"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "slug": {"type": "uid", "targetField": "title", "required": true},
+    "title": {"type": "string", "required": true, "pluginOptions": {"i18n": {"localized": true}}},
+    "demoType": {"type": "string"},
+    "summary": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "description": {"type": "richtext", "pluginOptions": {"i18n": {"localized": true}}},
+    "body": {"type": "richtext", "pluginOptions": {"i18n": {"localized": true}}},
+    "icon": {"type": "string"}
+  }
+}

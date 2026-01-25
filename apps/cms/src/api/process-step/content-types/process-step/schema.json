@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "process_steps",
+  "info": {
+    "singularName": "process-step",
+    "pluralName": "process-steps",
+    "displayName": "Process Step"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "step": {"type": "integer", "required": true},
+    "title": {"type": "string", "required": true, "pluginOptions": {"i18n": {"localized": true}}},
+    "description": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
+    "icon": {"type": "string", "default": "circle"}
+  }
+}
