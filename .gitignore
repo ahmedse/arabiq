@@ -46,3 +46,6 @@ coverage/
 # Allow CMS DB backups (keep secrets ignored)
 !apps/cms/.tmp/*.sqlite
 !apps/cms/.tmp/*.db
+.run/cms.pid
+.run/web.pid
+.run/cms.pid

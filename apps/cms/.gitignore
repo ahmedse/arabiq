@@ -1,49 +1,3 @@
-<<<<<<< HEAD
-# Node
-node_modules/
-npm-debug.log*
-*.log
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Next / build
-.next/
-out/
-dist/
-.build/
-
-# Env
-.env
-.env.*
-
-# Editor
-.vscode/
-.idea/
-.DS_Store
-
-# Logs and misc
-logs/
-*.log
-
-# OS
-Thumbs.db
-
-# Sensitive
-client_secret_*.json
-
-# Strapi uploads
-apps/cms/public/uploads/
-
-# Coverage
-coverage/
-
-# TypeScript
-*.tsbuildinfo
-
-# Local runtime
-.pnp/
-=======
 ############################
 # OS X
 ############################
@@ -56,13 +10,11 @@ Icon
 .Trashes
 ._*
 
-
 ############################
 # Linux
 ############################
 
 *~
-
 
 ############################
 # Windows
@@ -76,7 +28,6 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
-
 
 ############################
 # Packages
@@ -106,17 +57,14 @@ $RECYCLE.BIN/
 *.out
 *.pid
 
-
 ############################
 # Logs and databases
 ############################
 
-.tmp
 *.log
 *.sql
 *.sqlite
 *.sqlite3
-
 
 ############################
 # Misc.
@@ -139,7 +87,6 @@ lib-cov
 lcov.info
 pids
 logs
-results
 node_modules
 .node_history
 
@@ -179,4 +126,3 @@ build
 # Allow committing DB backups
 !.tmp/*.db
 !.tmp/*.sqlite
->>>>>>> 6786bd4 (chore(cms): shorten process-steps descriptions (EN + AR))
