@@ -214,7 +214,7 @@ start_service() {
 # Service-specific wrappers
 # Wait for the CMS to become healthy (polls /admin/init). Returns 0 if healthy, 1 if timeout
 wait_for_cms() {
-  local timeout_secs="${1:-60}"
+  local timeout_secs="${1:-6}"
   local start_ts
   start_ts=$(date +%s)
 
@@ -243,8 +243,8 @@ start_web() {
 
   # Optionally wait for CMS before starting web. Default: true when starting both services together.
   if [[ "${WAIT_FOR_CMS:-true}" == "true" ]]; then
-    # Wait up to 60s for CMS (non-fatal: we still start web if CMS doesn't come up)
-    if wait_for_cms 60; then
+    # Wait up to 6s for CMS (non-fatal: we still start web if CMS doesn't come up)
+    if wait_for_cms 6; then
       echo "Proceeding to start web after CMS healthy"
     else
       echo "Warning: CMS did not become healthy; starting web anyway"
@@ -258,9 +258,9 @@ start_cms() {
   local mode="$1"
   local cmd
   if [[ "$mode" == "dev" ]]; then
-    cmd="npm run develop"
+    cmd="./build.sh && npm run develop"
   else
-    cmd="npm run build && npm run start"
+    cmd="./build.sh && npm run start"
   fi
   start_service "cms" "$CMS_DIR" "$mode" "$(cms_pidfile)" "$(cms_logfile)" "$cmd"
 }
@@ -432,7 +432,7 @@ case "$cmd" in
     case "$service" in
       web) stop_web; start_web "$mode" ;;
       cms) stop_cms; start_cms "$mode" ;;
-      all|"") stop_web; stop_cms; start_cms "$mode"; if wait_for_cms 60; then start_web "$mode"; else start_web "$mode"; fi ;;
+      all|"") stop_web; stop_cms; start_cms "$mode"; if wait_for_cms 6; then start_web "$mode"; else start_web "$mode"; fi ;;
       *) echo "Unknown service: $service" >&2; exit 1 ;;
     esac
     ;;

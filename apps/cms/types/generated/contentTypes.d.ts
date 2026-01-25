@@ -1165,7 +1165,16 @@ export interface ApiNavItemNavItem extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::nav-item.nav-item'
     >;
-    location: Schema.Attribute.Enumeration<['header', 'footer']> &
+    location: Schema.Attribute.Enumeration<
+      [
+        'header',
+        'footer',
+        'footer-company',
+        'footer-products',
+        'footer-resources',
+        'footer-social',
+      ]
+    > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'header'>;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
