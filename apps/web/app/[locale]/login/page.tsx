@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
-import { auth, signIn } from "@/auth";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 type LoginPageProps = {
   params: Promise<{
@@ -32,10 +33,7 @@ export default async function LoginPage({ params }: LoginPageProps) {
     }
   }
 
-  async function signInWithGoogle() {
-    "use server";
-    await signIn("google", { redirectTo: `/${locale}/demos` });
-  }
+  const callbackUrl = `http://localhost:3000/${locale}/demos`;
 
   return (
     <div className="mx-auto max-w-md space-y-4">
@@ -44,11 +42,7 @@ export default async function LoginPage({ params }: LoginPageProps) {
         <p className="text-sm text-slate-600">Sign in with Google to request access to demos.</p>
       </div>
 
-      <form action={signInWithGoogle}>
-        <button className="w-full rounded bg-slate-900 px-4 py-2 text-white hover:bg-slate-800">
-          Continue with Google
-        </button>
-      </form>
+      <GoogleSignInButton callbackUrl={callbackUrl} />
 
       <p className="text-xs text-slate-500">
         By continuing, you may be asked for approval before accessing protected demos.
