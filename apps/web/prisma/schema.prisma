@@ -3,17 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  schemas  = ["arabiq_app"]
+  provider = "sqlite"
+  url      = "file:./.tmp/web.db"
 }
 
 enum ApprovalStatus {
   PENDING
   APPROVED
   REJECTED
-
-  @@schema("arabiq_app")
 }
 
 model User {
@@ -27,8 +24,6 @@ model User {
   approval      UserApproval?
   demoGrants    DemoGrant[]
   profile       UserProfile?
-
-  @@schema("arabiq_app")
 }
 
 model Account {
@@ -47,7 +42,6 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@schema("arabiq_app")
 }
 
 model Session {
@@ -56,8 +50,6 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@schema("arabiq_app")
 }
 
 model VerificationToken {
@@ -66,7 +58,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-  @@schema("arabiq_app")
 }
 
 model UserApproval {
@@ -76,8 +67,6 @@ model UserApproval {
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
   user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@schema("arabiq_app")
 }
 
 model DemoGrant {
@@ -88,7 +77,6 @@ model DemoGrant {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, demoKey])
-  @@schema("arabiq_app")
 }
 
 model UserProfile {
@@ -99,6 +87,4 @@ model UserProfile {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@schema("arabiq_app")
 }

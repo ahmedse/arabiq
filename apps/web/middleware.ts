@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { auth } from "@/auth";
 
 const SUPPORTED_LOCALES = new Set(["en", "ar"]);
 
@@ -13,7 +14,7 @@ function isPublicFile(pathname: string) {
   return false;
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isPublicFile(pathname)) {
@@ -32,6 +33,16 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = `/en${pathname}`;
     return NextResponse.redirect(url);
+  }
+
+  // Auth protection for /account
+  if (pathname.startsWith(`/${locale}/account`)) {
+    const session = await auth();
+    if (!session) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/login`;
+      return NextResponse.redirect(url);
+    }
   }
 
   return NextResponse.next();
