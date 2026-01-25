@@ -49,3 +49,4 @@ coverage/
 .run/cms.pid
 .run/web.pid
 .run/cms.pid
+.run/cms.pid
