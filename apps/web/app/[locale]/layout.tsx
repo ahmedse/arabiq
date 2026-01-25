@@ -53,8 +53,9 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const dir = locale === "ar" ? "rtl" : "ltr";
   const otherLocale = locale === "ar" ? "en" : "ar";
 
-  // Fetch ALL navigation from Strapi
-  const [headerNavItems, footerCompanyItems, footerProductsItems, footerResourcesItems, footerSocialItems] = await Promise.all([
+  // Fetch site settings AND navigation from Strapi
+  const [siteSettings, headerNavItems, footerCompanyItems, footerProductsItems, footerResourcesItems, footerSocialItems] = await Promise.all([
+    getSiteSettings(lang),
     getNavItems(lang, "header"),
     getNavItems(lang, "footer-company"),
     getNavItems(lang, "footer-products"),
@@ -62,22 +63,20 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     getNavItems(lang, "footer-social"),
   ]);
 
-  // Fallback navigation if Strapi is not available
-  const defaultHeaderNav: NavItem[] = [
-    { id: 1, label: lang === "ar" ? "الحلول" : "Solutions", href: "/solutions", location: "header", order: 1, isExternal: false },
-    { id: 2, label: lang === "ar" ? "القطاعات" : "Industries", href: "/industries", location: "header", order: 2, isExternal: false },
-    { id: 3, label: lang === "ar" ? "قصص النجاح" : "Case Studies", href: "/case-studies", location: "header", order: 3, isExternal: false },
-    { id: 4, label: lang === "ar" ? "العروض" : "Demos", href: "/demos", location: "header", order: 4, isExternal: false },
-    { id: 5, label: lang === "ar" ? "من نحن" : "About", href: "/about", location: "header", order: 5, isExternal: false },
-    { id: 6, label: lang === "ar" ? "تواصل معنا" : "Contact", href: "/contact", location: "header", order: 6, isExternal: false },
-  ];
-
-  const headerNav = headerNavItems.length > 0 ? headerNavItems : defaultHeaderNav;
-  // Use Strapi-provided footer lists directly; fallbacks removed so CMS controls the footer
+  // Use CMS content or show obvious missing indicator
+  const headerNav = headerNavItems;
   const footerCompany = footerCompanyItems;
   const footerProducts = footerProductsItems;
   const footerResources = footerResourcesItems;
   const footerSocial = footerSocialItems;
+
+  // Footer titles from CMS
+  const footerCompanyTitle = siteSettings?.footerCompanyTitle;
+  const footerProductsTitle = siteSettings?.footerProductsTitle;
+  const footerResourcesTitle = siteSettings?.footerResourcesTitle;
+  const footerConnectTitle = siteSettings?.footerConnectTitle;
+  const copyrightText = siteSettings?.copyrightText;
+  const loginButtonText = siteSettings?.loginButtonText;
 
   return (
     <div
@@ -98,7 +97,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
           {/* Desktop Navigation - from Strapi */}
           <nav className={`hidden md:flex items-center gap-8 text-sm font-medium ${dir === "rtl" ? "flex-row-reverse" : ""}`}>
-            {headerNav.map((item) => (
+            {headerNav.length > 0 ? headerNav.map((item) => (
               <Link
                 key={item.id}
                 className="text-slate-600 hover:text-slate-900 transition-colors"
@@ -107,7 +106,11 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
               >
                 {item.label}
               </Link>
-            ))}
+            )) : (
+              <span className="text-amber-600 text-xs font-medium px-2 py-1 bg-amber-50 border border-amber-200 rounded">
+                ⚠️ {lang === "ar" ? "قائمة مفقودة - أضفها من CMS" : "Nav missing - Add in CMS"}
+              </span>
+            )}
           </nav>
 
           {/* Right side actions */}
@@ -125,7 +128,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
               className="hidden sm:inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition-colors"
               href={`/${locale}/login`}
             >
-              {lang === "ar" ? "تسجيل الدخول" : "Login"}
+              {loginButtonText || (lang === "ar" ? "⚠️ مفقود" : "⚠️ Missing")}
             </Link>
             
             <MobileNav locale={locale} navItems={headerNav} />
@@ -142,10 +145,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             {/* Company */}
             <div>
               <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                {lang === "ar" ? "الشركة" : "Company"}
+                {footerCompanyTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
               </h3>
               <ul className="space-y-2 text-sm text-slate-600">
-                {footerCompany.map((item) => (
+                {footerCompany.length > 0 ? footerCompany.map((item) => (
                   <li key={item.id}>
                     <Link
                       className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
@@ -155,17 +158,17 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                       {item.label}
                     </Link>
                   </li>
-                ))}
+                )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
               </ul>
             </div>
             
             {/* Products */}
             <div>
               <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                {lang === "ar" ? "المنتجات" : "Products"}
+                {footerProductsTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
               </h3>
               <ul className="space-y-2 text-sm text-slate-600">
-                {footerProducts.map((item) => (
+                {footerProducts.length > 0 ? footerProducts.map((item) => (
                   <li key={item.id}>
                     <Link
                       className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
@@ -175,17 +178,17 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                       {item.label}
                     </Link>
                   </li>
-                ))}
+                )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
               </ul>
             </div>
             
             {/* Resources */}
             <div>
               <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                {lang === "ar" ? "الموارد" : "Resources"}
+                {footerResourcesTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
               </h3>
               <ul className="space-y-2 text-sm text-slate-600">
-                {footerResources.map((item) => (
+                {footerResources.length > 0 ? footerResources.map((item) => (
                   <li key={item.id}>
                     <Link
                       className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
@@ -195,17 +198,17 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                       {item.label}
                     </Link>
                   </li>
-                ))}
+                )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
               </ul>
             </div>
             
             {/* Social / Connect */}
             <div>
               <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                {lang === "ar" ? "تواصل معنا" : "Connect"}
+                {footerConnectTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
               </h3>
               <ul className="space-y-2 text-sm text-slate-600">
-                {footerSocial.map((item) => (
+                {footerSocial.length > 0 ? footerSocial.map((item) => (
                   <li key={item.id}>
                     <Link
                       className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
@@ -216,14 +219,14 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                       {item.label}
                     </Link>
                   </li>
-                ))}
+                )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
               </ul>
             </div>
           </div>
           
           {/* Bottom bar */}
           <div className="mt-12 pt-8 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-600">
-            <p>© {new Date().getFullYear()} Arabiq. {lang === "ar" ? "جميع الحقوق محفوظة." : "All rights reserved."}</p>
+            <p>{copyrightText || `© ${new Date().getFullYear()} Arabiq. ⚠️ ${lang === "ar" ? "نص مفقود" : "Text missing in CMS"}`}</p>
             <div className={`flex items-center gap-2 ${dir === "rtl" ? "flex-row-reverse" : ""}`}>
               <div className="flex items-center justify-center h-6 w-6 rounded bg-gradient-to-br from-indigo-600 to-indigo-800 text-white font-bold text-xs">
                 A

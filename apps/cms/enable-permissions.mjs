@@ -38,7 +38,9 @@ async function enablePublicPermissions() {
       'api::solution.solution',
       'api::industry.industry',
       'api::case-study.case-study',
-      'api::demo.demo'
+      'api::demo.demo',
+      'api::team-member.team-member',
+      'api::value.value'
     ];
     
     // Build permissions object

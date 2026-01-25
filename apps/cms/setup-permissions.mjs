@@ -6,7 +6,7 @@ const BASE_URL = 'http://127.0.0.1:1337';
 const CONTENT_TYPES = [
   'about-page', 'case-study', 'contact-page', 'demo', 'feature',
   'homepage', 'industry', 'nav-item', 'process-step', 'site-setting',
-  'solution', 'stat', 'trusted-company'
+  'solution', 'stat', 'team-member', 'trusted-company', 'value'
 ];
 
 async function main() {

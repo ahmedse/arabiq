@@ -59,24 +59,31 @@ export default async function HomePage({ params }: HomePageProps) {
   const featuredCaseStudies = caseStudies.slice(0, 2);
   const featuredDemos = demos.slice(0, 3);
 
-  // Hero content with fallbacks
-  const heroTitle = homepage?.heroTitle || (isRTL ? 'ابنِ مستقبل التجارة في العالم العربي' : 'Build the Future of Commerce in the Arab World');
-  const heroSubtitle = homepage?.heroSubtitle || (isRTL ? 'أنشئ توائم رقمية ثلاثية الأبعاد مذهلة لمساحاتك' : 'Create stunning 3D digital twins of your spaces');
-  const heroPrimaryCta = homepage?.heroPrimaryCta || (isRTL ? 'ابدأ مجاناً' : 'Start Free Trial');
-  const heroSecondaryCta = homepage?.heroSecondaryCta || (isRTL ? 'شاهد العرض' : 'Watch Demo');
-  const trustAward = homepage?.trustAward || (isRTL ? '🏆 منصة حائزة على جوائز' : '🏆 Award-Winning Platform');
-  const trustGlobal = homepage?.trustGlobal || (isRTL ? '🌍 12 دولة' : '🌍 12 Countries');
-  const trustFast = homepage?.trustFast || (isRTL ? '⚡ تسليم خلال 24 ساعة' : '⚡ 24hr Delivery');
+  // Hero content - show obvious warning if missing
+  const heroTitle = homepage?.heroTitle;
+  const heroSubtitle = homepage?.heroSubtitle;
+  const heroPrimaryCta = homepage?.heroPrimaryCta;
+  const heroSecondaryCta = homepage?.heroSecondaryCta;
+  const trustAward = homepage?.trustAward;
+  const trustGlobal = homepage?.trustGlobal;
+  const trustFast = homepage?.trustFast;
+
+  // Missing content indicator
+  const missing = (field: string) => `⚠️ ${field} ${isRTL ? 'مفقود - أضفه من CMS' : 'missing - Add in CMS'}`;
 
   return (
     <div className="min-h-screen">
       {/* Hero Section - Always shown */}
       <Hero
-        title={heroTitle}
-        subtitle={heroSubtitle}
-        primaryCTA={{ label: heroPrimaryCta, href: `/${locale}/contact` }}
-        secondaryCTA={{ label: heroSecondaryCta, href: `/${locale}/demos` }}
-        trustIndicators={{ award: trustAward, global: trustGlobal, fast: trustFast }}
+        title={heroTitle || missing('Hero Title')}
+        subtitle={heroSubtitle || missing('Hero Subtitle')}
+        primaryCTA={{ label: heroPrimaryCta || missing('Button'), href: `/${locale}/contact` }}
+        secondaryCTA={{ label: heroSecondaryCta || missing('Button'), href: `/${locale}/demos` }}
+        trustIndicators={{ 
+          award: trustAward || missing('Trust Award'), 
+          global: trustGlobal || missing('Trust Global'), 
+          fast: trustFast || missing('Trust Fast') 
+        }}
         isRTL={isRTL}
       />
 
@@ -85,12 +92,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <Stats
           stats={stats.length > 0 
             ? stats.map(s => ({ value: s.value, label: s.label }))
-            : [
-                { value: isRTL ? '+500' : '500+', label: isRTL ? 'توأم رقمي' : 'Digital Twins Created' },
-                { value: isRTL ? '+100' : '100+', label: isRTL ? 'عميل سعيد' : 'Happy Clients' },
-                { value: '98%', label: isRTL ? 'رضا العملاء' : 'Client Satisfaction' },
-                { value: '12', label: isRTL ? 'دولة' : 'Countries Served' },
-              ]
+            : [{ value: '⚠️', label: isRTL ? 'إحصائيات مفقودة - أضفها من CMS → Stats' : 'Stats missing - Add in CMS → Stats' }]
           }
         />
       )}
@@ -100,12 +102,12 @@ export default async function HomePage({ params }: HomePageProps) {
         <section className="py-16 bg-slate-50 border-b border-slate-100">
           <Container>
             <p className="text-center text-sm font-medium text-slate-500 mb-8">
-              {homepage?.trustedByTitle || (isRTL ? 'موثوق به من قبل الشركات الرائدة' : 'TRUSTED BY LEADING COMPANIES')}
+              {homepage?.trustedByTitle || <span className="text-amber-600">{missing('Trusted By Title')}</span>}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 opacity-60 grayscale">
               {trustedCompanies.length > 0 
                 ? trustedCompanies.map(c => <div key={c.id} className="text-xl font-bold text-slate-400">{c.name}</div>)
-                : ['Saudi Aramco', 'Emaar', 'SABIC', 'Etisalat', 'Qatar Airways'].map(n => <div key={n} className="text-xl font-bold text-slate-400">{n}</div>)
+                : <div className="text-amber-600 text-sm p-4 border-2 border-dashed border-amber-300 bg-amber-50 rounded-lg">{isRTL ? '⚠️ شركات مفقودة - أضفها من CMS → Trusted Companies' : '⚠️ Companies missing - Add in CMS → Trusted Companies'}</div>
               }
             </div>
           </Container>
@@ -118,10 +120,10 @@ export default async function HomePage({ params }: HomePageProps) {
           <Container>
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                {homepage?.howItWorksTitle || (isRTL ? 'كيف يعمل' : 'How It Works')}
+                {homepage?.howItWorksTitle || <span className="text-amber-600">{missing('How It Works Title')}</span>}
               </h2>
               <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
-                {homepage?.howItWorksSubtitle || (isRTL ? 'ثلاث خطوات بسيطة' : 'Three simple steps to create your digital twin')}
+                {homepage?.howItWorksSubtitle || <span className="text-amber-600">{missing('Subtitle')}</span>}
               </p>
             </div>
 
@@ -138,18 +140,11 @@ export default async function HomePage({ params }: HomePageProps) {
                       <p className="text-slate-600 text-sm">{item.description}</p>
                     </div>
                   ))
-                : [
-                    { step: '01', title: isRTL ? 'استشارة' : 'Consult', description: isRTL ? 'نفهم احتياجاتك' : 'We understand your needs', icon: '💬' },
-                    { step: '02', title: isRTL ? 'بناء' : 'Build', description: isRTL ? 'نبني توأمك الرقمي' : 'We build your digital twin', icon: '🔧' },
-                    { step: '03', title: isRTL ? 'إطلاق' : 'Launch', description: isRTL ? 'ننشر ونطلق' : 'We deploy and launch', icon: '🚀' }
-                  ].map((item, i) => (
-                    <div key={i} className="relative text-center">
-                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-600 text-white text-2xl mb-6 relative z-10">{item.icon}</div>
-                      <div className="text-xs font-bold text-indigo-600 mb-2">{item.step}</div>
-                      <h3 className="text-lg sm:text-xl font-semibold text-slate-900 mb-3 truncate">{item.title}</h3>
-                      <p className="text-slate-600 text-sm">{item.description}</p>
-                    </div>
-                  ))
+                : (
+                  <div className="col-span-3 text-center p-8 border-2 border-dashed border-amber-400 bg-amber-50 rounded-xl">
+                    <p className="text-amber-700">{isRTL ? '⚠️ خطوات مفقودة - أضفها من CMS → Process Steps' : '⚠️ Steps missing - Add in CMS → Process Steps'}</p>
+                  </div>
+                )
               }
             </div>
           </Container>
@@ -162,10 +157,10 @@ export default async function HomePage({ params }: HomePageProps) {
           <Container>
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                {homepage?.featuresTitle || (isRTL ? 'لماذا تختار Arabiq' : 'Why Choose Arabiq')}
+                {homepage?.featuresTitle || <span className="text-amber-600">{missing('Features Title')}</span>}
               </h2>
               <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
-                {homepage?.featuresSubtitle || (isRTL ? 'مبنية خصيصاً للسوق العربي' : 'Built specifically for the Arab market')}
+                {homepage?.featuresSubtitle || <span className="text-amber-600">{missing('Subtitle')}</span>}
               </p>
             </div>
 
@@ -183,17 +178,11 @@ export default async function HomePage({ params }: HomePageProps) {
                       </div>
                     );
                   })
-                : [
-                    { title: isRTL ? 'سرعة البرق' : 'Lightning Fast', desc: isRTL ? 'محسّن للسرعة' : 'Optimized for speed', icon: <Zap className="w-6 h-6" />, color: 'from-yellow-400 to-orange-500' },
-                    { title: isRTL ? 'عربي-أولاً' : 'Arabic-First', desc: isRTL ? 'دعم RTL' : 'RTL support', icon: <Globe className="w-6 h-6" />, color: 'from-cyan-400 to-blue-500' },
-                    { title: isRTL ? 'مدعوم بالذكاء الاصطناعي' : 'AI-Powered', desc: isRTL ? 'توصيات ذكية' : 'Smart recommendations', icon: <Sparkles className="w-6 h-6" />, color: 'from-purple-400 to-indigo-500' }
-                  ].map((f, i) => (
-                    <div key={i} className="p-8 rounded-2xl border border-slate-200 bg-white hover:border-indigo-200 hover:shadow-lg transition-all">
-                      <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${f.color} text-white mb-6`}>{f.icon}</div>
-                      <h3 className="text-xl font-semibold text-slate-900 mb-3">{f.title}</h3>
-                      <p className="text-slate-600">{f.desc}</p>
-                    </div>
-                  ))
+                : (
+                  <div className="col-span-3 text-center p-8 border-2 border-dashed border-amber-400 bg-amber-50 rounded-xl">
+                    <p className="text-amber-700">{isRTL ? '⚠️ مميزات مفقودة - أضفها من CMS → Features' : '⚠️ Features missing - Add in CMS → Features'}</p>
+                  </div>
+                )
               }
             </div>
           </Container>
@@ -201,16 +190,16 @@ export default async function HomePage({ params }: HomePageProps) {
       )}
 
       {/* Solutions Section - Controlled by showSolutionsSection */}
-      {showSolutions && featuredSolutions.length > 0 && (
+      {showSolutions && (
         <section className="py-24 bg-white">
           <Container>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-4">
               <div>
                 <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                  {homepage?.solutionsTitle || (isRTL ? 'حلولنا' : 'Our Solutions')}
+                  {homepage?.solutionsTitle || <span className="text-amber-600">{missing('Solutions Title')}</span>}
                 </h2>
                 <p className="mt-4 text-lg text-slate-600 max-w-2xl">
-                  {homepage?.solutionsSubtitle || (isRTL ? 'أدوات تحول رقمي شاملة' : 'Comprehensive digital transformation tools')}
+                  {homepage?.solutionsSubtitle || <span className="text-amber-600">{missing('Subtitle')}</span>}
                 </p>
               </div>
               <Link href={`/${locale}/solutions`} className={`inline-flex items-center gap-2 text-indigo-600 font-semibold hover:text-indigo-700 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -219,6 +208,7 @@ export default async function HomePage({ params }: HomePageProps) {
               </Link>
             </div>
 
+            {featuredSolutions.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-8">
               {featuredSolutions.map((s, i) => (
                 <Link key={s.id} href={`/${locale}/solutions/${s.slug}`} className="group">
@@ -236,23 +226,29 @@ export default async function HomePage({ params }: HomePageProps) {
                 </Link>
               ))}
             </div>
+            ) : (
+              <div className="text-center p-8 border-2 border-dashed border-amber-400 bg-amber-50 rounded-xl">
+                <p className="text-amber-700">{isRTL ? '⚠️ حلول مفقودة - أضفها من CMS → Solutions' : '⚠️ Solutions missing - Add in CMS → Solutions'}</p>
+              </div>
+            )}
           </Container>
         </section>
       )}
 
       {/* Industries Section - Controlled by showIndustriesSection */}
-      {showIndustries && featuredIndustries.length > 0 && (
+      {showIndustries && (
         <section className="py-24 bg-slate-900 text-white">
           <Container>
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-                {homepage?.industriesTitle || (isRTL ? 'القطاعات التي نخدمها' : 'Industries We Serve')}
+                {homepage?.industriesTitle || <span className="text-amber-400">{missing('Industries Title')}</span>}
               </h2>
               <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
-                {homepage?.industriesSubtitle || (isRTL ? 'حلول مخصصة لكل قطاع' : 'Tailored solutions for every sector')}
+                {homepage?.industriesSubtitle || <span className="text-amber-400">{missing('Subtitle')}</span>}
               </p>
             </div>
 
+            {featuredIndustries.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {featuredIndustries.map(ind => (
                 <Link key={ind.id} href={`/${locale}/industries/${ind.slug}`} className="group p-6 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 hover:border-indigo-500 transition-all">
@@ -263,6 +259,11 @@ export default async function HomePage({ params }: HomePageProps) {
                 </Link>
               ))}
             </div>
+            ) : (
+              <div className="text-center p-8 border-2 border-dashed border-amber-400 bg-amber-900/30 rounded-xl">
+                <p className="text-amber-400">{isRTL ? '⚠️ قطاعات مفقودة - أضفها من CMS → Industries' : '⚠️ Industries missing - Add in CMS → Industries'}</p>
+              </div>
+            )}
 
             <div className="mt-12 text-center">
               <Link href={`/${locale}/industries`} className="inline-flex items-center gap-2 rounded-full border border-slate-600 bg-slate-800 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-700 transition-colors">
@@ -275,16 +276,16 @@ export default async function HomePage({ params }: HomePageProps) {
       )}
 
       {/* Case Studies Section - Controlled by showCaseStudiesSection */}
-      {showCaseStudies && featuredCaseStudies.length > 0 && (
+      {showCaseStudies && (
         <section className="py-24 bg-white">
           <Container>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-4">
               <div>
                 <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                  {homepage?.caseStudiesTitle || (isRTL ? 'قصص النجاح' : 'Success Stories')}
+                  {homepage?.caseStudiesTitle || <span className="text-amber-600">{missing('Case Studies Title')}</span>}
                 </h2>
                 <p className="mt-4 text-lg text-slate-600 max-w-2xl">
-                  {homepage?.caseStudiesSubtitle || (isRTL ? 'اكتشف كيف ساعدنا عملائنا' : 'Discover how we helped our clients')}
+                  {homepage?.caseStudiesSubtitle || <span className="text-amber-600">{missing('Subtitle')}</span>}
                 </p>
               </div>
               <Link href={`/${locale}/case-studies`} className={`inline-flex items-center gap-2 text-indigo-600 font-semibold hover:text-indigo-700 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -293,6 +294,7 @@ export default async function HomePage({ params }: HomePageProps) {
               </Link>
             </div>
 
+            {featuredCaseStudies.length > 0 ? (
             <div className="grid md:grid-cols-2 gap-8">
               {featuredCaseStudies.map((cs, i) => (
                 <Link key={cs.id} href={`/${locale}/case-studies/${cs.slug}`} className="group">
@@ -309,23 +311,29 @@ export default async function HomePage({ params }: HomePageProps) {
                 </Link>
               ))}
             </div>
+            ) : (
+              <div className="text-center p-8 border-2 border-dashed border-amber-400 bg-amber-50 rounded-xl">
+                <p className="text-amber-700">{isRTL ? '⚠️ قصص نجاح مفقودة - أضفها من CMS → Case Studies' : '⚠️ Case Studies missing - Add in CMS → Case Studies'}</p>
+              </div>
+            )}
           </Container>
         </section>
       )}
 
       {/* Live Demos Section - Controlled by showDemosSection */}
-      {showDemos && featuredDemos.length > 0 && (
+      {showDemos && (
         <section className="py-24 bg-gradient-to-br from-slate-50 to-indigo-50">
           <Container>
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                {homepage?.demosTitle || (isRTL ? 'جرب العروض التفاعلية' : 'Try Our Live Demos')}
+                {homepage?.demosTitle || <span className="text-amber-600">{missing('Demos Title')}</span>}
               </h2>
               <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
-                {homepage?.demosSubtitle || (isRTL ? 'استكشف إمكانياتنا' : 'Explore our capabilities')}
+                {homepage?.demosSubtitle || <span className="text-amber-600">{missing('Subtitle')}</span>}
               </p>
             </div>
 
+            {featuredDemos.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-6">
               {featuredDemos.map(demo => (
                 <Link key={demo.id} href={`/${locale}/demos/${demo.slug}`} className="group">
@@ -339,6 +347,11 @@ export default async function HomePage({ params }: HomePageProps) {
                 </Link>
               ))}
             </div>
+            ) : (
+              <div className="text-center p-8 border-2 border-dashed border-amber-400 bg-amber-50 rounded-xl">
+                <p className="text-amber-700">{isRTL ? '⚠️ عروض مفقودة - أضفها من CMS → Demos' : '⚠️ Demos missing - Add in CMS → Demos'}</p>
+              </div>
+            )}
 
             <div className="mt-12 text-center">
               <Link href={`/${locale}/demos`} className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-lg hover:bg-indigo-700 transition-colors">
@@ -363,18 +376,18 @@ export default async function HomePage({ params }: HomePageProps) {
           <Container className="relative z-10">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight">
-                {homepage?.ctaTitle || (isRTL ? 'مستعد لتحويل عملك رقميًا؟' : 'Ready to transform your business?')}
+                {homepage?.ctaTitle || <span className="text-amber-300">{missing('CTA Title')}</span>}
               </h2>
               <p className="mt-6 text-xl text-indigo-100">
-                {homepage?.ctaSubtitle || (isRTL ? 'انضم إلى مئات الشركات' : 'Join hundreds of companies that trust us')}
+                {homepage?.ctaSubtitle || <span className="text-amber-300">{missing('CTA Subtitle')}</span>}
               </p>
               <div className={`mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
                 <Link href={`/${locale}/contact`} className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-base font-semibold text-indigo-700 shadow-lg hover:bg-indigo-50 transition-colors">
-                  {homepage?.ctaPrimaryButton || (isRTL ? 'تواصل معنا' : 'Get in touch')}
+                  {homepage?.ctaPrimaryButton || missing('Button')}
                   <ArrowRight className={`w-5 h-5 ${isRTL ? 'rotate-180' : ''}`} />
                 </Link>
                 <Link href={`/${locale}/demos`} className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm px-8 py-4 text-base font-semibold text-white hover:bg-white/20 transition-colors">
-                  {homepage?.ctaSecondaryButton || (isRTL ? 'شاهد العروض' : 'View demos')}
+                  {homepage?.ctaSecondaryButton || missing('Button')}
                 </Link>
               </div>
             </div>

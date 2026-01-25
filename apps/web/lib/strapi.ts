@@ -105,13 +105,40 @@ async function getCollectionItemBySlug(locale: string, apiPath: string, slug: st
 type SiteSettingsAttributes = {
   title?: string;
   description?: string;
+  footerCompanyTitle?: string;
+  footerProductsTitle?: string;
+  footerResourcesTitle?: string;
+  footerConnectTitle?: string;
+  copyrightText?: string;
+  loginButtonText?: string;
 };
 
-export async function getSiteSettings(locale: string) {
+export type SiteSettings = {
+  title: string | null;
+  description: string | null;
+  footerCompanyTitle: string | null;
+  footerProductsTitle: string | null;
+  footerResourcesTitle: string | null;
+  footerConnectTitle: string | null;
+  copyrightText: string | null;
+  loginButtonText: string | null;
+};
+
+export async function getSiteSettings(locale: string): Promise<SiteSettings | null> {
   const data = (await fetchStrapi("/api/site-setting", { locale, revalidate: 60 })) as StrapiSingleResponse<SiteSettingsAttributes> | null;
   const item = data?.data;
   if (!item) return null;
-  return pickAttributes(item);
+  const attrs = pickAttributes(item);
+  return {
+    title: attrs.title ?? null,
+    description: attrs.description ?? null,
+    footerCompanyTitle: attrs.footerCompanyTitle ?? null,
+    footerProductsTitle: attrs.footerProductsTitle ?? null,
+    footerResourcesTitle: attrs.footerResourcesTitle ?? null,
+    footerConnectTitle: attrs.footerConnectTitle ?? null,
+    copyrightText: attrs.copyrightText ?? null,
+    loginButtonText: attrs.loginButtonText ?? null,
+  };
 }
 
 // ============================================================================
@@ -394,4 +421,81 @@ export async function getDemos(locale: string) {
 
 export async function getDemoBySlug(locale: string, slug: string) {
   return getCollectionItemBySlug(locale, "/api/demos", slug, 30);
+}
+
+// ============================================================================
+// TEAM MEMBERS
+// ============================================================================
+
+type TeamMemberAttributes = {
+  name?: string;
+  position?: string;
+  bio?: string;
+  photo?: { url?: string };
+  order?: number;
+  linkedinUrl?: string;
+  twitterUrl?: string;
+};
+
+export type TeamMember = {
+  id: number;
+  name: string;
+  position: string;
+  bio: string;
+  photoUrl: string | null;
+  order: number;
+  linkedinUrl: string | null;
+  twitterUrl: string | null;
+};
+
+export async function getTeamMembers(locale: string): Promise<TeamMember[]> {
+  const data = (await fetchStrapi("/api/team-members?sort=order:asc&populate=photo", { locale, revalidate: 300 })) as StrapiListResponse<TeamMemberAttributes> | null;
+  if (!data?.data?.length) return [];
+  return data.data.map((item) => {
+    const attrs = pickAttributes(item);
+    return {
+      id: item.id,
+      name: attrs.name ?? "",
+      position: attrs.position ?? "",
+      bio: attrs.bio ?? "",
+      photoUrl: attrs.photo?.url ?? null,
+      order: attrs.order ?? 0,
+      linkedinUrl: attrs.linkedinUrl ?? null,
+      twitterUrl: attrs.twitterUrl ?? null,
+    };
+  });
+}
+
+// ============================================================================
+// VALUES
+// ============================================================================
+
+type ValueAttributes = {
+  title?: string;
+  description?: string;
+  icon?: string;
+  order?: number;
+};
+
+export type Value = {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+  order: number;
+};
+
+export async function getValues(locale: string): Promise<Value[]> {
+  const data = (await fetchStrapi("/api/values?sort=order:asc", { locale, revalidate: 300 })) as StrapiListResponse<ValueAttributes> | null;
+  if (!data?.data?.length) return [];
+  return data.data.map((item) => {
+    const attrs = pickAttributes(item);
+    return {
+      id: item.id,
+      title: attrs.title ?? "",
+      description: attrs.description ?? "",
+      icon: attrs.icon ?? "heart",
+      order: attrs.order ?? 0,
+    };
+  });
 }

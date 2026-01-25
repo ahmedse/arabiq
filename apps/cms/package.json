@@ -8,8 +8,8 @@
     "build": "strapi build && npm run copy-schemas",
     "console": "strapi console",
     "deploy": "strapi deploy",
-    "dev": "strapi develop",
-    "develop": "strapi develop",
+    "dev": "npm run copy-schemas && strapi develop",
+    "develop": "npm run copy-schemas && strapi develop",
     "start": "npm run copy-schemas && strapi start",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
@@ -30,6 +30,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "sqlite3": "^5.1.7",
     "typescript": "^5"
   },
   "engines": {
