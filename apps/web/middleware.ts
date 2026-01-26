@@ -68,6 +68,30 @@ export async function middleware(request: NextRequest) {
       url.pathname = `/${locale}/admin/access-denied`;
       return NextResponse.redirect(url);
     }
+
+    // Optional IP allowlist enforcement for admin area
+    const allowlistRaw = process.env.ADMIN_IP_ALLOWLIST ?? '';
+    if (allowlistRaw.trim()) {
+      const allowlist = allowlistRaw.split(',').map((s) => s.trim()).filter(Boolean);
+      const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || '';
+      if (!allowlist.includes(ip)) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${locale}/admin/access-denied`;
+        return NextResponse.redirect(url);
+      }
+    }
+
+    // If admin MFA enabled, require a verified cookie
+    const { prisma } = await import('@/lib/prisma');
+    const userRow = await prisma.user.findUnique({ where: { id: userId }, select: { adminMfaEnabled: true } });
+    if (userRow?.adminMfaEnabled) {
+      const mfaCookie = request.cookies.get('ADMIN_MFA_VERIFIED')?.value;
+      if (!mfaCookie) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${locale}/admin/mfa/setup`;
+        return NextResponse.redirect(url);
+      }
+    }
   }
 
   return NextResponse.next();

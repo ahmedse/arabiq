@@ -1,4 +1,7 @@
 import { getDemoBySlug } from "@/lib/strapi";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { isContentAccessibleByUser } from "@/lib/contentAuth";
 
 type DemoDetailPageProps = {
   params: Promise<{
@@ -14,6 +17,21 @@ export default async function DemoDetailPage({ params }: DemoDetailPageProps) {
 
   if (!demo) {
     return <h1>Demo not found</h1>;
+  }
+
+  // Enforce role-based access control for demos when `allowedRoles` is set
+  if (demo.allowedRoles && demo.allowedRoles.length > 0) {
+    const session = await auth();
+    const userId = session?.user?.id;
+
+    const allowed = await isContentAccessibleByUser(userId, demo.allowedRoles);
+    if (!allowed) {
+      // If not authenticated, redirect to login; otherwise show access denied
+      if (!userId) {
+        redirect(`/${locale}/login`);
+      }
+      redirect(`/${locale}/admin/access-denied`);
+    }
   }
 
   return (

@@ -26,6 +26,8 @@ model User {
   demoGrants    DemoGrant[]
   profile       UserProfile?
   userRoles     UserRole[]
+  adminMfaEnabled Boolean @default(false)
+  adminMfaSecret  String?
 }
 
 model Account {
