@@ -10,7 +10,7 @@ Implement Google OAuth login/signup, user account management, and admin controls
 - [x] Update Prisma schema with NextAuth tables and custom user fields
 - [x] Run Prisma generate and db push
 - [x] Add environment variables to `.env.local`
-- [ ] Set up Strapi UserProfile content type and roles
+- [ ] Set up Strapi content types and roles (content-only; user accounts managed by `web`)
 
 ### Phase 2: NextAuth Configuration
 - [x] Create NextAuth route at `app/api/auth/[...nextauth]/route.ts`
@@ -23,7 +23,7 @@ Implement Google OAuth login/signup, user account management, and admin controls
 - [x] Create login page at `app/[locale]/login/page.tsx`
 - [x] Implement Google sign-in button and logic
 - [x] Add i18n support for English/Arabic
-- [x] Handle signup flow and Strapi user creation
+- [x] Handle signup flow (web authoritative); Strapi user creation disabled
 - [x] Add error handling and pending approval messages
 
 ### Phase 4: User Account Management
