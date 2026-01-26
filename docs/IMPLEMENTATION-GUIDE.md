@@ -447,10 +447,11 @@ pnpm run make-admin -- user@example.com
 
 This will attach the `ADMIN` role to the provided user account.
 
-5. Strapi profile sync: DISABLED by default (web authoritative)
+5. Strapi role & content permissions (content-only)
 
-- By decision, Arabiq uses web as the authoritative source for accounts and approvals.
-- Strapi remains the CMS for content metadata only. Profile synchronization is disabled; do not enable `STRAPI_SYNC_USER_PROFILES` without revisiting architecture and security.
+- By decision, Arabiq uses web as the authoritative source for accounts and approvals; **Strapi profile sync is disabled**.
+- Strapi is the source of truth for content. Editors should use `allowedRoles` (a JSON field) to restrict demos/solutions/case studies; server-side code enforces `allowedRoles` at request time.
+- If you must enable profile sync in the future, perform a security review and implement strong signing/verification, idempotency, and audit logging.
 
 ---
 
