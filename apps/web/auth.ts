@@ -3,10 +3,11 @@ import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 
+
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
-  debug: true,
   providers: [
     Google({
       clientId: process.env.NEXTAUTH_GOOGLE_ID as string,
@@ -15,27 +16,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user }) {
-      if (!user?.id) {
+      if (!user?.email) return false;
+      try {
+        const dbUser = await prisma.user.findUnique({ where: { email: user.email } });
+        if (!dbUser) return false;
+        if (dbUser.disabled) return false;
+        const approval = await prisma.userApproval.findUnique({ where: { userId: dbUser.id } });
+        if (!approval || approval.status !== 'APPROVED') return false;
+        return true;
+      } catch (err) {
+        console.error('signIn callback error', err);
         return false;
       }
-
-      // allow sign in; userApproval will be created in the `createUser` event
-      return true;
     },
   },
   events: {
     async createUser({ user }) {
-      // create the approval record, resolving the actual DB user id first
-      // (some adapter implementations may pass a different transient `user.id`)
+      // create the approval record, assign default role, and optionally sync with Strapi
       for (let attempt = 0; attempt < 5; attempt++) {
         try {
-          // try to resolve the persisted user by email (best-effort)
-          const dbUser = user?.email
-            ? await prisma.user.findUnique({ where: { email: user.email } })
-            : null;
+          const dbUser = user?.email ? await prisma.user.findUnique({ where: { email: user.email } }) : null;
 
           if (!dbUser?.id) {
-            // user row may not be committed yet; wait and retry
             const wait = 100 * (attempt + 1);
             console.warn(`createUser: DB user not found yet, retrying in ${wait}ms (attempt ${attempt + 1})`);
             await new Promise((r) => setTimeout(r, wait));
@@ -45,9 +47,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           await prisma.userApproval.create({
             data: {
               user: { connect: { id: dbUser.id } },
-              status: "PENDING",
+              status: 'PENDING',
             },
           });
+
+          // assign default role (PUBLIC) if available
+          try {
+            const defaultRole = await prisma.role.findUnique({ where: { name: 'PUBLIC' } });
+            if (defaultRole) {
+              await prisma.userRole.create({ data: { userId: dbUser.id, roleId: defaultRole.id } });
+            } else {
+              console.warn('createUser: default role PUBLIC not found; ensure roles are seeded');
+            }
+          } catch (err) {
+            console.warn('createUser: failed to assign default role (non-blocking)', err);
+          }
+
+          // Strapi profile sync is disabled (web is authoritative).
+          // If you later decide to re-enable profile sync, implement a controlled, audited sync flow and ensure secure secrets management.
+
           break;
         } catch (err: any) {
           const code = err?.code || err?.message || '';
@@ -57,11 +75,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             await new Promise((r) => setTimeout(r, wait));
             continue;
           }
-          console.error('createUser event: failed to create UserApproval', err);
+          console.error('createUser event: failed', err);
           break;
         }
       }
     },
   },
 });
-            console.warn(`createUser: FK violation, retrying in ${wait}ms (attempt ${attempt + 1})`);
+

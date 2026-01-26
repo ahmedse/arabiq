@@ -398,6 +398,62 @@ npm install next-intl lucide-react
 
 #### Day 2: Design System Setup
 - [ ] Update `tailwind.config.ts` with design tokens
+
+---
+
+### 🔐 Auth & Admin: Setup & Verification
+1. Add required environment variables (use your deployment secret store; do not commit secrets):
+
+```env
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=replace-with-a-secure-random-value
+NEXTAUTH_GOOGLE_ID=your-google-client-id
+NEXTAUTH_GOOGLE_SECRET=your-google-client-secret
+# optional Strapi sync
+STRAPI_API_URL=https://cms.example.com
+STRAPI_API_TOKEN=your-strapi-token
+# Profile sync intentionally disabled. Do NOT enable `STRAPI_SYNC_USER_PROFILES`. If you need profile sync in the future, re-evaluate architecture and security requirements.
+# STRAPI_WEBHOOK_SECRET is not used for profile sync in the current configuration
+ADMIN_EMAILS=admin@example.com
+```
+
+2. Apply database migrations and seed canonical roles:
+
+```bash
+cd /home/ahmed/arabiq/apps/web
+pnpm prisma migrate dev --name add-roles
+pnpm prisma db seed
+```
+
+3. Run the app locally and test Google sign-in flow:
+
+- Start dev server: `pnpm dev`
+- Visit: `http://localhost:3000/en/login` and sign in with Google
+- New users are created in DB with an approval record (PENDING) and are denied sign-in until approved
+
+4. Approve a user (admin flow):
+
+- Admins can visit `/en/admin/users` to review pending approvals and set APPROVED/REJECTED
+- Approving grants access; rejecting revokes sessions if any
+
+5. Bootstrapping an initial ADMIN user (one-time):
+
+If you already have a user in the database you want to make an ADMIN, run:
+
+```bash
+cd /home/ahmed/arabiq/apps/web
+pnpm run make-admin -- user@example.com
+```
+
+This will attach the `ADMIN` role to the provided user account.
+
+5. Strapi profile sync: DISABLED by default (web authoritative)
+
+- By decision, Arabiq uses web as the authoritative source for accounts and approvals.
+- Strapi remains the CMS for content metadata only. Profile synchronization is disabled; do not enable `STRAPI_SYNC_USER_PROFILES` without revisiting architecture and security.
+
+---
+
 - [ ] Create `/components/ui` folder
 - [ ] Build base components: Button, Card, Badge, Container
 - [ ] Add IBM Plex Sans Arabic font

@@ -45,6 +45,31 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Admin area: require authenticated user with ADMIN role
+  if (pathname.startsWith(`/${locale}/admin`)) {
+    const session = await auth();
+    if (!session) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/login`;
+      return NextResponse.redirect(url);
+    }
+
+    const userId = session?.user?.id;
+    if (!userId) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/login`;
+      return NextResponse.redirect(url);
+    }
+
+    const { userHasRole } = await import('@/lib/roles');
+    const isAdmin = await userHasRole(userId, 'ADMIN');
+    if (!isAdmin) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/admin/access-denied`;
+      return NextResponse.redirect(url);
+    }
+  }
+
   return NextResponse.next();
 }
 

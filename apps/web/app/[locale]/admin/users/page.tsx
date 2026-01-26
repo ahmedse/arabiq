@@ -1,6 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { userHasRole } from "@/lib/roles";
+import { logAuditEvent } from "@/lib/audit";
 
 type AdminUsersPageProps = {
   params: Promise<{
@@ -50,6 +52,43 @@ async function updateApprovalAction(formData: FormData) {
     create: { userId, status: statusRaw },
   });
 
+  // If rejected, revoke sessions and log
+  if (statusRaw === 'REJECTED') {
+    await prisma.session.deleteMany({ where: { userId } });
+    await logAuditEvent({ actorId: session?.user?.id ?? null, action: 'reject-user', targetUserId: userId });
+  } else if (statusRaw === 'APPROVED') {
+    await logAuditEvent({ actorId: session?.user?.id ?? null, action: 'approve-user', targetUserId: userId });
+  }
+
+  revalidatePath(`/${locale}/admin/users`);
+}
+
+async function updateRolesAction(formData: FormData) {
+  "use server";
+
+  const session = await auth();
+  if (!session?.user?.id) return;
+
+  const isAdmin = await userHasRole(session.user.id, 'ADMIN');
+  if (!isAdmin) return;
+
+  const userId = String(formData.get("userId") ?? "");
+  const locale = String(formData.get("locale") ?? "en");
+
+  if (!userId) return;
+
+  const roles = formData.getAll('roles').map(String).filter(Boolean);
+
+  // Resolve role ids and replace user roles
+  const roleRows = await prisma.role.findMany({ where: { name: { in: roles } } });
+
+  await prisma.userRole.deleteMany({ where: { userId } });
+  for (const r of roleRows) {
+    await prisma.userRole.create({ data: { userId, roleId: r.id } });
+  }
+
+  await logAuditEvent({ actorId: session.user.id, action: 'set-roles', targetUserId: userId, meta: { roles } });
+
   revalidatePath(`/${locale}/admin/users`);
 }
 
@@ -66,12 +105,19 @@ export default async function AdminUsersPage({ params }: AdminUsersPageProps) {
           createdAt: true,
         },
       },
+      userRoles: {
+        select: {
+          role: { select: { name: true } },
+        },
+      },
     },
     orderBy: {
       approval: { createdAt: "desc" },
     },
     take: 200,
   });
+
+  const roles = await prisma.role.findMany({ orderBy: { name: 'asc' } });
 
   const pending = users.filter((user) => (user.approval?.status ?? "PENDING") === "PENDING");
   const reviewed = users.filter((user) => (user.approval?.status ?? "PENDING") !== "PENDING");
@@ -80,7 +126,7 @@ export default async function AdminUsersPage({ params }: AdminUsersPageProps) {
     <div className="space-y-10">
       <div>
         <h1 className="text-2xl font-semibold">User Approvals</h1>
-        <p className="text-sm text-slate-500">Manage access approvals for demo users.</p>
+        <p className="text-sm text-slate-500">Manage access approvals and roles for demo users.</p>
       </div>
 
       <section className="space-y-4">
@@ -146,6 +192,7 @@ export default async function AdminUsersPage({ params }: AdminUsersPageProps) {
                   <th className="px-4 py-3 font-medium">Email</th>
                   <th className="px-4 py-3 font-medium">Requested</th>
                   <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium">Roles</th>
                   <th className="px-4 py-3 font-medium">Actions</th>
                 </tr>
               </thead>
@@ -157,6 +204,21 @@ export default async function AdminUsersPage({ params }: AdminUsersPageProps) {
                       {user.approval?.createdAt ? user.approval.createdAt.toLocaleString() : "—"}
                     </td>
                     <td className="px-4 py-3 text-slate-600">{user.approval?.status ?? "PENDING"}</td>
+                    <td className="px-4 py-3 text-slate-600">
+                      {/* Roles form below */}
+                      <form action={updateRolesAction} className="flex items-center gap-2">
+                        <input type="hidden" name="userId" value={user.id} />
+                        <select name="roles" multiple defaultValue={user.userRoles?.map((ur) => ur.role.name) ?? []} className="rounded border px-2 py-1 text-sm">
+                          {roles.map((r) => (
+                            <option key={r.name} value={r.name}>
+                              {r.name}
+                            </option>
+                          ))}
+                        </select>
+                        <input type="hidden" name="locale" value={locale} />
+                        <button className="rounded border border-slate-600 px-3 py-1 text-slate-600 hover:bg-slate-50">Save</button>
+                      </form>
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <form action={updateApprovalAction}>
