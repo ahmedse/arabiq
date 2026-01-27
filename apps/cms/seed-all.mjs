@@ -46,6 +46,27 @@ async function request(path, options) {
   }
 }
 
+// Confirm before seeding if DB appears non-empty (unless forced)
+async function confirmIfNonEmpty() {
+  const forced = process.argv.includes('--force') || process.env.FORCE_SEED === '1';
+  if (forced) return;
+  try {
+    const res = await request('/api/homepage?pagination[limit]=1');
+    const hasContent = res.ok && Array.isArray(res.body?.data) && res.body.data.length > 0;
+    if (hasContent) {
+      const { createInterface } = await import('readline');
+      const rl = createInterface({ input: process.stdin, output: process.stdout });
+      const answer = await new Promise(resolve => rl.question('Database appears to contain content. Proceed with seeding? (yes/no): ', a => { rl.close(); resolve(a); }));
+      if (String(answer).trim().toLowerCase() !== 'yes') {
+        console.log('Aborting seeding. No changes made.');
+        process.exit(0);
+      }
+    }
+  } catch (e) {
+    console.warn('Warning: could not determine DB content - proceeding. Error:', e.message);
+  }
+}
+
 async function upsertSingle(type, data, locale = 'en') {
   const payload = { ...data, publishedAt: new Date().toISOString() };
   const res = await request(`/api/${type}?locale=${locale}`, { method: 'PUT', body: JSON.stringify({ data: payload }) });
@@ -406,6 +427,8 @@ const demosAR = [
 
 async function seed() {
   console.log('🌱 Seeding Complete Arabiq CMS...\n');
+
+  await confirmIfNonEmpty();
 
   // Navigation Items
   // NOTE: Nav items are now managed centrally by `seed-nav-canonical.mjs` to avoid duplicates.

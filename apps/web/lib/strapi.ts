@@ -54,6 +54,17 @@ async function getCollection(locale: string, apiPath: string, revalidate = 300) 
 
   return data.data.map((item) => {
     const attrs = pickAttributes(item);
+
+    // Extract allowedRoles if present (supports string[] or relation shapes)
+    const rawAllowed = (attrs as any).allowedRoles ?? (attrs as any).allowed_roles ?? (attrs as any).allowedRole ?? null;
+    let allowedRoles: string[] = [];
+    if (Array.isArray(rawAllowed)) {
+      // support relation array with { name } objects or plain strings
+      allowedRoles = rawAllowed.map((r: any) => (typeof r === 'string' ? r : r?.name ?? String(r))).filter(Boolean);
+    } else if (typeof rawAllowed === 'string') {
+      allowedRoles = rawAllowed.split(',').map((s: string) => s.trim()).filter(Boolean);
+    }
+
     return {
       id: item.id,
       slug: attrs.slug ?? "",
@@ -63,6 +74,7 @@ async function getCollection(locale: string, apiPath: string, revalidate = 300) 
       client: attrs.client,
       industry: attrs.industry,
       demoType: attrs.demoType,
+      allowedRoles,
     };
   }).filter((item) => Boolean(item.slug));
 }

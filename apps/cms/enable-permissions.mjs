@@ -5,8 +5,23 @@ const TOKEN = process.env.SEED_TOKEN || '6ea9b21562ea143156a28f194a9ada7699ec78c
 
 const headers = {
   'Content-Type': 'application/json',
+  'Accept': 'application/json',
   'Authorization': `Bearer ${TOKEN}`
 };
+
+function assertJsonResponse(res, text) {
+  const ct = res.headers && res.headers.get && res.headers.get('content-type');
+  if (!res.ok) {
+    console.error('❌ Request failed with status', res.status);
+    console.error('Response:', text);
+    process.exit(1);
+  }
+  if (!ct || !ct.includes('application/json')) {
+    console.error('❌ Expected JSON response but got:', ct);
+    console.error('Response body:', text);
+    process.exit(1);
+  }
+}
 
 async function enablePublicPermissions() {
   try {
@@ -14,7 +29,9 @@ async function enablePublicPermissions() {
     
     // Get current public role
     const rolesRes = await fetch(`${STRAPI_URL}/admin/users-permissions/roles`, { headers });
-    const rolesData = await rolesRes.json();
+    const rolesText = await rolesRes.text();
+    assertJsonResponse(rolesRes, rolesText);
+    const rolesData = JSON.parse(rolesText);
     const publicRole = rolesData.data?.find(r => r.type === 'public');
     
     if (!publicRole) {
@@ -38,7 +55,7 @@ async function enablePublicPermissions() {
       'api::solution.solution',
       'api::industry.industry',
       'api::case-study.case-study',
-      'api::demo.demo',
+      // 'api::demo.demo', // kept intentionally public listing is allowed, but detail view is restricted (see override below)
       'api::team-member.team-member',
       'api::value.value'
     ];
@@ -67,6 +84,31 @@ async function enablePublicPermissions() {
         permissions
       })
     });
+
+    // Additionally, ensure demo detail (findOne) is disabled for public role to protect restricted demos
+    // Fetch the permission id for demo.findOne and disable it
+    const permsRes = await fetch(`${STRAPI_URL}/admin/users-permissions/roles/${publicRole.id}` , { headers });
+    const permsText = await permsRes.text();
+    assertJsonResponse(permsRes, permsText);
+    const permsData = JSON.parse(permsText);
+    const demoPermKey = 'api::demo.demo.controllers.demo.findOne';
+    if (permsData?.permissions && permsData.permissions[demoPermKey]) {
+      permsData.permissions[demoPermKey].enabled = false;
+      const patchRes = await fetch(`${STRAPI_URL}/admin/users-permissions/roles/${publicRole.id}`, {
+        method: 'PUT', headers, body: JSON.stringify({
+          name: publicRole.name,
+          description: publicRole.description,
+          type: publicRole.type,
+          permissions: permsData.permissions
+        })
+      });
+      const patchText = await patchRes.text();
+      if (patchRes.ok) {
+        console.log('\n✅ Demo detail (findOne) disabled for public role');
+      } else {
+        console.error('❌ Failed to patch demo permission:', patchText);
+      }
+    }
     
     if (updateRes.ok) {
       console.log('\n✅ Public API permissions enabled successfully!');

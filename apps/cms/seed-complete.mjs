@@ -69,6 +69,27 @@ async function requestJson(path, options) {
   throw lastError;
 }
 
+// Confirm before seeding if DB appears non-empty (unless forced)
+async function confirmIfNonEmpty() {
+  const forced = process.argv.includes('--force') || process.env.FORCE_SEED === '1';
+  if (forced) return;
+  try {
+    const res = await requestJson('/api/homepage?pagination[limit]=1');
+    const hasContent = res.ok && Array.isArray(res.body?.data) && res.body.data.length > 0;
+    if (hasContent) {
+      const { createInterface } = await import('readline');
+      const rl = createInterface({ input: process.stdin, output: process.stdout });
+      const answer = await new Promise(resolve => rl.question('Database appears to contain content. Proceed with seeding? (yes/no): ', a => { rl.close(); resolve(a); }));
+      if (String(answer).trim().toLowerCase() !== 'yes') {
+        console.log('Aborting seeding. No changes made.');
+        process.exit(0);
+      }
+    }
+  } catch (e) {
+    console.warn('Warning: could not determine DB content - proceeding. Error:', e.message);
+  }
+}
+
 // ============================================================================
 // SINGLE TYPE HELPERS
 // ============================================================================
@@ -443,6 +464,8 @@ const demosAR = [
 // ============================================================================
 
 async function seed() {
+  // Confirm before running if DB looks non-empty
+  await confirmIfNonEmpty();
   console.log('🌱 Starting Complete Arabiq CMS Seeding...\n');
 
   // 1. Homepage (Single Type)

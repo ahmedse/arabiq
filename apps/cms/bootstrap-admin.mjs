@@ -15,15 +15,20 @@ async function main() {
     return;
   }
   
-  // Register the first admin
+  // Register the first admin (values from env or defaults)
+  const ADMIN_EMAIL = process.env.ADMIN_SEED_EMAIL || 'admin@arabiq.tech';
+  const ADMIN_PASSWORD = process.env.ADMIN_SEED_PASSWORD || 'AdminPass123';
+  const ADMIN_FIRSTNAME = process.env.ADMIN_SEED_FIRSTNAME || 'Admin';
+  const ADMIN_LASTNAME = process.env.ADMIN_SEED_LASTNAME || '';
+
   const registerRes = await fetch(`${BASE}/admin/register-admin`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      email: 'admin@arabiq.sa',
-      firstname: 'Admin',
-      lastname: 'User',
-      password: 'AdminPass123'
+      email: ADMIN_EMAIL,
+      firstname: ADMIN_FIRSTNAME,
+      lastname: ADMIN_LASTNAME,
+      password: ADMIN_PASSWORD
     })
   });
   

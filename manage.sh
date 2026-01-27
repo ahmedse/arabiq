@@ -198,7 +198,7 @@ start_service() {
       fi
     done
     # start the process
-    nohup bash -lc "$cmd" >>"$logfile" 2>&1 &
+    nohup bash -c "export PATH=\"$PATH:/home/ahmed/.nvm/versions/node/v20.19.6/bin\"; $cmd" >>"$logfile" 2>&1 &
     echo $! >"$pidfile"
   )
 
@@ -236,9 +236,9 @@ start_web() {
   local mode="$1"
   local cmd
   if [[ "$mode" == "dev" ]]; then
-    cmd="pnpm dev --port 3000"
+    cmd="/home/ahmed/.nvm/versions/node/v20.19.6/bin/pnpm dev --port 3000"
   else
-    cmd="pnpm build && PORT=3000 pnpm start"
+    cmd="/home/ahmed/.nvm/versions/node/v20.19.6/bin/pnpm build && PORT=3000 /home/ahmed/.nvm/versions/node/v20.19.6/bin/pnpm start"
   fi
 
   # Optionally wait for CMS before starting web. Default: true when starting both services together.

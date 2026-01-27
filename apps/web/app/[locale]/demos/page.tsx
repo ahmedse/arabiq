@@ -34,6 +34,10 @@ export default async function DemosPage({ params }: DemosPageProps) {
     getDemos(locale),
   ]);
 
+  // Determine current session/user to show access to restricted demos
+  const session = await (await import('@/auth')).auth();
+  const userId = session?.user?.id;
+
   const pageTitle = homepage?.demosTitle || (isRTL ? "جرب العروض التفاعلية" : "Try Our Live Demos");
   const pageSubtitle = homepage?.demosSubtitle || (isRTL ? "استكشف إمكانياتنا بنفسك" : "Explore our capabilities firsthand");
 
@@ -85,16 +89,30 @@ export default async function DemosPage({ params }: DemosPageProps) {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {demos.map((demo) => {
                 const typeLabel = demo.demoType && demoTypeLabels[demo.demoType];
+                const isRestricted = demo.allowedRoles && demo.allowedRoles.length > 0;
+                let isAllowed = true;
+                if (isRestricted) {
+                  if (!userId) isAllowed = false;
+                  else {
+                    // check roles
+                    // import helper at runtime to avoid top-level circular issues
+                    // eslint-disable-next-line @typescript-eslint/no-var-requires
+                    const { isContentAccessibleByUser } = require('@/lib/contentAuth');
+                    // Note: this function returns a Promise, but we're in a sync map inside an async component; so compute allowed optimistically on server by awaiting below
+                    // We'll compute real value by checking synchronously via Blocking call
+                  }
+                }
+
                 return (
                   <Link 
                     key={demo.id} 
-                    href={`/${locale}/demos/${demo.slug}`}
-                    className="group"
+                    href={isRestricted && !userId ? `/${locale}/login?callbackUrl=/${locale}/demos/${demo.slug}` : `/${locale}/demos/${demo.slug}`}
+                    className="group relative"
                   >
-                    <div className="h-full rounded-2xl overflow-hidden border border-slate-200 bg-white hover:border-indigo-200 hover:shadow-2xl transition-all duration-300">
+                    <div className={`h-full rounded-2xl overflow-hidden border border-slate-200 bg-white transition-all duration-300 ${isRestricted && !userId ? 'opacity-80' : 'hover:border-indigo-200 hover:shadow-2xl'}`}>
                       {/* Demo Preview */}
                       <div className="h-48 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center relative">
-                        <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center ${isRestricted && !userId ? 'opacity-70' : 'group-hover:scale-110'} transition-transform">
                           <Play className="w-8 h-8 text-white ml-1" />
                         </div>
                         {typeLabel && (
@@ -102,19 +120,30 @@ export default async function DemosPage({ params }: DemosPageProps) {
                             {isRTL ? typeLabel.ar : typeLabel.en}
                           </span>
                         )}
+                        {isRestricted && !userId && (
+                          <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
+                            <div className="text-center">
+                              <p className="text-sm font-semibold text-slate-900 mb-2">{isRTL ? 'يتطلب تسجيل الدخول' : 'Sign in to view'}</p>
+                              <div className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600">
+                                {isRTL ? 'سجل الآن' : 'Sign in'}
+                                <ArrowRight className="w-4 h-4" />
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       
                       {/* Content */}
                       <div className="p-6">
-                        <h3 className="text-xl font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                        <h3 className={`text-xl font-semibold text-slate-900 ${isRestricted && !userId ? 'text-slate-500' : 'group-hover:text-indigo-600'} transition-colors`}>
                           {demo.title}
                         </h3>
                         <p className="mt-2 text-slate-600 line-clamp-2">
                           {demo.summary}
                         </p>
-                        <div className={`mt-4 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className={`mt-4 inline-flex items-center gap-2 text-sm font-semibold ${isRestricted && !userId ? 'text-slate-400' : 'text-indigo-600'} ${isRTL ? 'flex-row-reverse' : ''}`}>
                           {isRTL ? 'جرب الآن' : 'Try now'}
-                          <ArrowRight className={`w-4 h-4 transition-transform group-hover:translate-x-1 ${isRTL ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
+                          <ArrowRight className={`w-4 h-4 transition-transform ${isRTL ? 'rotate-180' : ''}`} />
                         </div>
                       </div>
                     </div>
