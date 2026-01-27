@@ -1,9 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "kind": "collectionType",
   "info": {
     "name": "user-profile",
+    "singularName": "user-profile",
+    "displayName": "User Profile",
+    "pluralName": "user-profiles",
     "description": "DEPRECATED: user-profile content type was used for profile sync. Profile sync is disabled; keep this file for historical reference or delete in Strapi manually."
   },
+
   "collectionName": "user_profiles",
   "attributes": {}
 }
