@@ -1,0 +1,21 @@
+{
+  "data": {
+    "id": 1,
+    "documentId": "cwy9tvop2wa1qjri5u2fh00b",
+    "title": "Arabiq",
+    "description": "Leading provider of virtual mall platforms, 3D scanning, and AI-powered solutions for businesses across the Middle East",
+    "contactEmail": "contact@arabiq.tech",
+    "contactPhone": "+966 XX XXX XXXX",
+    "footerCompanyTitle": "Company",
+    "footerProductsTitle": "Products",
+    "footerResourcesTitle": "Resources",
+    "footerConnectTitle": "Connect",
+    "copyrightText": "© 2026 Arabiq. All rights reserved.",
+    "loginButtonText": "Login",
+    "createdAt": "2026-01-28T08:34:27.526Z",
+    "updatedAt": "2026-01-28T08:35:05.617Z",
+    "publishedAt": "2026-01-28T08:35:05.610Z",
+    "locale": "en"
+  },
+  "meta": {}
+}

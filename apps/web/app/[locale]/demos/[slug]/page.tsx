@@ -1,7 +1,6 @@
 import { getDemoBySlug } from "@/lib/strapi";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { isContentAccessibleByUser } from "@/lib/contentAuth";
+import { getCurrentUser } from "@/lib/serverAuth";
 
 type DemoDetailPageProps = {
   params: Promise<{
@@ -13,25 +12,30 @@ type DemoDetailPageProps = {
 export default async function DemoDetailPage({ params }: DemoDetailPageProps) {
   const { locale: localeParam, slug } = await params;
   const locale = localeParam === "ar" ? "ar" : "en";
+  
+  // Always require login for demo pages
+  const user = await getCurrentUser();
+  if (!user) {
+    redirect(`/${locale}/login?redirect=/${locale}/demos/${slug}`);
+  }
+
+  // Check account status
+  if (user.accountStatus === 'suspended') {
+    redirect(`/${locale}/account-suspended`);
+  }
+  if (user.accountStatus === 'pending') {
+    redirect(`/${locale}/account-pending`);
+  }
+
   const demo = await getDemoBySlug(locale, slug);
 
   if (!demo) {
     return <h1>Demo not found</h1>;
   }
 
-  // Enforce role-based access control for demos when `allowedRoles` is set
-  if (demo.allowedRoles && demo.allowedRoles.length > 0) {
-    const session = await auth();
-    const userId = session?.user?.id;
-
-    const allowed = await isContentAccessibleByUser(userId, demo.allowedRoles);
-    if (!allowed) {
-      // If not authenticated, redirect to login; otherwise show access denied
-      if (!userId) {
-        redirect(`/${locale}/login`);
-      }
-      redirect(`/${locale}/admin/access-denied`);
-    }
+  // Check role-based access - active users can access demos
+  if (user.accountStatus !== 'active') {
+    redirect(`/${locale}/access-denied`);
   }
 
   return (

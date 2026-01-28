@@ -1,13 +1,48 @@
-import { userHasAnyRole } from '@/lib/roles';
+/**
+ * Content Access Control
+ * Helper functions to check if a user can access specific content
+ */
+
+import type { StrapiUser } from './strapiAuth';
 
 /**
- * Returns true if the content (with allowedRoles array) is accessible by the user.
- * - If allowedRoles is empty -> public
- * - If userId missing and allowedRoles present -> not allowed
- * - Otherwise check if user has any of the allowed roles
+ * Check if user can access content based on role and permissions
  */
-export async function isContentAccessibleByUser(userId: string | undefined | null, allowedRoles: string[] | undefined) {
-  if (!allowedRoles || allowedRoles.length === 0) return true;
-  if (!userId) return false;
-  return userHasAnyRole(userId, allowedRoles);
+export async function isContentAccessibleByUser(
+  user: StrapiUser | null,
+  requiredRoles?: string[]
+): Promise<boolean> {
+  // If no roles required, content is public
+  if (!requiredRoles || requiredRoles.length === 0) {
+    return true;
+  }
+
+  // User must be authenticated
+  if (!user) {
+    return false;
+  }
+
+  // Check if user's role is in the required roles
+  if (user.role && requiredRoles.includes(user.role.name)) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Check if user can access a specific demo
+ */
+export async function canAccessDemo(
+  user: StrapiUser | null,
+  demoId: number
+): Promise<boolean> {
+  if (!user) return false;
+
+  // Check if user has explicit access to this demo
+  if (user.demoAccess && user.demoAccess.some(demo => demo.id === demoId)) {
+    return true;
+  }
+
+  return false;
 }

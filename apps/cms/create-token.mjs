@@ -4,7 +4,7 @@ import { writeFileSync } from 'fs';
 const loginRes = await fetch(BASE + '/admin/login', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email: 'admin@arabiq.sa', password: 'AdminPass123' })
+  body: JSON.stringify({ email: 'admin@arabiq.tech', password: 'AdminPass123' })
 });
 const { data } = await loginRes.json();
 const jwt = data.token;

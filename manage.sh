@@ -260,7 +260,7 @@ start_cms() {
   if [[ "$mode" == "dev" ]]; then
     cmd="./build.sh && npm run develop"
   else
-    cmd="npm run build && npm run start"
+    cmd="npm run copy-schemas && npm run start"
   fi
   start_service "cms" "$CMS_DIR" "$mode" "$(cms_pidfile)" "$(cms_logfile)" "$cmd"
 }

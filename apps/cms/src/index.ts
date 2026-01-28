@@ -17,6 +17,10 @@ export default {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }: any) {
+    // Create custom roles
+    const { createCustomRoles } = await import('./bootstrap/create-roles');
+    await createCustomRoles(strapi);
+
     // Optionally disable AI localizations via env var to avoid noisy errors when no AI provider is configured.
     if (process.env.DISABLE_AI_LOCALIZATIONS === 'true' || process.env.DISABLE_AI_LOCALIZATIONS === '1') {
       try {

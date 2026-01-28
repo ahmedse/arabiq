@@ -6,6 +6,7 @@
     "target": "ES2019",
     "strict": false,
     "skipLibCheck": true,
+    "noEmit": false,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "esModuleInterop": true,

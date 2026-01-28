@@ -1,0 +1,25 @@
+{
+  "data": {
+    "id": 4,
+    "documentId": "joz3wkyd1f6l3e49w3zc5gbf",
+    "heroTitle": "اتصل بنا",
+    "heroSubtitle": "تواصل مع فريقنا",
+    "formTitle": "أرسل لنا رسالة",
+    "nameLabel": "الاسم الكامل",
+    "emailLabel": "البريد الإلكتروني",
+    "phoneLabel": "رقم الهاتف",
+    "messageLabel": "رسالتك",
+    "submitButton": "إرسال الرسالة",
+    "infoTitle": "معلومات الاتصال",
+    "address": "الرياض، المملكة العربية السعودية",
+    "email": "contact@arabiq.tech",
+    "phone": "+966 XX XXX XXXX",
+    "hoursTitle": "ساعات العمل",
+    "hoursText": "الأحد - الخميس: 9:00 صباحًا - 6:00 مساءً\nالجمعة - السبت: مغلق",
+    "createdAt": "2026-01-28T08:35:05.774Z",
+    "updatedAt": "2026-01-28T08:35:05.774Z",
+    "publishedAt": "2026-01-28T08:35:05.776Z",
+    "locale": "ar"
+  },
+  "meta": {}
+}

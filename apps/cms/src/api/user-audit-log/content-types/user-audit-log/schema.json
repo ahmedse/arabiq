@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_audit_logs",
+  "info": {
+    "singularName": "user-audit-log",
+    "pluralName": "user-audit-logs",
+    "displayName": "User Audit Log",
+    "description": "Track all user actions and events"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "action": {
+      "type": "enumeration",
+      "enum": [
+        "login",
+        "logout",
+        "register",
+        "password_reset",
+        "password_reset_request",
+        "demo_access",
+        "demo_access_denied",
+        "role_change",
+        "profile_update",
+        "failed_login",
+        "account_suspended",
+        "account_activated",
+        "email_confirmed"
+      ],
+      "required": true
+    },
+    "ipAddress": {
+      "type": "string"
+    },
+    "userAgent": {
+      "type": "text"
+    },
+    "targetDemo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::demo.demo"
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "success": {
+      "type": "boolean",
+      "default": true
+    },
+    "errorMessage": {
+      "type": "text"
+    }
+  }
+}

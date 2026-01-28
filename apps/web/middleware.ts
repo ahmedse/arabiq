@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/auth";
 
 const SUPPORTED_LOCALES = new Set(["en", "ar"]);
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
 
 function isPublicFile(pathname: string) {
   if (pathname.startsWith("/_next/") || pathname.startsWith("/api/")) return true;
@@ -12,6 +12,18 @@ function isPublicFile(pathname: string) {
   // Example: /brand/arabiq-logo.jpg
   if (pathname.includes(".")) return true;
   return false;
+}
+
+async function getStrapiUser(token: string) {
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/users/me?populate=role`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function middleware(request: NextRequest) {
@@ -35,62 +47,82 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  const token = request.cookies.get('strapi_jwt')?.value;
+
   // Auth protection for /account
   if (pathname.startsWith(`/${locale}/account`)) {
-    const session = await auth();
-    if (!session) {
+    if (!token) {
       const url = request.nextUrl.clone();
       url.pathname = `/${locale}/login`;
+      return NextResponse.redirect(url);
+    }
+
+    const user = await getStrapiUser(token);
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/login`;
+      return NextResponse.redirect(url);
+    }
+
+    // Check account status
+    if (user.accountStatus === 'suspended') {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/account-suspended`;
+      return NextResponse.redirect(url);
+    }
+
+    if (user.accountStatus === 'pending') {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/account-pending`;
       return NextResponse.redirect(url);
     }
   }
 
   // Admin area: require authenticated user with ADMIN role
   if (pathname.startsWith(`/${locale}/admin`)) {
-    const session = await auth();
-    if (!session) {
+    if (!token) {
       const url = request.nextUrl.clone();
       url.pathname = `/${locale}/login`;
       return NextResponse.redirect(url);
     }
 
-    const userId = session?.user?.id;
-    if (!userId) {
+    const user = await getStrapiUser(token);
+    if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = `/${locale}/login`;
       return NextResponse.redirect(url);
     }
 
-    const { userHasRole } = await import('@/lib/roles');
-    const isAdmin = await userHasRole(userId, 'ADMIN');
+    const isAdmin = user.role?.type === 'admin';
     if (!isAdmin) {
       const url = request.nextUrl.clone();
-      url.pathname = `/${locale}/admin/access-denied`;
+      url.pathname = `/${locale}/access-denied`;
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Demo protection
+  if (pathname.match(new RegExp(`/${locale}/demos/[^/]+`))) {
+    if (!token) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/login`;
+      url.searchParams.set('redirect', pathname);
       return NextResponse.redirect(url);
     }
 
-    // Optional IP allowlist enforcement for admin area
-    const allowlistRaw = process.env.ADMIN_IP_ALLOWLIST ?? '';
-    if (allowlistRaw.trim()) {
-      const allowlist = allowlistRaw.split(',').map((s) => s.trim()).filter(Boolean);
-      const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || '';
-      if (!allowlist.includes(ip)) {
-        const url = request.nextUrl.clone();
-        url.pathname = `/${locale}/admin/access-denied`;
-        return NextResponse.redirect(url);
-      }
+    const user = await getStrapiUser(token);
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/login`;
+      url.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(url);
     }
 
-    // If admin MFA enabled, require a verified cookie
-    const { prisma } = await import('@/lib/prisma');
-    const userRow = await prisma.user.findUnique({ where: { id: userId }, select: { adminMfaEnabled: true } });
-    if (userRow?.adminMfaEnabled) {
-      const mfaCookie = request.cookies.get('ADMIN_MFA_VERIFIED')?.value;
-      if (!mfaCookie) {
-        const url = request.nextUrl.clone();
-        url.pathname = `/${locale}/admin/mfa/setup`;
-        return NextResponse.redirect(url);
-      }
+    // Check account status
+    if (user.accountStatus !== 'active') {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/account-${user.accountStatus}`;
+      return NextResponse.redirect(url);
     }
   }
 

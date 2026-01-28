@@ -34,9 +34,9 @@ export default async function DemosPage({ params }: DemosPageProps) {
     getDemos(locale),
   ]);
 
-  // Determine current session/user to show access to restricted demos
-  const session = await (await import('@/auth')).auth();
-  const userId = session?.user?.id;
+  // Get current user to show access status
+  const { getCurrentUser } = await import('@/lib/serverAuth');
+  const user = await getCurrentUser();
 
   const pageTitle = homepage?.demosTitle || (isRTL ? "جرب العروض التفاعلية" : "Try Our Live Demos");
   const pageSubtitle = homepage?.demosSubtitle || (isRTL ? "استكشف إمكانياتنا بنفسك" : "Explore our capabilities firsthand");
@@ -90,23 +90,12 @@ export default async function DemosPage({ params }: DemosPageProps) {
               {demos.map((demo) => {
                 const typeLabel = demo.demoType && demoTypeLabels[demo.demoType];
                 const isRestricted = demo.allowedRoles && demo.allowedRoles.length > 0;
-                let isAllowed = true;
-                if (isRestricted) {
-                  if (!userId) isAllowed = false;
-                  else {
-                    // check roles
-                    // import helper at runtime to avoid top-level circular issues
-                    // eslint-disable-next-line @typescript-eslint/no-var-requires
-                    const { isContentAccessibleByUser } = require('@/lib/contentAuth');
-                    // Note: this function returns a Promise, but we're in a sync map inside an async component; so compute allowed optimistically on server by awaiting below
-                    // We'll compute real value by checking synchronously via Blocking call
-                  }
-                }
+                const hasUser = !!user?.id;
 
                 return (
                   <Link 
                     key={demo.id} 
-                    href={isRestricted && !userId ? `/${locale}/login?callbackUrl=/${locale}/demos/${demo.slug}` : `/${locale}/demos/${demo.slug}`}
+                    href={isRestricted && !hasUser ? `/${locale}/login?callbackUrl=/${locale}/demos/${demo.slug}` : `/${locale}/demos/${demo.slug}`}
                     className="group relative"
                   >
                     <div className={`h-full rounded-2xl overflow-hidden border border-slate-200 bg-white transition-all duration-300 ${isRestricted && !userId ? 'opacity-80' : 'hover:border-indigo-200 hover:shadow-2xl'}`}>

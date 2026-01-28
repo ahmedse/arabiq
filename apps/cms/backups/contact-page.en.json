@@ -1,0 +1,25 @@
+{
+  "data": {
+    "id": 2,
+    "documentId": "joz3wkyd1f6l3e49w3zc5gbf",
+    "heroTitle": "Contact Us",
+    "heroSubtitle": "Get in touch with our team",
+    "formTitle": "Send us a message",
+    "nameLabel": "Full Name",
+    "emailLabel": "Email Address",
+    "phoneLabel": "Phone Number",
+    "messageLabel": "Your Message",
+    "submitButton": "Send Message",
+    "infoTitle": "Contact Information",
+    "address": "Riyadh, Saudi Arabia",
+    "email": "contact@arabiq.tech",
+    "phone": "+966 XX XXX XXXX",
+    "hoursTitle": "Business Hours",
+    "hoursText": "Sunday - Thursday: 9:00 AM - 6:00 PM\nFriday - Saturday: Closed",
+    "createdAt": "2026-01-28T08:35:05.747Z",
+    "updatedAt": "2026-01-28T08:35:05.747Z",
+    "publishedAt": "2026-01-28T08:35:05.753Z",
+    "locale": "en"
+  },
+  "meta": {}
+}
