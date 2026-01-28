@@ -204,7 +204,16 @@ CORS is configured in `config/middlewares.ts` to allow requests from:
 
 ### Database
 
-Development uses SQLite (`.tmp/data.db`). For production, configure PostgreSQL in `config/database.ts`.
+**PostgreSQL is required for all environments.** Configure Postgres connection in `apps/cms/.env` or `apps/cms/.env.local` (see `README.DEV.md` for local dev recommendations). Example:
+
+```dotenv
+DATABASE_CLIENT=postgres
+DATABASE_HOST=127.0.0.1
+DATABASE_PORT=5432
+DATABASE_NAME=arabiq
+DATABASE_USERNAME=arabiq
+DATABASE_PASSWORD=pass
+```
 
 ### Environment Variables
 
@@ -281,18 +290,18 @@ export default async function TestStrapiPage() {
 
 ## 🛠️ Common Tasks
 
-### Reset Database
+### Reset Database (Postgres)
 ```bash
-rm .tmp/data.db
-npm run develop  # Will recreate the database
+# Drop and recreate DB locally (example using psql)
+sudo -u postgres psql -c "DROP DATABASE IF EXISTS arabiq; CREATE DATABASE arabiq OWNER arabiq;"
+# Or use your Docker / managed DB tooling
 ```
 
-### View Database
+### View Database (Postgres)
 ```bash
-npm install -g sqlite3
-sqlite3 .tmp/data.db
+# Connect with psql
+PGPASSWORD=pass psql -U arabiq -h 127.0.0.1 -p 5432 -d arabiq
 ```
-
 ### Generate TypeScript Types
 ```bash
 npm run strapi ts:generate-types
@@ -311,7 +320,7 @@ npm run build
 - **Ensure slugs are unique** - they're used for routing
 - **Publish content** - unpublished content won't appear in the API
 - **Locale defaults to `en`** - always specify locale in API calls
-- **SQLite for dev only** - use PostgreSQL in production
+- **PostgreSQL required** - SQLite is not used anywhere
 
 ---
 

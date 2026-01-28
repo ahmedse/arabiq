@@ -1,7 +1,8 @@
 import path from 'path';
 
 export default ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+  // Force Postgres as the default database client to avoid accidental SQLite usage
+  const client = env('DATABASE_CLIENT', 'postgres');
 
   const connections = {
     mysql: {

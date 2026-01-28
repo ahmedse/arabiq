@@ -63,8 +63,7 @@ $RECYCLE.BIN/
 
 *.log
 *.sql
-*.sqlite
-*.sqlite3
+# SQLite is not used - Postgres only
 
 ############################
 # Misc.
