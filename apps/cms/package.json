@@ -9,7 +9,7 @@
     "build-backend": "npx tsc --project tsconfig.json && npm run copy-schemas",
     "console": "npx strapi console",
     "deploy": "npx strapi deploy",
-    "dev": "npm run copy-schemas && npx strapi develop",
+    "dev": "npx strapi develop",
     "develop": "npm run copy-schemas && npx strapi develop",
     "start": "npm run copy-schemas && npx strapi start",
     "seed": "node seed-complete.mjs \"$SEED_TOKEN\"",
