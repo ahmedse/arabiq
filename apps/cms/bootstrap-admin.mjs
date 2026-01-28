@@ -17,7 +17,7 @@ async function main() {
   
   // Register the first admin (values from env or defaults)
   const ADMIN_EMAIL = process.env.ADMIN_SEED_EMAIL || 'admin@arabiq.tech';
-  const ADMIN_PASSWORD = process.env.ADMIN_SEED_PASSWORD || 'AdminPass123';
+  const ADMIN_PASSWORD = process.env.ADMIN_SEED_PASSWORD || 'TestUser_132';
   const ADMIN_FIRSTNAME = process.env.ADMIN_SEED_FIRSTNAME || 'Admin';
   const ADMIN_LASTNAME = process.env.ADMIN_SEED_LASTNAME || '';
 
@@ -41,8 +41,8 @@ async function main() {
   const result = await registerRes.json();
   console.log('✅ Admin user created:', result.data?.user?.email);
   console.log('\n📝 Login credentials:');
-  console.log('   Email: admin@arabiq.sa');
-  console.log('   Password: AdminPass123');
+  console.log(`   Email: ${ADMIN_EMAIL}`);
+  console.log(`   Password: ${ADMIN_PASSWORD}`);
 }
 
 main().catch(err => {

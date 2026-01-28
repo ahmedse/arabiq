@@ -1,10 +1,13 @@
 const BASE = 'http://127.0.0.1:1337';
 import { writeFileSync } from 'fs';
 
+const ADMIN_EMAIL = process.env.ADMIN_SEED_EMAIL || 'admin@arabiq.tech';
+const ADMIN_PASSWORD = process.env.ADMIN_SEED_PASSWORD || 'TestUser_132';
+
 const loginRes = await fetch(BASE + '/admin/login', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email: 'admin@arabiq.tech', password: 'AdminPass123' })
+  body: JSON.stringify({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD })
 });
 const { data } = await loginRes.json();
 const jwt = data.token;
