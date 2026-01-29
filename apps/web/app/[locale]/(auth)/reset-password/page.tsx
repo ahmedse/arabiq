@@ -1,15 +1,25 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { strapiResetPassword } from '@/lib/strapiAuth';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const code = searchParams.get('code');
+  const [code, setCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      setCode(params.get('code'));
+    } catch (e) {
+      setCode(null);
+    }
+  }, []);
 
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');

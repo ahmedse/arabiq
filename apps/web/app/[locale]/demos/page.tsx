@@ -98,10 +98,10 @@ export default async function DemosPage({ params }: DemosPageProps) {
                     href={isRestricted && !hasUser ? `/${locale}/login?callbackUrl=/${locale}/demos/${demo.slug}` : `/${locale}/demos/${demo.slug}`}
                     className="group relative"
                   >
-                    <div className={`h-full rounded-2xl overflow-hidden border border-slate-200 bg-white transition-all duration-300 ${isRestricted && !userId ? 'opacity-80' : 'hover:border-indigo-200 hover:shadow-2xl'}`}>
+                    <div className={`h-full rounded-2xl overflow-hidden border border-slate-200 bg-white transition-all duration-300 ${isRestricted && !hasUser ? 'opacity-80' : 'hover:border-indigo-200 hover:shadow-2xl'}`}>
                       {/* Demo Preview */}
                       <div className="h-48 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center relative">
-                        <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center ${isRestricted && !userId ? 'opacity-70' : 'group-hover:scale-110'} transition-transform">
+                        <div className={`w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center ${isRestricted && !hasUser ? 'opacity-70' : 'group-hover:scale-110'} transition-transform`}>
                           <Play className="w-8 h-8 text-white ml-1" />
                         </div>
                         {typeLabel && (
@@ -109,7 +109,7 @@ export default async function DemosPage({ params }: DemosPageProps) {
                             {isRTL ? typeLabel.ar : typeLabel.en}
                           </span>
                         )}
-                        {isRestricted && !userId && (
+                        {isRestricted && !hasUser && (
                           <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
                             <div className="text-center">
                               <p className="text-sm font-semibold text-slate-900 mb-2">{isRTL ? 'يتطلب تسجيل الدخول' : 'Sign in to view'}</p>
@@ -124,13 +124,13 @@ export default async function DemosPage({ params }: DemosPageProps) {
                       
                       {/* Content */}
                       <div className="p-6">
-                        <h3 className={`text-xl font-semibold text-slate-900 ${isRestricted && !userId ? 'text-slate-500' : 'group-hover:text-indigo-600'} transition-colors`}>
+                        <h3 className={`text-xl font-semibold text-slate-900 ${isRestricted && !hasUser ? 'text-slate-500' : 'group-hover:text-indigo-600'} transition-colors`}>
                           {demo.title}
-                        </h3>
+                        </h3> 
                         <p className="mt-2 text-slate-600 line-clamp-2">
                           {demo.summary}
                         </p>
-                        <div className={`mt-4 inline-flex items-center gap-2 text-sm font-semibold ${isRestricted && !userId ? 'text-slate-400' : 'text-indigo-600'} ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className={`mt-4 inline-flex items-center gap-2 text-sm font-semibold ${isRestricted && !hasUser ? 'text-slate-400' : 'text-indigo-600'} ${isRTL ? 'flex-row-reverse' : ''}`}>
                           {isRTL ? 'جرب الآن' : 'Try now'}
                           <ArrowRight className={`w-4 h-4 transition-transform ${isRTL ? 'rotate-180' : ''}`} />
                         </div>

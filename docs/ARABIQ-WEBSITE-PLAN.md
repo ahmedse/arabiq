@@ -21,8 +21,8 @@
 ### 1.2 What We Have Working
 - ✅ Next.js 14 App Router with locale routing
 - ✅ Strapi CMS with i18n plugin
-- ✅ Prisma + PostgreSQL for auth
-- ✅ Auth.js with Google provider (needs config)
+- ✅ Strapi (PostgreSQL) for auth and user approvals
+- ✅ Strapi admin; Google provider can be configured in Strapi if needed
 - ✅ Basic page structure
 - ✅ RTL/LTR switching
 

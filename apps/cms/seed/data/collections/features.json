@@ -1,0 +1,78 @@
+{
+  "apiId": "features",
+  "identifierField": "order",
+  "items": [
+    {
+      "order": 1,
+      "icon": "🤖",
+      "en": {
+        "title": "Arabic-First AI",
+        "description": "Native Arabic language support with dialect understanding and cultural context."
+      },
+      "ar": {
+        "title": "ذكاء اصطناعي عربي أولاً",
+        "description": "دعم لغة عربية أصلية مع فهم اللهجات والسياق الثقافي."
+      }
+    },
+    {
+      "order": 2,
+      "icon": "📸",
+      "en": {
+        "title": "Photorealistic 3D",
+        "description": "Matterport Pro3 captures spaces with stunning detail and accuracy."
+      },
+      "ar": {
+        "title": "ثلاثي الأبعاد فوتوغرافي",
+        "description": "تقنية Matterport Pro3 تلتقط المساحات بتفاصيل ودقة مذهلة."
+      }
+    },
+    {
+      "order": 3,
+      "icon": "⚡",
+      "en": {
+        "title": "48-Hour Delivery",
+        "description": "From scanning to launch in 48 hours with our streamlined pipeline."
+      },
+      "ar": {
+        "title": "تسليم خلال 48 ساعة",
+        "description": "من المسح إلى الإطلاق في 48 ساعة بخط إنتاجنا المبسط."
+      }
+    },
+    {
+      "order": 4,
+      "icon": "💳",
+      "en": {
+        "title": "MENA Payments",
+        "description": "Integrated with PayTabs, PayFort, Moyasar, and regional processors."
+      },
+      "ar": {
+        "title": "بوابات دفع المنطقة",
+        "description": "متكامل مع PayTabs و PayFort و Moyasar والمعالجات الإقليمية."
+      }
+    },
+    {
+      "order": 5,
+      "icon": "📊",
+      "en": {
+        "title": "Real-time Analytics",
+        "description": "Track visitor behavior, conversions, and ROI with comprehensive dashboards."
+      },
+      "ar": {
+        "title": "تحليلات لحظية",
+        "description": "تتبع سلوك الزوار والتحويلات والعائد بلوحات معلومات شاملة."
+      }
+    },
+    {
+      "order": 6,
+      "icon": "📱",
+      "en": {
+        "title": "Mobile AR",
+        "description": "iOS and Android AR support for try-before-you-buy previews."
+      },
+      "ar": {
+        "title": "واقع معزز للموبايل",
+        "description": "دعم AR لـ iOS و Android لمعاينات قبل الشراء."
+      }
+    }
+  ]
+}

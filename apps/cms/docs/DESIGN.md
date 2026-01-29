@@ -52,8 +52,8 @@ Pick A unless you have a strong reason. It simplifies ops and env management.
 - Next.js 14+ (App Router)
 - TypeScript strict
 - Tailwind CSS
-- Auth.js (NextAuth v5)
-- Prisma ORM for Postgres
+- Authentication & user management: **Strapi** (with optional social providers configured in Strapi)
+- Postgres used by Strapi for content & auth data
 
 ### 3.2 Routing & i18n
 All pages exist under app/[locale]/...
@@ -142,30 +142,28 @@ For demo type MATTERPORT_SDK:
 
 Note: SDK key must remain server-side where possible; if it must be used client-side, restrict it in Matterport settings as much as possible.
 
-## 4) Database Spec (Prisma)
-### 4.1 Prisma models (draft)
-You’ll have Auth.js models + custom.
+## 4) Data Model (Strapi collections)
+All application-level auth/approval data should live in Strapi collections (backed by Postgres). Recommended collections and fields below.
 
-**Custom:**
+### 4.1 Collections (recommended)
 
-**UserApproval:**
-- userId unique
+**UserApproval (collection):**
+- user (relation to Strapi user)
 - status enum: PENDING, APPROVED, REJECTED
-- timestamps
 - notes
+- timestamps
 
-**DemoGrant (optional but recommended even if not used immediately):**
-- userId
+**DemoGrant (optional):**
+- user (relation)
 - demoSlug (string)
 - grantedAt, expiresAt
 
-**UserProfile (optional):**
+**UserProfile (optional fields or collection):**
 - company, phone, country, jobTitle
 
-### 4.2 Migrations
-- All app tables managed by Prisma migrations
-- Strapi manages its own schema in a separate DB (arabiq_strapi) or separate schema
-- Recommended: separate DBs: arabiq_app and arabiq_strapi
+### 4.2 Migrations & Seed
+- Strapi manages its own schema; use `apps/cms/seed.mjs` with an Admin API token to seed roles and initial admin user(s).
+- Recommended: Strapi content and auth in a single Postgres DB (or separate DBs if desired for isolation).
 
 ## 5) Strapi CMS — Technical Spec
 ### 5.1 Locales
@@ -281,7 +279,7 @@ No. Google OAuth sign-in is free to use for this scenario. You just configure OA
 
 ### 1) Next.js app bootstrap
 - Next.js 14+ (App Router), TypeScript strict, Tailwind CSS.
-- Add Auth.js (NextAuth v5) + Prisma.
+- Use Strapi (v5) as the canonical authentication provider (JWT cookie + admin tokens).
 - Configure i18n routing under app/[locale]/…
 
 ### 2) Middleware & i18n
@@ -292,7 +290,7 @@ No. Google OAuth sign-in is free to use for this scenario. You just configure OA
 
 ### 3) Auth + approvals
 - Google-only provider.
-- DB sessions (recommended) + Prisma Adapter.
+- Use Strapi's user approvals and server-side checks (no Prisma).
 - On sign-in: ensure UserApproval exists; create PENDING on first login.
 - Admin allowlist via ADMIN_EMAILS env.
 
@@ -323,9 +321,9 @@ No. Google OAuth sign-in is free to use for this scenario. You just configure OA
   - /{locale}/admin/users → list pending users + approve/reject
 - Optional /admin/grants if per-demo grants activated.
 
-### 8) Prisma + migrations
-- Add Auth.js schema + custom models.
-- Migrate against arabiq_app DB.
+### 8) Strapi content models & migrations
+- Manage user approvals, roles, and demo grants within Strapi collections.
+- Use Strapi admin UI or seed scripts (`apps/cms/seed.mjs`) to populate initial data.
 
 ### 9) Nginx
 - Add server blocks for arabiq.tech and cms.arabiq.tech.
@@ -339,27 +337,8 @@ No. Google OAuth sign-in is free to use for this scenario. You just configure OA
 
 ---
 
-## Prisma Schema Draft (arabiq_app)
-Below is a **draft**. Adjust naming to your conventions. This assumes Auth.js with Prisma Adapter.
-
-```prisma
-// generator + datasource omitted for brevity
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-
-  accounts      Account[]
-  sessions      Session[]
-  approval      UserApproval?
-  profile       UserProfile?
-  demoGrants    DemoGrant[]
-
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+## Note: Prisma experiment rolled back
+The Prisma/Auth.js experiment was rolled back. Strapi collections and seed scripts are the canonical source for user approvals, roles, and demo grants. See `apps/cms/seed.mjs` and Strapi docs for guidance.
 }
 
 model Account {

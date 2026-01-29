@@ -6,19 +6,18 @@ Implement Google OAuth login/signup, user account management, and admin controls
 ## Phases & Tasks
 
 ### Phase 1: Core Setup & Dependencies
-- [x] Install NextAuth.js and Prisma adapter in `apps/web/`
-- [x] Update Prisma schema with NextAuth tables and custom user fields
-- [x] Run Prisma generate and db push
-- [x] Add environment variables to `.env.local`
-- [x] Set up Strapi content types and roles (content-only; user accounts managed by `web`)  
+- [x] Set up Strapi (v5) with Postgres and i18n
+- [x] Configure Strapi auth (users, roles, approvals) and admin tokens
+- [x] Add environment variables to `.env.local` (`STRAPI_URL`, `STRAPI_API_TOKEN`, `STRAPI_JWT_COOKIE_NAME`)
+- [x] Set up Strapi content types and roles (include `allowedRoles` JSON field)
   - Added `allowedRoles` JSON field to `Demo`, `Solution`, and `CaseStudy` content types and created `apps/cms/scripts/ensure-allowed-roles.mjs` to update Strapi (requires `STRAPI_API_URL` + `STRAPI_API_TOKEN`).
 
-### Phase 2: NextAuth Configuration
-- [x] Create NextAuth route at `app/api/auth/[...nextauth]/route.ts`
-- [x] Configure Google OAuth provider
-- [x] Set up Prisma adapter and session handling
-- [x] Add middleware for route protection
-- [x] Update root layout with SessionProvider
+### Phase 2: Strapi Configuration
+- [x] Configure external providers (Google) in Strapi admin (optional)
+- [x] Create roles and permissions in Strapi admin
+- [x] Add server-side helpers in `apps/web` to read Strapi JWT cookie and validate sessions
+- [x] Add middleware for route protection using Strapi session checks
+- [x] Update root layout and components to use Strapi-backed user helpers
 
 ### Phase 3: Login/Signup Pages
 - [x] Create login page at `app/[locale]/login/page.tsx`
@@ -35,7 +34,7 @@ Implement Google OAuth login/signup, user account management, and admin controls
 - [x] Implement access control based on user level
 
 ### Phase 5: Strapi Admin (Content) Integration
-- [x] **Decision:** Web is authoritative for accounts and approvals — Strapi *will not* manage user accounts or approvals (profile sync disabled).
+- [x] **Decision:** Strapi is authoritative for accounts and approvals — web uses Strapi JWT and server-side checks (profile sync optional).
 - [ ] Configure Strapi permissions for **content management** (roles, locales, publish workflows) — ensure server-side reads use API tokens for protected content.
 - [x] Add `allowedRoles` to content types (Demos, Solutions, Case Studies) and provide an `apps/cms/scripts/ensure-allowed-roles.mjs` helper to enable the field in Strapi (requires `STRAPI_API_URL` + `STRAPI_API_TOKEN`).
 - [ ] Ensure guidelines for editors: how to mark content as restricted and which roles map to each label.

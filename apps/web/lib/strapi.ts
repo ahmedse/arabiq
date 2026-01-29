@@ -23,19 +23,45 @@ const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
 export async function fetchStrapi(path: string, options: FetchStrapiOptions = {}) {
   if (!STRAPI_URL) return null;
 
-  const url = new URL(path, STRAPI_URL);
-  if (options.locale) url.searchParams.set("locale", options.locale);
-
-  try {
-    const response = await fetch(url.toString(), {
-      headers: STRAPI_API_TOKEN ? { Authorization: `Bearer ${STRAPI_API_TOKEN}` } : undefined,
-      next: options.revalidate ? { revalidate: options.revalidate } : undefined,
-    });
-    if (!response.ok) return null;
-    return response.json();
-  } catch {
-    return null;
+  // Helpful warning when token is missing — some protected content will fail without it
+  if (!STRAPI_API_TOKEN) {
+    // Don't print the token value for safety
+    console.warn('[Strapi] STRAPI_API_TOKEN is not set, protected content may not be returned');
   }
+
+  async function doRequest(locale?: string) {
+    const url = new URL(path, STRAPI_URL);
+    if (locale) url.searchParams.set('locale', locale);
+
+    try {
+      const response = await fetch(url.toString(), {
+        headers: STRAPI_API_TOKEN ? { Authorization: `Bearer ${STRAPI_API_TOKEN}` } : undefined,
+        next: options.revalidate ? { revalidate: options.revalidate } : undefined,
+      });
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => '');
+        console.error(`[Strapi] fetch ${url.toString()} failed: ${response.status} ${text}`);
+        return null;
+      }
+
+      return response.json();
+    } catch (err) {
+      console.error(`[Strapi] fetch ${url.toString()} error:`, err);
+      return null;
+    }
+  }
+
+  // If a locale was requested, try that first; if no content, fall back to no-locale request
+  if (options.locale) {
+    const localized = await doRequest(options.locale);
+    if (localized) return localized;
+    // fallback to unlocalized content (helps when translations are missing)
+    console.warn(`[Strapi] No content for locale="${options.locale}" at ${path}, retrying without locale`);
+    return await doRequest();
+  }
+
+  return await doRequest();
 }
 
 async function getCollection(locale: string, apiPath: string, revalidate = 300) {
@@ -148,19 +174,25 @@ export type SiteSettings = {
 };
 
 export async function getSiteSettings(locale: string): Promise<SiteSettings | null> {
+  // Fetch localized settings
   const data = (await fetchStrapi("/api/site-setting", { locale, revalidate: 60 })) as StrapiSingleResponse<SiteSettingsAttributes> | null;
   const item = data?.data;
   if (!item) return null;
   const attrs = pickAttributes(item);
+
+  // If some fields are missing in the localized record, fetch fallback (default locale) and merge
+  const fallbackData = (await fetchStrapi("/api/site-setting")) as StrapiSingleResponse<SiteSettingsAttributes> | null;
+  const fallbackAttrs = fallbackData?.data ? pickAttributes(fallbackData.data) : ({} as SiteSettingsAttributes);
+
   return {
-    title: attrs.title ?? null,
-    description: attrs.description ?? null,
-    footerCompanyTitle: attrs.footerCompanyTitle ?? null,
-    footerProductsTitle: attrs.footerProductsTitle ?? null,
-    footerResourcesTitle: attrs.footerResourcesTitle ?? null,
-    footerConnectTitle: attrs.footerConnectTitle ?? null,
-    copyrightText: attrs.copyrightText ?? null,
-    loginButtonText: attrs.loginButtonText ?? null,
+    title: attrs.title ?? fallbackAttrs.title ?? null,
+    description: attrs.description ?? fallbackAttrs.description ?? null,
+    footerCompanyTitle: attrs.footerCompanyTitle ?? fallbackAttrs.footerCompanyTitle ?? null,
+    footerProductsTitle: attrs.footerProductsTitle ?? fallbackAttrs.footerProductsTitle ?? null,
+    footerResourcesTitle: attrs.footerResourcesTitle ?? fallbackAttrs.footerResourcesTitle ?? null,
+    footerConnectTitle: attrs.footerConnectTitle ?? fallbackAttrs.footerConnectTitle ?? null,
+    copyrightText: attrs.copyrightText ?? fallbackAttrs.copyrightText ?? null,
+    loginButtonText: attrs.loginButtonText ?? fallbackAttrs.loginButtonText ?? null,
   };
 }
 
@@ -187,11 +219,18 @@ export type NavItem = {
 
 export async function getNavItems(locale: string, location?: string): Promise<NavItem[]> {
   const params = location ? `?filters[location][$eq]=${location}&sort=order:asc` : "?sort=order:asc";
+  // Try localized first; if localized is empty array, fall back to default locale
   const data = (await fetchStrapi(`/api/nav-items${params}`, { locale, revalidate: 60 })) as StrapiListResponse<NavItemAttributes> | null;
+  let items = data?.data ?? [];
 
-  if (!data?.data?.length) return [];
+  if (locale && items.length === 0) {
+    const fallback = (await fetchStrapi(`/api/nav-items${params}`)) as StrapiListResponse<NavItemAttributes> | null;
+    items = fallback?.data ?? [];
+  }
 
-  return data.data.map((item) => {
+  if (!items.length) return [];
+
+  return items.map((item) => {
     const attrs = pickAttributes(item);
     return {
       id: item.id,
@@ -247,10 +286,52 @@ type HomepageAttributes = {
 };
 
 export async function getHomepage(locale: string) {
+  // Fetch localized homepage
   const data = (await fetchStrapi("/api/homepage", { locale, revalidate: 60 })) as StrapiSingleResponse<HomepageAttributes> | null;
   const item = data?.data;
   if (!item) return null;
-  return pickAttributes(item);
+  const attrs = pickAttributes(item);
+
+  // If localized fields are missing, merge with fallback (default locale)
+  const fallbackData = (await fetchStrapi("/api/homepage")) as StrapiSingleResponse<HomepageAttributes> | null;
+  const fallbackAttrs = fallbackData?.data ? pickAttributes(fallbackData.data) : ({} as HomepageAttributes);
+
+  return {
+    heroTitle: attrs.heroTitle ?? fallbackAttrs.heroTitle ?? null,
+    heroSubtitle: attrs.heroSubtitle ?? fallbackAttrs.heroSubtitle ?? null,
+    heroPrimaryCta: attrs.heroPrimaryCta ?? fallbackAttrs.heroPrimaryCta ?? null,
+    heroSecondaryCta: attrs.heroSecondaryCta ?? fallbackAttrs.heroSecondaryCta ?? null,
+    heroBadge: attrs.heroBadge ?? fallbackAttrs.heroBadge ?? null,
+    trustAward: attrs.trustAward ?? fallbackAttrs.trustAward ?? null,
+    trustGlobal: attrs.trustGlobal ?? fallbackAttrs.trustGlobal ?? null,
+    trustFast: attrs.trustFast ?? fallbackAttrs.trustFast ?? null,
+    showStatsSection: attrs.showStatsSection ?? fallbackAttrs.showStatsSection ?? false,
+    showTrustedBySection: attrs.showTrustedBySection ?? fallbackAttrs.showTrustedBySection ?? false,
+    trustedByTitle: attrs.trustedByTitle ?? fallbackAttrs.trustedByTitle ?? null,
+    showHowItWorksSection: attrs.showHowItWorksSection ?? fallbackAttrs.showHowItWorksSection ?? false,
+    howItWorksTitle: attrs.howItWorksTitle ?? fallbackAttrs.howItWorksTitle ?? null,
+    howItWorksSubtitle: attrs.howItWorksSubtitle ?? fallbackAttrs.howItWorksSubtitle ?? null,
+    showFeaturesSection: attrs.showFeaturesSection ?? fallbackAttrs.showFeaturesSection ?? false,
+    featuresTitle: attrs.featuresTitle ?? fallbackAttrs.featuresTitle ?? null,
+    featuresSubtitle: attrs.featuresSubtitle ?? fallbackAttrs.featuresSubtitle ?? null,
+    showSolutionsSection: attrs.showSolutionsSection ?? fallbackAttrs.showSolutionsSection ?? false,
+    solutionsTitle: attrs.solutionsTitle ?? fallbackAttrs.solutionsTitle ?? null,
+    solutionsSubtitle: attrs.solutionsSubtitle ?? fallbackAttrs.solutionsSubtitle ?? null,
+    showIndustriesSection: attrs.showIndustriesSection ?? fallbackAttrs.showIndustriesSection ?? false,
+    industriesTitle: attrs.industriesTitle ?? fallbackAttrs.industriesTitle ?? null,
+    industriesSubtitle: attrs.industriesSubtitle ?? fallbackAttrs.industriesSubtitle ?? null,
+    showCaseStudiesSection: attrs.showCaseStudiesSection ?? fallbackAttrs.showCaseStudiesSection ?? false,
+    caseStudiesTitle: attrs.caseStudiesTitle ?? fallbackAttrs.caseStudiesTitle ?? null,
+    caseStudiesSubtitle: attrs.caseStudiesSubtitle ?? fallbackAttrs.caseStudiesSubtitle ?? null,
+    showDemosSection: attrs.showDemosSection ?? fallbackAttrs.showDemosSection ?? false,
+    demosTitle: attrs.demosTitle ?? fallbackAttrs.demosTitle ?? null,
+    demosSubtitle: attrs.demosSubtitle ?? fallbackAttrs.demosSubtitle ?? null,
+    showCtaSection: attrs.showCtaSection ?? fallbackAttrs.showCtaSection ?? false,
+    ctaTitle: attrs.ctaTitle ?? fallbackAttrs.ctaTitle ?? null,
+    ctaSubtitle: attrs.ctaSubtitle ?? fallbackAttrs.ctaSubtitle ?? null,
+    ctaPrimaryButton: attrs.ctaPrimaryButton ?? fallbackAttrs.ctaPrimaryButton ?? null,
+    ctaSecondaryButton: attrs.ctaSecondaryButton ?? fallbackAttrs.ctaSecondaryButton ?? null,
+  };
 }
 
 // ============================================================================

@@ -1,0 +1,35 @@
+{
+  "apiId": "contact-page",
+  "en": {
+    "heroTitle": "Let's Create Something Amazing",
+    "heroSubtitle": "Have a project in mind? We'd love to hear about it.",
+    "formTitle": "Send Us a Message",
+    "nameLabel": "Your Name",
+    "emailLabel": "Email Address",
+    "phoneLabel": "Phone Number",
+    "messageLabel": "Tell us about your project",
+    "submitButton": "Send Message",
+    "infoTitle": "Contact Information",
+    "address": "Riyadh, Saudi Arabia",
+    "email": "hello@arabiq.tech",
+    "phone": "+966 50 123 4567",
+    "hoursTitle": "Business Hours",
+    "hoursText": "Sunday - Thursday: 9AM - 6PM GST"
+  },
+  "ar": {
+    "heroTitle": "لننشئ شيئاً رائعاً",
+    "heroSubtitle": "لديك مشروع؟ نحب أن نسمع عنه.",
+    "formTitle": "أرسل لنا رسالة",
+    "nameLabel": "اسمك",
+    "emailLabel": "البريد الإلكتروني",
+    "phoneLabel": "رقم الهاتف",
+    "messageLabel": "أخبرنا عن مشروعك",
+    "submitButton": "إرسال",
+    "infoTitle": "معلومات التواصل",
+    "address": "الرياض، المملكة العربية السعودية",
+    "email": "hello@arabiq.tech",
+    "phone": "+966 50 123 4567",
+    "hoursTitle": "ساعات العمل",
+    "hoursText": "الأحد - الخميس: 9ص - 6م بتوقيت الخليج"
+  }
+}

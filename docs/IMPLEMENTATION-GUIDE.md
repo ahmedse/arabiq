@@ -405,31 +405,33 @@ npm install next-intl lucide-react
 1. Add required environment variables (use your deployment secret store; do not commit secrets):
 
 ```env
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=replace-with-a-secure-random-value
-NEXTAUTH_GOOGLE_ID=your-google-client-id
-NEXTAUTH_GOOGLE_SECRET=your-google-client-secret
-# optional Strapi sync
-STRAPI_API_URL=https://cms.example.com
-STRAPI_API_TOKEN=your-strapi-token
-# Profile sync intentionally disabled. Do NOT enable `STRAPI_SYNC_USER_PROFILES`. If you need profile sync in the future, re-evaluate architecture and security requirements.
-# STRAPI_WEBHOOK_SECRET is not used for profile sync in the current configuration
+# Strapi (authentication & content)
+STRAPI_URL=http://localhost:1337
+STRAPI_API_TOKEN=your-read-only-token   # used for content fetches
+STRAPI_ADMIN_TOKEN=your-admin-api-token # used for admin scripts only
+STRAPI_JWT_COOKIE_NAME=strapi_jwt
 ADMIN_EMAILS=admin@example.com
+# Note: Profile sync is intentionally disabled. If you enable profile sync in the future, perform a security review.
 ```
 
-2. Apply database migrations and seed canonical roles:
+2. Create roles and seed initial content and approvals in Strapi:
+
+- Generate an **Admin API token** in Strapi admin (Settings → API Tokens).
+- Run the CMS seed script (uses the admin token):
 
 ```bash
-cd /home/ahmed/arabiq/apps/web
-pnpm prisma migrate dev --name add-roles
-pnpm prisma db seed
+cd /home/ahmed/arabiq/apps/cms
+node seed.mjs <full-admin-token>
 ```
 
-3. Run the app locally and test Google sign-in flow:
+- To create or approve admin users, use the **Strapi admin UI** (Users & Permissions) or call the Admin API with `STRAPI_ADMIN_TOKEN`.
+
+3. Run the app locally and test login flow (Strapi-powered):
 
 - Start dev server: `pnpm dev`
-- Visit: `http://localhost:3000/en/login` and sign in with Google
-- New users are created in DB with an approval record (PENDING) and are denied sign-in until approved
+- Visit: `http://localhost:3000/en/login` and sign in (email/password or social providers configured in Strapi)
+- New users created through Strapi should have an approval record (PENDING) and will be denied access to demos until approved (APPROVED)
+
 
 4. Approve a user (admin flow):
 

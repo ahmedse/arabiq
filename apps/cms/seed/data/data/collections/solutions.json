@@ -1,0 +1,90 @@
+{
+  "apiId": "solutions",
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "vmall-platform",
+      "icon": "🏬",
+      "en": {
+        "title": "Vmall Platform",
+        "summary": "Create immersive 3D virtual malls, shops, and exhibitions using Matterport technology",
+        "description": "# Vmall Platform\n\nTransform physical spaces into stunning 3D digital experiences.\n\n## Features\n- Matterport 3D scanning\n- Interactive hotspots\n- Multi-language support\n- E-commerce integration\n- Analytics dashboard"
+      },
+      "ar": {
+        "title": "منصة Vmall",
+        "summary": "إنشاء مراكز تسوق ومعارض افتراضية ثلاثية الأبعاد باستخدام تقنية Matterport",
+        "description": "# منصة Vmall\n\nحوّل المساحات الفيزيائية إلى تجارب رقمية مذهلة.\n\n## المزايا\n- مسح Matterport ثلاثي الأبعاد\n- نقاط تفاعلية\n- دعم متعدد اللغات\n- تكامل التجارة الإلكترونية\n- لوحة التحليلات"
+      }
+    },
+    {
+      "slug": "arabiq-ai-suite",
+      "icon": "🤖",
+      "en": {
+        "title": "Arabiq AI Suite",
+        "summary": "Arabic-first AI tools: voice narration, chatbots, recommendations, and analytics",
+        "description": "# Arabiq AI Suite\n\nIntelligent Arabic language AI for MENA markets.\n\n## Modules\n- Voice AI narration\n- Conversational chatbot\n- Smart recommendations\n- Vision AI"
+      },
+      "ar": {
+        "title": "مجموعة Arabiq للذكاء الاصطناعي",
+        "summary": "أدوات ذكاء اصطناعي عربية: سرد صوتي، روبوتات محادثة، توصيات، وتحليلات",
+        "description": "# مجموعة Arabiq للذكاء الاصطناعي\n\nذكاء اصطناعي عربي لأسواق المنطقة.\n\n## الوحدات\n- سرد صوتي بالذكاء الاصطناعي\n- روبوت محادثة\n- توصيات ذكية\n- ذكاء اصطناعي بصري"
+      }
+    },
+    {
+      "slug": "arabiq-commerce",
+      "icon": "🛒",
+      "en": {
+        "title": "Arabiq Commerce",
+        "summary": "Complete e-commerce backend with MENA payment gateways and shipping",
+        "description": "# Arabiq Commerce\n\nFull e-commerce platform for Arab markets.\n\n## Features\n- PayTabs, PayFort, Moyasar integration\n- Aramex, DHL shipping\n- Multi-currency support\n- VAT compliance"
+      },
+      "ar": {
+        "title": "Arabiq Commerce",
+        "summary": "منصة تجارة إلكترونية متكاملة مع بوابات دفع وشحن المنطقة",
+        "description": "# Arabiq Commerce\n\nمنصة تجارة إلكترونية كاملة للأسواق العربية.\n\n## المزايا\n- تكامل PayTabs و PayFort و Moyasar\n- شحن Aramex و DHL\n- دعم متعدد العملات\n- امتثال ضريبة القيمة المضافة"
+      }
+    },
+    {
+      "slug": "digital-twin-production",
+      "icon": "📸",
+      "en": {
+        "title": "Digital Twin Production",
+        "summary": "Professional 3D scanning, modeling, and hosting services",
+        "description": "# Digital Twin Production\n\nEnd-to-end 3D capture services.\n\n## Services\n- Professional Matterport scanning\n- Post-production enhancement\n- Cloud hosting with CDN"
+      },
+      "ar": {
+        "title": "إنتاج التوأم الرقمي",
+        "summary": "خدمات مسح وتصميم واستضافة ثلاثية الأبعاد احترافية",
+        "description": "# إنتاج التوأم الرقمي\n\nخدمات التقاط ثلاثي الأبعاد شاملة.\n\n## الخدمات\n- مسح Matterport احترافي\n- تحسين ما بعد الإنتاج\n- استضافة سحابية مع CDN"
+      }
+    },
+    {
+      "slug": "vfair-edition",
+      "icon": "🎪",
+      "en": {
+        "title": "VFair Edition",
+        "summary": "Virtual events platform for conferences, trade shows, and exhibitions",
+        "description": "# VFair Edition\n\nTransform events into immersive virtual experiences.\n\n## Features\n- Virtual booths\n- Live networking\n- Streaming with Q&A"
+      },
+      "ar": {
+        "title": "إصدار VFair",
+        "summary": "منصة فعاليات افتراضية للمؤتمرات والمعارض التجارية",
+        "description": "# إصدار VFair\n\nحوّل الفعاليات إلى تجارب افتراضية غامرة.\n\n## المزايا\n- أجنحة افتراضية\n- تواصل مباشر\n- بث مع أسئلة وأجوبة"
+      }
+    },
+    {
+      "slug": "system-integration",
+      "icon": "🔗",
+      "en": {
+        "title": "System Integration",
+        "summary": "Connect with existing CRM, ERP, POS, and e-commerce systems",
+        "description": "# System Integration\n\nSeamless connections to your business systems.\n\n## Supported\n- Shopify, WooCommerce, Magento\n- Odoo, ERPNext, SAP\n- Custom REST APIs"
+      },
+      "ar": {
+        "title": "تكامل الأنظمة",
+        "summary": "ربط مع أنظمة CRM و ERP و POS والتجارة الإلكترونية",
+        "description": "# تكامل الأنظمة\n\nاتصالات سلسة بأنظمة أعمالك.\n\n## المدعوم\n- Shopify و WooCommerce و Magento\n- Odoo و ERPNext و SAP\n- واجهات REST مخصصة"
+      }
+    }
+  ]
+}

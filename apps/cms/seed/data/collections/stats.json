@@ -1,0 +1,26 @@
+{
+  "apiId": "stats",
+  "identifierField": "order",
+  "items": [
+    {
+      "order": 1,
+      "en": { "value": "100+", "label": "Businesses Transformed" },
+      "ar": { "value": "+100", "label": "شركة متحولة" }
+    },
+    {
+      "order": 2,
+      "en": { "value": "12", "label": "Countries Served" },
+      "ar": { "value": "12", "label": "دولة نخدمها" }
+    },
+    {
+      "order": 3,
+      "en": { "value": "500K+", "label": "Virtual Visitors" },
+      "ar": { "value": "+500 ألف", "label": "زائر افتراضي" }
+    },
+    {
+      "order": 4,
+      "en": { "value": "48hr", "label": "Average Delivery" },
+      "ar": { "value": "48 ساعة", "label": "متوسط التسليم" }
+    }
+  ]
+}

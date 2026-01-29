@@ -1,15 +1,25 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { strapiLogin } from '@/lib/strapiAuth';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect');
+  const [redirect, setRedirect] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      setRedirect(params.get('redirect'));
+    } catch (e) {
+      setRedirect(null);
+    }
+  }, []);
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');

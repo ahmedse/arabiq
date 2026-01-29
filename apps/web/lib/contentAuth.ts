@@ -35,14 +35,20 @@ export async function isContentAccessibleByUser(
  */
 export async function canAccessDemo(
   user: StrapiUser | null,
-  demoId: number
+  demoId: number,
+  token?: string
 ): Promise<boolean> {
   if (!user) return false;
 
-  // Check if user has explicit access to this demo
-  if (user.demoAccess && user.demoAccess.some(demo => demo.id === demoId)) {
-    return true;
+  // Admins can access all demos
+  if (user.role?.name === 'ADMIN') return true;
+
+  // If a token is provided, do a server-side check against Strapi for demo access
+  if (token) {
+    const { checkDemoAccess } = await import('./strapiAuth');
+    return checkDemoAccess(token, demoId);
   }
 
+  // No explicit access info available client-side
   return false;
 }

@@ -1,0 +1,12 @@
+{
+  "apiId": "trusted-companies",
+  "identifierField": "order",
+  "items": [
+    { "order": 1, "en": { "name": "Saudi Telecom" }, "ar": { "name": "الاتصالات السعودية" } },
+    { "order": 2, "en": { "name": "Emaar Properties" }, "ar": { "name": "إعمار العقارية" } },
+    { "order": 3, "en": { "name": "Majid Al Futtaim" }, "ar": { "name": "ماجد الفطيم" } },
+    { "order": 4, "en": { "name": "Almarai" }, "ar": { "name": "المراعي" } },
+    { "order": 5, "en": { "name": "Aramco" }, "ar": { "name": "أرامكو" } },
+    { "order": 6, "en": { "name": "Dubai Tourism" }, "ar": { "name": "سياحة دبي" } }
+  ]
+}

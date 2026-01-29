@@ -1,0 +1,41 @@
+{
+  "apiId": "about-page",
+  "en": {
+    "heroTitle": "Pioneering Virtual Experiences in MENA",
+    "heroSubtitle": "We bring physical spaces to life in stunning 3D, accessible to anyone, anywhere.",
+    "missionTitle": "Our Mission",
+    "missionText": "To democratize access to immersive 3D technology, empowering MENA businesses to reach global audiences.",
+    "visionTitle": "Our Vision",
+    "visionText": "A world where every physical space has a digital twin, enabling limitless virtual exploration.",
+    "valuesTitle": "Our Values",
+    "value1Title": "Innovation",
+    "value1Text": "We push the boundaries of what's possible with 3D, AI, and immersive tech.",
+    "value2Title": "Arabic-First",
+    "value2Text": "Built for MENA markets with native Arabic language and cultural understanding.",
+    "value3Title": "Customer Success",
+    "value3Text": "Your success is our success. We measure ourselves by your results.",
+    "teamTitle": "Meet Our Team",
+    "teamSubtitle": "20+ experts in 3D technology, AI, and digital transformation",
+    "ctaTitle": "Join Our Journey",
+    "ctaButton": "Get in Touch"
+  },
+  "ar": {
+    "heroTitle": "رواد التجارب الافتراضية في المنطقة",
+    "heroSubtitle": "نحيي المساحات الفيزيائية بشكل ثلاثي الأبعاد مذهل، متاحة لأي شخص في أي مكان.",
+    "missionTitle": "مهمتنا",
+    "missionText": "إتاحة الوصول لتقنية ثلاثية الأبعاد الغامرة، وتمكين شركات المنطقة من الوصول لجماهير عالمية.",
+    "visionTitle": "رؤيتنا",
+    "visionText": "عالم حيث كل مساحة فيزيائية لها توأم رقمي، يتيح استكشافاً افتراضياً بلا حدود.",
+    "valuesTitle": "قيمنا",
+    "value1Title": "الابتكار",
+    "value1Text": "ندفع حدود الممكن مع تقنية 3D والذكاء الاصطناعي.",
+    "value2Title": "العربية أولاً",
+    "value2Text": "مبني لأسواق المنطقة بلغة عربية أصلية وفهم ثقافي.",
+    "value3Title": "نجاح العملاء",
+    "value3Text": "نجاحك هو نجاحنا. نقيس أنفسنا بنتائجك.",
+    "teamTitle": "تعرّف على فريقنا",
+    "teamSubtitle": "أكثر من 20 خبيراً في تقنية 3D والذكاء الاصطناعي والتحول الرقمي",
+    "ctaTitle": "انضم لرحلتنا",
+    "ctaButton": "تواصل معنا"
+  }
+}

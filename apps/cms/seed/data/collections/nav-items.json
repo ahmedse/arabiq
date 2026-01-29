@@ -1,0 +1,127 @@
+{
+  "apiId": "nav-items",
+  "identifierField": "href",
+  "compositeKey": ["href", "location"],
+  "items": [
+    {
+      "href": "/",
+      "location": "header",
+      "order": 1,
+      "isExternal": false,
+      "en": { "label": "Home" },
+      "ar": { "label": "الرئيسية" }
+    },
+    {
+      "href": "/solutions",
+      "location": "header",
+      "order": 2,
+      "isExternal": false,
+      "en": { "label": "Solutions" },
+      "ar": { "label": "الحلول" }
+    },
+    {
+      "href": "/industries",
+      "location": "header",
+      "order": 3,
+      "isExternal": false,
+      "en": { "label": "Industries" },
+      "ar": { "label": "الصناعات" }
+    },
+    {
+      "href": "/case-studies",
+      "location": "header",
+      "order": 4,
+      "isExternal": false,
+      "en": { "label": "Case Studies" },
+      "ar": { "label": "دراسات الحالة" }
+    },
+    {
+      "href": "/demos",
+      "location": "header",
+      "order": 5,
+      "isExternal": false,
+      "en": { "label": "Demos" },
+      "ar": { "label": "العروض" }
+    },
+    {
+      "href": "/about",
+      "location": "header",
+      "order": 6,
+      "isExternal": false,
+      "en": { "label": "About" },
+      "ar": { "label": "من نحن" }
+    },
+    {
+      "href": "/contact",
+      "location": "header",
+      "order": 7,
+      "isExternal": false,
+      "en": { "label": "Contact" },
+      "ar": { "label": "اتصل بنا" }
+    },
+    {
+      "href": "/about",
+      "location": "footer-company",
+      "order": 1,
+      "isExternal": false,
+      "en": { "label": "About Us" },
+      "ar": { "label": "من نحن" }
+    },
+    {
+      "href": "/careers",
+      "location": "footer-company",
+      "order": 2,
+      "isExternal": false,
+      "en": { "label": "Careers" },
+      "ar": { "label": "الوظائف" }
+    },
+    {
+      "href": "/contact",
+      "location": "footer-company",
+      "order": 3,
+      "isExternal": false,
+      "en": { "label": "Contact" },
+      "ar": { "label": "اتصل بنا" }
+    },
+    {
+      "href": "/solutions/vmall-platform",
+      "location": "footer-products",
+      "order": 1,
+      "isExternal": false,
+      "en": { "label": "Vmall Platform" },
+      "ar": { "label": "منصة Vmall" }
+    },
+    {
+      "href": "/solutions/arabiq-ai-suite",
+      "location": "footer-products",
+      "order": 2,
+      "isExternal": false,
+      "en": { "label": "AI Suite" },
+      "ar": { "label": "مجموعة الذكاء الاصطناعي" }
+    },
+    {
+      "href": "/solutions/arabiq-commerce",
+      "location": "footer-products",
+      "order": 3,
+      "isExternal": false,
+      "en": { "label": "Commerce" },
+      "ar": { "label": "التجارة" }
+    },
+    {
+      "href": "https://twitter.com/arabiq",
+      "location": "footer-social",
+      "order": 1,
+      "isExternal": true,
+      "en": { "label": "Twitter" },
+      "ar": { "label": "تويتر" }
+    },
+    {
+      "href": "https://linkedin.com/company/arabiq",
+      "location": "footer-social",
+      "order": 2,
+      "isExternal": true,
+      "en": { "label": "LinkedIn" },
+      "ar": { "label": "لينكد إن" }
+    }
+  ]
+}

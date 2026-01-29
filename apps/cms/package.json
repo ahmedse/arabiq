@@ -12,10 +12,12 @@
     "dev": "npm run copy-schemas && npx strapi develop",
     "develop": "npm run copy-schemas && npx strapi develop",
     "start": "npm run copy-schemas && npx strapi start",
-    "seed": "node seed-complete.mjs \"$SEED_TOKEN\"",
+    "seed": "node seed/seed.js \"$SEED_TOKEN\"",
+    "seed:fresh": "node seed/seed.js \"$SEED_TOKEN\" --fresh",
     "strapi": "npx strapi",
     "upgrade": "npx @strapi/upgrade latest",
-    "upgrade:dry": "npx @strapi/upgrade latest --dry"
+    "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "test:seed": "node seed/__tests__/slug-test.mjs"
   },
   "dependencies": {
     "@strapi/core": "^5.33.4",
@@ -29,7 +31,8 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
     "resend": "^6.9.1",
-    "styled-components": "^6.0.0"
+    "styled-components": "^6.0.0",
+    "transliteration": "^2.6.1"
   },
   "devDependencies": {
     "@types/node": "^20",

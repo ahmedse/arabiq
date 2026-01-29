@@ -1,0 +1,65 @@
+{
+  "timestamp": "20260129-144335Z",
+  "singleTypes": {
+    "about-page": {
+      "en": 
+null
+,
+      "ar": 
+null
+    },
+    "contact-page": {
+      "en": 
+null
+,
+      "ar": 
+null
+    },
+    "homepage": {
+      "en": 
+null
+,
+      "ar": 
+null
+    },
+    "site-setting": {
+      "en": 
+null
+,
+      "ar": 
+null
+    }
+  },
+  "collections": {
+    "case-studies": 
+null
+,
+    "demos": 
+null
+,
+    "features": 
+null
+,
+    "industries": 
+null
+,
+    "nav-items": 
+null
+,
+    "process-steps": 
+null
+,
+    "stats": 
+null
+,
+    "team-members": 
+null
+,
+    "trusted-companies": 
+null
+,
+    "values": 
+null
+
+  }
+}

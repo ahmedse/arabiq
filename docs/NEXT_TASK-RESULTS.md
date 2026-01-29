@@ -63,18 +63,15 @@
 
 ---
 **Task ID:** 2
-**Summary:** Added Prisma schema (Auth.js models + approvals), Auth.js v5 beta config with Google provider and DB sessions, env example, and session helpers.
-**Files changed:**
-- apps/web/package.json
-- apps/web/pnpm-lock.yaml
-- apps/web/prisma/schema.prisma
-- apps/web/lib/prisma.ts
-- apps/web/auth.ts
-- apps/web/app/api/auth/[...nextauth]/route.ts
-- apps/web/lib/session.ts
-- apps/web/.env.example
-**Blockers:** None
-**Follow-up needed:** None
+**Summary:** (Experiment rolled back) Initially added an Auth.js/Prisma-based prototype (Auth.js v5 + Prisma schema) for auth and approvals during exploration; this approach was later replaced by a Strapi-native authentication and authorization design. The prototype files were removed or rolled back and replaced with Strapi integrations and server helpers.
+**Files added during the experiment (now removed/rolled back):**
+- apps/web/prisma/schema.prisma (removed)
+- apps/web/lib/prisma.ts (removed)
+- apps/web/app/api/auth/[...nextauth]/route.ts (removed)
+- apps/web/lib/session.ts (removed)
+- Related env example entries (converted to Strapi usage)
+**Follow-up:** Use Strapi admin UI or `apps/cms/seed.mjs` to seed roles and approvals as the authoritative workflow.
+
 
 ---
 
