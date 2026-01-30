@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className={inter.variable}>
+    <html className={inter.variable} suppressHydrationWarning>
       <body>
         <Providers>{children}</Providers>
       </body>

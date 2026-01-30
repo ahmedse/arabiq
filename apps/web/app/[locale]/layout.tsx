@@ -79,120 +79,127 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const copyrightText = siteSettings?.copyrightText;
   const loginButtonText = siteSettings?.loginButtonText;
 
-  return (
-    <div
-      lang={lang}
-      dir={dir}
-      className={`min-h-screen bg-white text-slate-900 ${lang === "ar" ? ibmPlexArabic.variable : ""}`}
-    >
-      <Header
-        locale={locale}
-        otherLocale={otherLocale}
-        headerNav={headerNav}
-        dir={dir}
-        lang={lang}
+return (
+    <>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `document.documentElement.lang="${lang}";document.documentElement.dir="${dir}";`,
+        }}
       />
+      <div
+        lang={lang}
+        dir={dir}
+        className={`min-h-screen bg-white text-slate-900 ${lang === "ar" ? ibmPlexArabic.variable : ""}`}
+      >
+        <Header
+          locale={locale}
+          otherLocale={otherLocale}
+          headerNav={headerNav}
+          dir={dir}
+          lang={lang}
+        />
 
-      <main>{children}</main>
+        <main>{children}</main>
 
-      {/* Stripe-style footer - from Strapi */}
-      <footer className="border-t border-slate-200 bg-slate-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-start">
-            {/* Company */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                {footerCompanyTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
-              </h3>
-              <ul className="space-y-2 text-sm text-slate-600">
-                {footerCompany.length > 0 ? footerCompany.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
-                      href={item.isExternal ? item.href : `/${locale}${item.href}`}
-                      {...(item.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
-              </ul>
-            </div>
-            
-            {/* Products */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                {footerProductsTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
-              </h3>
-              <ul className="space-y-2 text-sm text-slate-600">
-                {footerProducts.length > 0 ? footerProducts.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
-                      href={item.isExternal ? item.href : `/${locale}${item.href}`}
-                      {...(item.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
-              </ul>
-            </div>
-            
-            {/* Resources */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                {footerResourcesTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
-              </h3>
-              <ul className="space-y-2 text-sm text-slate-600">
-                {footerResources.length > 0 ? footerResources.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
-                      href={item.isExternal ? item.href : `/${locale}${item.href}`}
-                      {...(item.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
-              </ul>
-            </div>
-            
-            {/* Social / Connect */}
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                {footerConnectTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
-              </h3>
-              <ul className="space-y-2 text-sm text-slate-600">
-                {footerSocial.length > 0 ? footerSocial.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
-              </ul>
-            </div>
-          </div>
-          
-          {/* Bottom bar */}
-          <div className="mt-12 pt-8 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-600">
-            <p>{copyrightText || `© ${new Date().getFullYear()} Arabiq. ⚠️ ${lang === "ar" ? "نص مفقود" : "Text missing in CMS"}`}</p>
-            <div className={`flex items-center gap-2 ${dir === "rtl" ? "flex-row-reverse" : ""}`}>
-              <div className="flex items-center justify-center h-6 w-6 rounded bg-gradient-to-br from-indigo-600 to-indigo-800 text-white font-bold text-xs">
-                A
+        {/* Stripe-style footer - from Strapi */}
+        <footer className="border-t border-slate-200 bg-slate-50">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-start">
+              {/* Company */}
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
+                  {footerCompanyTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
+                </h3>
+                <ul className="space-y-2 text-sm text-slate-600">
+                  {footerCompany.length > 0 ? footerCompany.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
+                        href={item.isExternal ? item.href : `/${locale}${item.href}`}
+                        {...(item.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
+                </ul>
               </div>
-              <span className="font-medium text-slate-900">Arabiq</span>
+              
+              {/* Products */}
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
+                  {footerProductsTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
+                </h3>
+                <ul className="space-y-2 text-sm text-slate-600">
+                  {footerProducts.length > 0 ? footerProducts.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
+                        href={item.isExternal ? item.href : `/${locale}${item.href}`}
+                        {...(item.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
+                </ul>
+              </div>
+              
+              {/* Resources */}
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
+                  {footerResourcesTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
+                </h3>
+                <ul className="space-y-2 text-sm text-slate-600">
+                  {footerResources.length > 0 ? footerResources.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
+                        href={item.isExternal ? item.href : `/${locale}${item.href}`}
+                        {...(item.isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
+                </ul>
+              </div>
+              
+              {/* Social / Connect */}
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
+                  {footerConnectTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
+                </h3>
+                <ul className="space-y-2 text-sm text-slate-600">
+                  {footerSocial.length > 0 ? footerSocial.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
+                </ul>
+              </div>
+            </div>
+            
+            {/* Bottom bar */}
+            <div className="mt-12 pt-8 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-600">
+              <p>{copyrightText || `© ${new Date().getFullYear()} Arabiq. ⚠️ ${lang === "ar" ? "نص مفقود" : "Text missing in CMS"}`}</p>
+              <div className={`flex items-center gap-2 ${dir === "rtl" ? "flex-row-reverse" : ""}`}>
+                <div className="flex items-center justify-center h-6 w-6 rounded bg-gradient-to-br from-indigo-600 to-indigo-800 text-white font-bold text-xs">
+                  A
+                </div>
+                <span className="font-medium text-slate-900">Arabiq</span>
+              </div>
             </div>
           </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </>
   );
 }

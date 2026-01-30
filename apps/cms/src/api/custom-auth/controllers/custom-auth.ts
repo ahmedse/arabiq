@@ -52,16 +52,31 @@ const controller = ({ strapi }) => ({
         blocked: false,
       });
 
-      await knex('up_users').where('id', user.id).update({
-        phone: phone,
-        country: country || null,
-        company: company || null,
-        sales_contact_allowed: salesContactAllowed !== false,
-        display_name: displayName || username,
-        account_status: 'pending',
+      // Debug: show what we will write
+      strapi.log.debug('[custom-auth] updating up_users for id', user.id, {
+        phone,
+        country,
+        company,
+        salesContactAllowed,
+        displayName,
       });
 
-      const fullUser = await knex('up_users').where('id', user.id).first();
+      // Use RETURNING to inspect the updated row on Postgres
+      const updated = await knex('up_users')
+        .where('id', user.id)
+        .update({
+          phone: phone,
+          country: country || null,
+          company: company || null,
+          sales_contact_allowed: salesContactAllowed !== false,
+          display_name: displayName || username,
+          account_status: 'pending',
+        })
+        .returning('*');
+
+      strapi.log.debug('[custom-auth] knex update returned:', updated);
+
+      const fullUser = updated && updated[0] ? updated[0] : await knex('up_users').where('id', user.id).first();
 
       const sanitizedUser = {
         id: fullUser.id,
@@ -88,6 +103,61 @@ const controller = ({ strapi }) => ({
       return ctx.badRequest(error.message || 'Registration failed');
     }
   },
+
+  async me(ctx: any) {
+    const user = ctx.state.user;
+
+    if (!user) {
+      return ctx.unauthorized('You must be logged in');
+    }
+
+    const knex = strapi.db.connection;
+
+    // Fetch full user
+    const fullUser = await knex('up_users')
+      .select(
+        'id',
+        'document_id as documentId',
+        'username',
+        'email',
+        'phone',
+        'country',
+        'company',
+        'display_name as displayName',
+        'account_status as accountStatus',
+        'sales_contact_allowed as salesContactAllowed',
+        'provider',
+        'confirmed',
+        'blocked',
+        'created_at as createdAt',
+        'updated_at as updatedAt'
+      )
+      .where('id', user.id)
+      .first();
+
+    if (!fullUser) {
+      return ctx.notFound('User not found');
+    }
+
+    // Get role
+    const roleLink = await knex('up_users_role_lnk')
+      .where('user_id', user.id)
+      .first();
+
+    let role = null;
+    if (roleLink) {
+      role = await knex('up_roles')
+        .select('id', 'document_id as documentId', 'name', 'description', 'type')
+        .where('id', roleLink.role_id)
+        .first();
+    }
+
+    ctx.body = {
+      ...fullUser,
+      role,
+    };
+  },
+  
 });
 
 export default controller;

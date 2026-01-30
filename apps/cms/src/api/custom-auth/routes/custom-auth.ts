@@ -6,7 +6,14 @@ export default {
       handler: 'custom-auth.register',
       config: {
         auth: false,
-        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: 'GET',
+      path: '/custom-auth/me',
+      handler: 'custom-auth.me',
+      config: {
         middlewares: [],
       },
     },

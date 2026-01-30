@@ -68,7 +68,7 @@ export async function strapiLogin(
  * Register a new user
  */
 export async function strapiRegister(data: RegisterData): Promise<LoginResponse | { user: StrapiUser; message: string }> {
-  const res = await fetch(`${STRAPI_URL}/api/auth/register`, {
+  const res = await fetch(`${STRAPI_URL}/api/custom-auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
