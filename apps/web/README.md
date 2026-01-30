@@ -1,5 +1,25 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+
+./manage.sh start          # Start CMS (with build), wait healthy, start Web
+./manage.sh start cms      # Start only CMS (runs build.sh, installs deps)
+./manage.sh start web      # Start only Web (installs deps)
+
+./manage.sh stop           # Stop all
+./manage.sh stop cms       # Stop only CMS
+
+./manage.sh restart        # Full restart all
+./manage.sh restart web    # Restart only Web
+
+./manage.sh clean          # Stop all + remove builds + node_modules
+./manage.sh clean cms      # Clean only CMS
+
+./manage.sh logs cms -f    # Follow CMS logs
+./manage.sh logs web 200   # Last 200 lines Web logs
+
+./manage.sh doctor         # Full diagnostic
+./manage.sh seed           # Run seeder (CMS must be running)
+
 ## Getting Started
 
 First, run the development server:

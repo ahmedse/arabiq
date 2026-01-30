@@ -1,0 +1,25 @@
+// seed/solutions-page.json
+{
+  "en": {
+    "heroTitle": "Solutions for Every Business",
+    "heroSubtitle": "Comprehensive virtual experience solutions tailored to your industry and goals",
+    "filterAll": "All Solutions",
+    "filterPlatforms": "Platforms",
+    "filterServices": "Services",
+    "filterAi": "AI Tools",
+    "ctaTitle": "Not Sure Which Solution Is Right for You?",
+    "ctaSubtitle": "Our team will help you find the perfect combination of solutions for your business needs.",
+    "ctaButton": "Schedule a Consultation"
+  },
+  "ar": {
+    "heroTitle": "حلول لكل الأعمال",
+    "heroSubtitle": "حلول تجارب افتراضية شاملة مصممة لصناعتك وأهدافك",
+    "filterAll": "جميع الحلول",
+    "filterPlatforms": "المنصات",
+    "filterServices": "الخدمات",
+    "filterAi": "أدوات الذكاء الاصطناعي",
+    "ctaTitle": "غير متأكد من الحل المناسب لك؟",
+    "ctaSubtitle": "سيساعدك فريقنا في إيجاد المجموعة المثالية من الحلول لاحتياجات عملك.",
+    "ctaButton": "احجز استشارة"
+  }
+}

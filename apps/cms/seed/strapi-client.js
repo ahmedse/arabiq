@@ -1,4 +1,4 @@
-// apps/cms/seed/lib/strapi-client.js
+// seed/strapi-client.js
 
 import { slugify as trSlugify } from 'transliteration';
 
@@ -29,18 +29,15 @@ class StrapiClient {
         
         const text = await res.text();
         
-        // Handle non-JSON responses (like 405 "Method Not Allowed")
         if (!res.ok) {
           let errorMsg = `${res.status} ${res.statusText}`;
           try {
             const errBody = JSON.parse(text);
             errorMsg = errBody?.error?.message || errorMsg;
           } catch {
-            // Response wasn't JSON - use status text
             errorMsg = `${res.status}: ${text || res.statusText}`;
           }
           
-          // Debug: log raw body for 4xx so we can see permission errors in CI/dev
           if (res.status >= 400 && res.status < 500) {
             console.error(`DEBUG Strapi ${method} ${path} => status:${res.status}, body:${text}`);
             throw new Error(`${method} ${path} → ${errorMsg}`);
@@ -49,19 +46,15 @@ class StrapiClient {
           throw new Error(errorMsg);
         }
         
-        // Parse successful response
         return text ? JSON.parse(text) : null;
         
       } catch (err) {
-        // Don't retry client errors
         if (err.message.includes('→')) throw err;
         
-        // Connection refused - fail fast
         if (err.cause?.code === 'ECONNREFUSED') {
           throw new Error(`Cannot connect to Strapi at ${STRAPI_URL}`);
         }
         
-        // Retry server errors
         if (attempt === 3) throw err;
         await this.sleep(200 * attempt);
       }
@@ -72,7 +65,6 @@ class StrapiClient {
     return new Promise(r => setTimeout(r, ms));
   }
 
-  // Slugify using the upstream `transliteration` library for higher fidelity
   slugify(text) {
     if (!text) return '';
     return trSlugify(String(text || ''), { lowercase: true, separator: '-' });
@@ -93,19 +85,15 @@ class StrapiClient {
       const res = await this.request(`/api/${apiId}?${params}`);
       return res?.data?.[0] || null;
     } catch (err) {
-      // Fallback: some Content Types return "Invalid key <field>" for filter queries (e.g., localized or computed fields)
-      // In that case, fetch a page of items and search for a matching attribute locally.
       if (/Invalid key/i.test(err.message || '')) {
         try {
           const res2 = await this.request(`/api/${apiId}?locale=${locale}&pagination[pageSize]=500`);
           const items = res2?.data || [];
           return items.find(it => {
-            // typical shapes: it.slug or it.attributes.slug
-            const s = it?.slug ?? it?.attributes?.slug ?? null;
-            return s === value;
+            const val = it?.[field] ?? it?.attributes?.[field] ?? null;
+            return val === value;
           }) || null;
         } catch (err2) {
-          // If fallback fails, rethrow original error to surface the root cause
           throw err;
         }
       }
@@ -149,82 +137,57 @@ class StrapiClient {
     return items.length;
   }
 
-  // Upsert a collection item (handles EN + AR)
-  async upsertCollection(apiId, identifierField, item) {
-    const identifierValue = item[identifierField];
+  async upsertCollection(apiId, identifierField, enData, arData, sharedData = {}) {
+    const identifierValue = sharedData[identifierField] || enData[identifierField];
     if (!identifierValue) {
       throw new Error(`Missing identifier '${identifierField}' in item`);
     }
 
-    const { en, ar, ...shared } = item;
-    
-    // Find existing by identifier
     const existing = await this.findOne(apiId, identifierField, identifierValue, 'en');
     let documentId = existing?.documentId;
 
     // EN locale
-    const enData = { ...shared, ...en };
+    const enPayload = { ...sharedData, ...enData };
     if (documentId) {
-      await this.updateCollection(apiId, documentId, enData, 'en');
+      await this.updateCollection(apiId, documentId, enPayload, 'en');
     } else {
-      const created = await this.createCollection(apiId, enData, 'en');
+      const created = await this.createCollection(apiId, enPayload, 'en');
       documentId = created?.documentId;
     }
 
     // AR locale
-    if (ar && documentId) {
-      // Build AR data and deterministically generate/adjust slug from Arabic title
-      const arData = { ...shared, ...ar };
+    if (arData && documentId) {
+      const arPayload = { ...sharedData, ...arData };
 
-      // If no explicit slug, try to generate one from a title-like field
-      if (!arData.slug) {
-        const source = (arData.title || arData.heading || shared.title || shared.name || '');
-        const generated = this.slugify(source || '');
-        if (generated) {
-          arData.slug = generated;
-        }
+      if (!arPayload.slug && arPayload.title) {
+        arPayload.slug = this.slugify(arPayload.title);
       }
 
-      // If a slug exists (explicit or generated), ensure uniqueness in AR locale by numeric suffix
-      if (arData.slug) {
-        const base = arData.slug;
+      if (arPayload.slug) {
+        const base = arPayload.slug;
         let candidate = base;
         let suffix = 0;
         while (true) {
-          const existing = await this.findOne(apiId, 'slug', candidate, 'ar');
-          if (!existing || existing.documentId === documentId) break;
+          const existingAr = await this.findOne(apiId, 'slug', candidate, 'ar');
+          if (!existingAr || existingAr.documentId === documentId) break;
           suffix++;
           candidate = `${base}-${suffix}`;
         }
-        if (candidate !== arData.slug) {
-          arData.slug = candidate;
-          console.log(`  ⚙ AR slug adjusted to ${candidate} for ${apiId}/${documentId}`);
-        }
+        arPayload.slug = candidate;
       }
 
       try {
-        await this.updateCollection(apiId, documentId, arData, 'ar');
+        await this.updateCollection(apiId, documentId, arPayload, 'ar');
       } catch (err) {
-        // Handle specific 'Invalid key slug' errors by retrying without slug
         if (/Invalid key slug/i.test(err.message || '')) {
-          const { slug, ...withoutSlug } = arData;
+          const { slug, ...withoutSlug } = arPayload;
           try {
             await this.updateCollection(apiId, documentId, withoutSlug, 'ar');
-            console.log(`  ⚙ Removed slug and updated AR locale for ${apiId}/${documentId}`);
-            return { documentId, existed: !!existing };
           } catch (err2) {
-            console.warn(`  ⚠ AR update (without slug) failed for ${apiId}/${documentId}: ${err2.message}`);
-            // Return result object so callers don't crash; we attempted the best-effort update
-            return { documentId, existed: !!existing };
+            console.warn(`  ⚠ AR update failed for ${apiId}/${documentId}: ${err2.message}`);
           }
-        }
-
-        // If slug still causes validation errors, log and skip AR update (preserve run success)
-        const isSlugConflict = /unique|This attribute must be unique|slug must be a `string`/i.test(err.message || '');
-        if (isSlugConflict) {
-          console.warn(`  ⚠ Skipping AR update for ${apiId}/${documentId} due to slug conflict: ${err.message}`);
         } else {
-          console.warn(`  ⚠ Could not add AR locale for ${apiId}/${documentId}: ${err.message}`);
+          console.warn(`  ⚠ AR update failed for ${apiId}/${documentId}: ${err.message}`);
         }
       }
     }
@@ -233,7 +196,7 @@ class StrapiClient {
   }
 
   // ─────────────────────────────────────────────────────────────
-  // SINGLE-TYPE METHODS (PUT only, no POST, no documentId in URL)
+  // SINGLE-TYPE METHODS
   // ─────────────────────────────────────────────────────────────
 
   async getSingle(apiId, locale) {
@@ -241,14 +204,12 @@ class StrapiClient {
       const res = await this.request(`/api/${apiId}?locale=${locale}`);
       return res?.data || null;
     } catch (err) {
-      // 404 means single-type not yet created - that's OK
       if (err.message.includes('404')) return null;
       throw err;
     }
   }
 
   async putSingle(apiId, data, locale) {
-    // Single-types use PUT to both create and update (no POST!)
     const res = await this.request(`/api/${apiId}?locale=${locale}`, {
       method: 'PUT',
       body: JSON.stringify({
@@ -258,14 +219,11 @@ class StrapiClient {
     return res?.data || null;
   }
 
-  // Upsert single-type (both locales)
   async upsertSingle(apiId, enData, arData) {
     const existingEn = await this.getSingle(apiId, 'en');
     
-    // EN locale (PUT always works for single-types)
     await this.putSingle(apiId, enData, 'en');
     
-    // AR locale
     if (arData) {
       await this.putSingle(apiId, arData, 'ar');
     }

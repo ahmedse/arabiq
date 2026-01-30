@@ -1,0 +1,102 @@
+// seed/features.json
+{
+  "identifierField": "order",
+  "items": [
+    {
+      "order": 1,
+      "icon": "🤖",
+      "en": {
+        "title": "Arabic-First AI",
+        "description": "Native Arabic language understanding with support for Gulf, Egyptian, Levantine, and Maghrebi dialects. Our AI was trained on Arabic data and understands cultural context, not just translation."
+      },
+      "ar": {
+        "title": "ذكاء اصطناعي عربي أولاً",
+        "description": "فهم لغة عربية أصلي مع دعم اللهجات الخليجية والمصرية والشامية والمغاربية. ذكاؤنا الاصطناعي مدرب على بيانات عربية ويفهم السياق الثقافي، وليس مجرد الترجمة."
+      }
+    },
+    {
+      "order": 2,
+      "icon": "📸",
+      "en": {
+        "title": "Photorealistic 3D Capture",
+        "description": "Industry-leading Matterport Pro3 technology captures spaces with millimeter precision and stunning visual fidelity. Every detail, every texture, every lighting nuance preserved in digital form."
+      },
+      "ar": {
+        "title": "التقاط ثلاثي الأبعاد فوتوغرافي",
+        "description": "تقنية Matterport Pro3 الرائدة في الصناعة تلتقط المساحات بدقة ملليمترية ودقة بصرية مذهلة. كل تفصيل وكل ملمس وكل فارق إضاءة محفوظ في شكل رقمي."
+      }
+    },
+    {
+      "order": 3,
+      "icon": "⚡",
+      "en": {
+        "title": "48-Hour Delivery",
+        "description": "From on-site scanning to fully enhanced virtual experience in just 48 hours. Our streamlined pipeline and regional presence ensure the fastest turnaround in the industry."
+      },
+      "ar": {
+        "title": "تسليم خلال 48 ساعة",
+        "description": "من المسح في الموقع إلى التجربة الافتراضية المحسنة بالكامل في 48 ساعة فقط. خط إنتاجنا المبسط وحضورنا الإقليمي يضمنان أسرع تسليم في الصناعة."
+      }
+    },
+    {
+      "order": 4,
+      "icon": "💳",
+      "en": {
+        "title": "MENA Payment Integration",
+        "description": "Pre-integrated with regional payment gateways including PayTabs, Moyasar, PayFort, Tap, and Fawry. Cash on delivery, installments, and all local payment methods supported."
+      },
+      "ar": {
+        "title": "تكامل بوابات دفع المنطقة",
+        "description": "متكامل مسبقاً مع بوابات الدفع الإقليمية شاملة PayTabs و Moyasar و PayFort و Tap و فوري. الدفع عند الاستلام والتقسيط وجميع طرق الدفع المحلية مدعومة."
+      }
+    },
+    {
+      "order": 5,
+      "icon": "📊",
+      "en": {
+        "title": "Advanced Analytics",
+        "description": "Understand visitor behavior with heatmaps, attention tracking, conversion funnels, and ROI measurement. Know exactly which products get attention and optimize accordingly."
+      },
+      "ar": {
+        "title": "تحليلات متقدمة",
+        "description": "افهم سلوك الزوار بخرائط الحرارة وتتبع الانتباه ومسارات التحويل وقياس العائد. اعرف بالضبط أي المنتجات تحصل على الانتباه وحسّن وفقاً لذلك."
+      }
+    },
+    {
+      "order": 6,
+      "icon": "📱",
+      "en": {
+        "title": "Mobile & AR Ready",
+        "description": "Fully responsive on all devices with native iOS and Android AR support. Customers can visualize products in their space before purchasing using augmented reality."
+      },
+      "ar": {
+        "title": "جاهز للجوال والواقع المعزز",
+        "description": "متجاوب بالكامل على جميع الأجهزة مع دعم AR أصلي لـ iOS و Android. يمكن للعملاء تصور المنتجات في مساحتهم قبل الشراء باستخدام الواقع المعزز."
+      }
+    },
+    {
+      "order": 7,
+      "icon": "🔒",
+      "en": {
+        "title": "Enterprise Security",
+        "description": "SOC 2 compliant infrastructure with data residency options in Saudi Arabia and UAE. Role-based access, SSO integration, and comprehensive audit logs."
+      },
+      "ar": {
+        "title": "أمان على مستوى المؤسسات",
+        "description": "بنية تحتية متوافقة مع SOC 2 مع خيارات إقامة البيانات في السعودية والإمارات. وصول مبني على الأدوار وتكامل SSO وسجلات تدقيق شاملة."
+      }
+    },
+    {
+      "order": 8,
+      "icon": "🌐",
+      "en": {
+        "title": "Global CDN Delivery",
+        "description": "Lightning-fast load times worldwide with edge servers across MENA, Europe, and Asia. 99.9% uptime SLA with automatic failover and redundancy."
+      },
+      "ar": {
+        "title": "توصيل CDN عالمي",
+        "description": "أوقات تحميل سريعة للغاية حول العالم مع خوادم حافة في الشرق الأوسط وأوروبا وآسيا. اتفاقية وقت تشغيل 99.9% مع تجاوز فشل تلقائي وتكرار."
+      }
+    }
+  ]
+}

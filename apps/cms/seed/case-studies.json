@@ -1,0 +1,131 @@
+// seed/case-studies.json
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "suites-egypt-furniture-showroom",
+      "client": "Suites Egypt",
+      "industry": "Retail",
+      "featured": true,
+      "order": 1,
+      "en": {
+        "title": "Suites Egypt: 340% Sales Growth with Virtual Showrooms",
+        "summary": "Premium furniture retailer transformed their sales approach with immersive Matterport virtual showrooms, achieving record-breaking online growth.",
+        "description": "## The Challenge\n\nSuites Egypt, a premium furniture retailer based in Cairo, faced a common challenge: customers wanted to see and experience furniture in person before making significant purchases. With showrooms limited to Cairo and Alexandria, they were missing customers across Egypt and the wider MENA region.\n\n## The Solution\n\nArabiq created comprehensive virtual showrooms of their three flagship locations using Matterport Pro3 technology. Each piece of furniture was tagged with interactive hotspots showing pricing, dimensions, materials, and direct add-to-cart functionality.\n\nWe integrated the virtual experience with their existing e-commerce platform, enabling seamless checkout without leaving the 3D environment.\n\n## The Results\n\nWithin six months of launching their virtual showrooms:\n\n- **340% increase** in online sales\n- **12,000+ virtual visitors** from 24 countries monthly\n- **45% reduction** in return rates (customers knew exactly what they were getting)\n- **60% of sales** now come from outside Cairo/Alexandria\n\n## Client Testimonial\n\n\"Arabiq transformed how we sell furniture. Customers from Saudi Arabia, UAE, and beyond can now walk through our showroom as if they were there in person. The results exceeded our expectations.\" — Mohamed El-Sayed, CEO, Suites Egypt",
+        "metrics": "340% sales increase|12,000+ monthly visitors|45% fewer returns|24 countries reached",
+        "testimonialQuote": "Arabiq transformed how we sell furniture. Customers from Saudi Arabia, UAE, and beyond can now walk through our showroom as if they were there in person.",
+        "testimonialAuthor": "Mohamed El-Sayed",
+        "testimonialRole": "CEO, Suites Egypt"
+      },
+      "ar": {
+        "title": "Suites Egypt: نمو مبيعات 340% مع صالات العرض الافتراضية",
+        "summary": "بائع أثاث فاخر حوّل نهج مبيعاته بصالات عرض Matterport الافتراضية الغامرة، محققاً نمواً قياسياً في المبيعات الإلكترونية.",
+        "description": "## التحدي\n\nواجهت Suites Egypt، بائع أثاث فاخر مقره القاهرة، تحدياً شائعاً: أراد العملاء رؤية وتجربة الأثاث شخصياً قبل إجراء مشتريات كبيرة. مع صالات عرض محدودة في القاهرة والإسكندرية، كانوا يفقدون عملاء عبر مصر ومنطقة الشرق الأوسط الأوسع.\n\n## الحل\n\nأنشأت Arabiq صالات عرض افتراضية شاملة لمواقعهم الثلاثة الرئيسية باستخدام تقنية Matterport Pro3. تم وسم كل قطعة أثاث بنقاط تفاعلية تظهر الأسعار والأبعاد والمواد ووظيفة الإضافة المباشرة للسلة.\n\nدمجنا التجربة الافتراضية مع منصة التجارة الإلكترونية الحالية، مما يتيح الدفع السلس دون مغادرة البيئة ثلاثية الأبعاد.\n\n## النتائج\n\nخلال ستة أشهر من إطلاق صالات العرض الافتراضية:\n\n- **زيادة 340%** في المبيعات الإلكترونية\n- **أكثر من 12,000 زائر افتراضي** من 24 دولة شهرياً\n- **انخفاض 45%** في معدلات الإرجاع (عرف العملاء بالضبط ما يحصلون عليه)\n- **60% من المبيعات** تأتي الآن من خارج القاهرة/الإسكندرية\n\n## شهادة العميل\n\n\"حوّلت Arabiq طريقة بيعنا للأثاث. يمكن للعملاء من السعودية والإمارات وخارجها الآن التجول في صالة العرض كأنهم هناك شخصياً. النتائج فاقت توقعاتنا.\" — محمد السيد، الرئيس التنفيذي، Suites Egypt",
+        "metrics": "زيادة مبيعات 340%|أكثر من 12,000 زائر شهرياً|مرتجعات أقل 45%|وصول لـ 24 دولة",
+        "testimonialQuote": "حوّلت Arabiq طريقة بيعنا للأثاث. يمكن للعملاء من السعودية والإمارات وخارجها الآن التجول في صالة العرض كأنهم هناك شخصياً.",
+        "testimonialAuthor": "محمد السيد",
+        "testimonialRole": "الرئيس التنفيذي، Suites Egypt"
+      }
+    },
+    {
+      "slug": "cairo-fashion-hub-virtual-mall",
+      "client": "Cairo Fashion Hub",
+      "industry": "Retail",
+      "featured": true,
+      "order": 2,
+      "en": {
+        "title": "Cairo Fashion Hub: $2.1M Revenue in Year One",
+        "summary": "A 50-vendor fashion marketplace achieved remarkable success by creating the region's first fully virtual shopping mall.",
+        "description": "## The Challenge\n\nCairo Fashion Hub wanted to create a unified online presence for 50+ independent fashion vendors. Each vendor had different levels of digital capability, and creating individual e-commerce stores would be expensive and fragmented.\n\n## The Solution\n\nArabiq designed and built a complete virtual mall experience. Each vendor received their own branded virtual storefront within a cohesive mall environment. Shoppers could walk through the mall, browse different stores, and checkout from multiple vendors in a single transaction.\n\nWe implemented:\n- Individual vendor dashboards for inventory management\n- Unified checkout with split payments to vendors\n- Arabic AI chatbot for customer assistance\n- Gamification to encourage exploration\n\n## The Results\n\n- **$2.1M in sales** in the first year\n- **200% increase** in daily visitors compared to physical location\n- **60% cost savings** for vendors vs. individual e-commerce stores\n- **35 new vendors** joined after seeing initial success\n\n## Client Testimonial\n\n\"The virtual mall concept was revolutionary for our vendors. Small boutiques that could never afford their own e-commerce presence now have beautiful virtual stores that look as good as the big brands.\" — Yasmine Fouad, Founder, Cairo Fashion Hub",
+        "metrics": "$2.1M first year revenue|200% more daily visitors|60% vendor cost savings|35 new vendors joined",
+        "testimonialQuote": "The virtual mall concept was revolutionary for our vendors. Small boutiques that could never afford their own e-commerce presence now have beautiful virtual stores.",
+        "testimonialAuthor": "Yasmine Fouad",
+        "testimonialRole": "Founder, Cairo Fashion Hub"
+      },
+      "ar": {
+        "title": "Cairo Fashion Hub: إيرادات 2.1 مليون دولار في السنة الأولى",
+        "summary": "سوق أزياء 50 بائع حقق نجاحاً ملحوظاً بإنشاء أول مول تسوق افتراضي كامل في المنطقة.",
+        "description": "## التحدي\n\nأرادت Cairo Fashion Hub إنشاء حضور إلكتروني موحد لأكثر من 50 بائع أزياء مستقل. كان لكل بائع مستويات مختلفة من القدرة الرقمية، وإنشاء متاجر إلكترونية فردية سيكون مكلفاً ومجزأً.\n\n## الحل\n\nصممت وبنت Arabiq تجربة مول افتراضي كاملة. حصل كل بائع على واجهة متجر افتراضية خاصة به ضمن بيئة مول متماسكة. يمكن للمتسوقين التجول في المول وتصفح المتاجر المختلفة والدفع من بائعين متعددين في معاملة واحدة.\n\nطبقنا:\n- لوحات تحكم فردية للبائعين لإدارة المخزون\n- دفع موحد مع تقسيم المدفوعات للبائعين\n- روبوت محادثة عربي بالذكاء الاصطناعي لمساعدة العملاء\n- تلعيب لتشجيع الاستكشاف\n\n## النتائج\n\n- **2.1 مليون دولار مبيعات** في السنة الأولى\n- **زيادة 200%** في الزوار اليوميين مقارنة بالموقع الفعلي\n- **توفير 60%** للبائعين مقارنة بالمتاجر الإلكترونية الفردية\n- **35 بائع جديد** انضموا بعد رؤية النجاح الأولي\n\n## شهادة العميل\n\n\"مفهوم المول الافتراضي كان ثورياً لبائعينا. المتاجر الصغيرة التي لم تكن قادرة على تحمل تكاليف حضور إلكتروني خاص بها الآن لديها متاجر افتراضية جميلة تبدو بجودة العلامات التجارية الكبيرة.\" — ياسمين فؤاد، مؤسسة Cairo Fashion Hub",
+        "metrics": "إيرادات 2.1 مليون دولار السنة الأولى|زوار يوميين أكثر 200%|توفير البائعين 60%|35 بائع جديد انضم",
+        "testimonialQuote": "مفهوم المول الافتراضي كان ثورياً لبائعينا. المتاجر الصغيرة التي لم تكن قادرة على تحمل تكاليف حضور إلكتروني الآن لديها متاجر افتراضية جميلة.",
+        "testimonialAuthor": "ياسمين فؤاد",
+        "testimonialRole": "مؤسسة Cairo Fashion Hub"
+      }
+    },
+    {
+      "slug": "alexandria-national-museum-digital-heritage",
+      "client": "Alexandria National Museum",
+      "industry": "Tourism",
+      "featured": true,
+      "order": 3,
+      "en": {
+        "title": "Alexandria Museum: Preserving Heritage for 500K+ Global Visitors",
+        "summary": "Egypt's historic museum achieved UNESCO recognition for digital preservation while reaching half a million virtual visitors worldwide.",
+        "description": "## The Challenge\n\nThe Alexandria National Museum houses priceless Egyptian artifacts spanning thousands of years. The museum wanted to preserve these treasures digitally while expanding access to people who couldn't visit Egypt in person.\n\n## The Solution\n\nArabiq conducted comprehensive 3D documentation of the entire museum, capturing every exhibit, artifact, and architectural detail. We enhanced the virtual tour with:\n\n- Bilingual AI narration (Arabic and English) explaining each exhibit\n- Detailed artifact information with historical context\n- Accessibility features for visually impaired visitors\n- Educational modules for schools and universities\n\n## The Results\n\n- **500,000+ virtual visitors** from 89 countries in the first year\n- **UNESCO recognition** for digital cultural heritage preservation\n- **85% engagement rate** (average 18 minutes per visit)\n- **Partnership with 200+ schools** for virtual field trips\n- Complete **digital archive** for preservation purposes\n\n## Client Testimonial\n\n\"Arabiq helped us share Egypt's heritage with the world. Students in Japan, researchers in Germany, and curious minds everywhere can now experience our museum. The UNESCO recognition validated our approach to digital preservation.\" — Dr. Amira Hassan, Museum Director",
+        "metrics": "500K+ visitors from 89 countries|UNESCO recognition|85% engagement rate|200+ school partnerships",
+        "testimonialQuote": "Arabiq helped us share Egypt's heritage with the world. Students in Japan, researchers in Germany, and curious minds everywhere can now experience our museum.",
+        "testimonialAuthor": "Dr. Amira Hassan",
+        "testimonialRole": "Museum Director"
+      },
+      "ar": {
+        "title": "متحف الإسكندرية: حفظ التراث لأكثر من 500 ألف زائر عالمي",
+        "summary": "متحف مصر التاريخي حقق اعتراف اليونسكو للحفظ الرقمي مع الوصول لنصف مليون زائر افتراضي حول العالم.",
+        "description": "## التحدي\n\nيضم متحف الإسكندرية القومي قطعاً أثرية مصرية لا تقدر بثمن تمتد لآلاف السنين. أراد المتحف حفظ هذه الكنوز رقمياً مع توسيع الوصول للأشخاص الذين لا يستطيعون زيارة مصر شخصياً.\n\n## الحل\n\nأجرت Arabiq توثيقاً ثلاثي الأبعاد شاملاً للمتحف بأكمله، ملتقطة كل معرض وقطعة أثرية وتفصيل معماري. عززنا الجولة الافتراضية بـ:\n\n- سرد ذكاء اصطناعي ثنائي اللغة (عربي وإنجليزي) يشرح كل معرض\n- معلومات مفصلة عن القطع الأثرية مع السياق التاريخي\n- ميزات إمكانية الوصول للزوار ضعاف البصر\n- وحدات تعليمية للمدارس والجامعات\n\n## النتائج\n\n- **أكثر من 500,000 زائر افتراضي** من 89 دولة في السنة الأولى\n- **اعتراف اليونسكو** لحفظ التراث الثقافي الرقمي\n- **معدل تفاعل 85%** (متوسط 18 دقيقة لكل زيارة)\n- **شراكة مع أكثر من 200 مدرسة** للرحلات الميدانية الافتراضية\n- **أرشيف رقمي كامل** لأغراض الحفظ\n\n## شهادة العميل\n\n\"ساعدتنا Arabiq في مشاركة تراث مصر مع العالم. الطلاب في اليابان والباحثون في ألمانيا والعقول الفضولية في كل مكان يمكنهم الآن تجربة متحفنا. اعتراف اليونسكو أكد نهجنا في الحفظ الرقمي.\" — د. أميرة حسن، مديرة المتحف",
+        "metrics": "أكثر من 500 ألف زائر من 89 دولة|اعتراف اليونسكو|معدل تفاعل 85%|شراكة مع 200+ مدرسة",
+        "testimonialQuote": "ساعدتنا Arabiq في مشاركة تراث مصر مع العالم. الطلاب في اليابان والباحثون في ألمانيا والعقول الفضولية في كل مكان يمكنهم الآن تجربة متحفنا.",
+        "testimonialAuthor": "د. أميرة حسن",
+        "testimonialRole": "مديرة المتحف"
+      }
+    },
+    {
+      "slug": "riyadh-motors-automotive-showroom",
+      "client": "Riyadh Motors",
+      "industry": "Retail",
+      "featured": false,
+      "order": 4,
+      "en": {
+        "title": "Riyadh Motors: Selling Luxury Cars Through Virtual Showrooms",
+        "summary": "Premium automotive dealership achieved 65% faster sales cycle by enabling customers to explore vehicles in photorealistic 3D.",
+        "description": "## The Challenge\n\nRiyadh Motors, a luxury car dealership representing multiple premium brands, found that busy executives often couldn't visit the showroom. International customers interested in importing vehicles had no way to inspect cars before purchasing.\n\n## The Solution\n\nArabiq created detailed virtual showrooms for each brand section, with individual 3D captures of every vehicle model. Features included:\n\n- Interior exploration with zoom capability\n- Color and trim visualization options\n- Specification comparison tools\n- Direct connection to sales consultants via video chat\n- Test drive scheduling integration\n\n## The Results\n\n- **65% faster** sales cycle for virtual-first customers\n- **SAR 4.2M in sales** attributed to virtual showroom leads\n- **40% of buyers** completed initial selection online\n- **International orders** increased 3x from GCC countries",
+        "metrics": "65% faster sales cycle|SAR 4.2M in virtual leads|40% online selection|3x international orders",
+        "testimonialQuote": "Our customers can now explore a Mercedes interior at midnight from their home. By the time they visit, they know exactly what they want.",
+        "testimonialAuthor": "Khalid Al-Mutairi",
+        "testimonialRole": "General Manager, Riyadh Motors"
+      },
+      "ar": {
+        "title": "Riyadh Motors: بيع السيارات الفاخرة عبر صالات العرض الافتراضية",
+        "summary": "وكالة سيارات فاخرة حققت دورة مبيعات أسرع 65% بتمكين العملاء من استكشاف السيارات بتقنية ثلاثية الأبعاد فوتوغرافية.",
+        "description": "## التحدي\n\nوجدت Riyadh Motors، وكالة سيارات فاخرة تمثل علامات تجارية متعددة ممتازة، أن المديرين المشغولين في كثير من الأحيان لا يستطيعون زيارة صالة العرض. العملاء الدوليون المهتمون باستيراد السيارات لم يكن لديهم طريقة لفحص السيارات قبل الشراء.\n\n## الحل\n\nأنشأت Arabiq صالات عرض افتراضية مفصلة لكل قسم علامة تجارية، مع التقاطات ثلاثية الأبعاد فردية لكل طراز سيارة. شملت الميزات:\n\n- استكشاف داخلي مع قدرة التكبير\n- خيارات تصور الألوان والتشطيبات\n- أدوات مقارنة المواصفات\n- اتصال مباشر بمستشاري المبيعات عبر دردشة الفيديو\n- تكامل جدولة تجربة القيادة\n\n## النتائج\n\n- **دورة مبيعات أسرع 65%** للعملاء الافتراضيين أولاً\n- **4.2 مليون ريال مبيعات** منسوبة لعملاء صالة العرض الافتراضية\n- **40% من المشترين** أكملوا الاختيار الأولي إلكترونياً\n- **الطلبات الدولية** زادت 3 أضعاف من دول الخليج",
+        "metrics": "دورة مبيعات أسرع 65%|4.2 مليون ريال عملاء افتراضيين|40% اختيار إلكتروني|3 أضعاف الطلبات الدولية",
+        "testimonialQuote": "يمكن لعملائنا الآن استكشاف داخل مرسيدس في منتصف الليل من منازلهم. بحلول وقت زيارتهم، يعرفون بالضبط ما يريدون.",
+        "testimonialAuthor": "خالد المطيري",
+        "testimonialRole": "المدير العام، Riyadh Motors"
+      }
+    },
+    {
+      "slug": "gulf-tech-summit-virtual-conference",
+      "client": "Gulf Tech Summit",
+      "industry": "Events",
+      "featured": false,
+      "order": 5,
+      "en": {
+        "title": "Gulf Tech Summit: 10,000 Attendees Across 40 Countries",
+        "summary": "Annual technology conference transformed into a hybrid event, tripling attendance while reducing costs by 60%.",
+        "description": "## The Challenge\n\nThe Gulf Tech Summit, the region's premier technology conference, was limited to 2,000 in-person attendees at a Riyadh venue. They wanted to expand reach without losing the networking and engagement that made the event valuable.\n\n## The Solution\n\nArabiq built a comprehensive virtual event platform featuring:\n\n- 3D exhibition hall with 75 sponsor booths\n- Live-streamed keynotes with real-time Arabic/English translation\n- AI-powered networking matching attendees by interests\n- Interactive workshops with breakout rooms\n- Gamification with prizes for engagement\n\n## The Results\n\n- **10,000 total attendees** (2,000 in-person + 8,000 virtual)\n- **40 countries** represented\n- **60% cost reduction** vs. expanding physical venue\n- **92% sponsor satisfaction** (higher than previous years)\n- **Event content accessible** for 6 months post-event",
+        "metrics": "10,000 total attendees|40 countries reached|60% cost savings|92% sponsor satisfaction",
+        "testimonialQuote": "Going hybrid with Arabiq was the best decision we made. We reached 5x more people while actually spending less than previous years.",
+        "testimonialAuthor": "Sara Al-Dosari",
+        "testimonialRole": "Event Director, Gulf Tech Summit"
+      },
+      "ar": {
+        "title": "Gulf Tech Summit: 10,000 حاضر من 40 دولة",
+        "summary": "مؤتمر التقنية السنوي تحوّل لفعالية هجينة، ضاعف الحضور ثلاث مرات مع تقليل التكاليف 60%.",
+        "description": "## التحدي\n\nكانت Gulf Tech Summit، مؤتمر التقنية الأول في المنطقة، محدودة بـ 2,000 حاضر شخصياً في مكان بالرياض. أرادوا توسيع الوصول دون خسارة التواصل والتفاعل الذي جعل الفعالية قيّمة.\n\n## الحل\n\nبنت Arabiq منصة فعالية افتراضية شاملة تضم:\n\n- قاعة معارض ثلاثية الأبعاد مع 75 جناح راعي\n- كلمات رئيسية مبثوثة مباشرة مع ترجمة فورية عربي/إنجليزي\n- تواصل مدعوم بالذكاء الاصطناعي يطابق الحاضرين حسب الاهتمامات\n- ورش عمل تفاعلية مع غرف جانبية\n- تلعيب مع جوائز للتفاعل\n\n## النتائج\n\n- **10,000 حاضر إجمالي** (2,000 شخصياً + 8,000 افتراضياً)\n- **40 دولة** ممثلة\n- **تقليل التكلفة 60%** مقارنة بتوسيع المكان الفعلي\n- **رضا الرعاة 92%** (أعلى من السنوات السابقة)\n- **محتوى الفعالية متاح** لـ 6 أشهر بعد الفعالية",
+        "metrics": "10,000 حاضر إجمالي|40 دولة وصلنا لها|توفير 60%|رضا الرعاة 92%",
+        "testimonialQuote": "التحول للهجين مع Arabiq كان أفضل قرار اتخذناه. وصلنا لـ 5 أضعاف الأشخاص بينما أنفقنا أقل من السنوات السابقة.",
+        "testimonialAuthor": "سارة الدوسري",
+        "testimonialRole": "مديرة الفعالية، Gulf Tech Summit"
+      }
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+// seed/trusted-companies.json
+{
+  "identifierField": "order",
+  "items": [
+    {
+      "order": 1,
+      "logoUrl": null,
+      "en": {
+        "name": "Saudi Telecom Company",
+        "industry": "Telecommunications"
+      },
+      "ar": {
+        "name": "شركة الاتصالات السعودية",
+        "industry": "الاتصالات"
+      }
+    },
+    {
+      "order": 2,
+      "logoUrl": null,
+      "en": {
+        "name": "Emaar Properties",
+        "industry": "Real Estate"
+      },
+      "ar": {
+        "name": "إعمار العقارية",
+        "industry": "العقارات"
+      }
+    },
+    {
+      "order": 3,
+      "logoUrl": null,
+      "en": {
+        "name": "Majid Al Futtaim",
+        "industry": "Retail & Entertainment"
+      },
+      "ar": {
+        "name": "ماجد الفطيم",
+        "industry": "التجزئة والترفيه"
+      }
+    },
+    {
+      "order": 4,
+      "logoUrl": null,
+      "en": {
+        "name": "Almarai",
+        "industry": "Food & Beverage"
+      },
+      "ar": {
+        "name": "المراعي",
+        "industry": "الأغذية والمشروبات"
+      }
+    },
+    {
+      "order": 5,
+      "logoUrl": null,
+      "en": {
+        "name": "Saudi Aramco",
+        "industry": "Energy"
+      },
+      "ar": {
+        "name": "أرامكو السعودية",
+        "industry": "الطاقة"
+      }
+    },
+    {
+      "order": 6,
+      "logoUrl": null,
+      "en": {
+        "name": "Dubai Tourism",
+        "industry": "Tourism & Hospitality"
+      },
+      "ar": {
+        "name": "سياحة دبي",
+        "industry": "السياحة والضيافة"
+      }
+    },
+    {
+      "order": 7,
+      "logoUrl": null,
+      "en": {
+        "name": "Jarir Bookstore",
+        "industry": "Retail"
+      },
+      "ar": {
+        "name": "مكتبة جرير",
+        "industry": "التجزئة"
+      }
+    },
+    {
+      "order": 8,
+      "logoUrl": null,
+      "en": {
+        "name": "ROSHN",
+        "industry": "Real Estate Development"
+      },
+      "ar": {
+        "name": "روشن",
+        "industry": "التطوير العقاري"
+      }
+    }
+  ]
+}

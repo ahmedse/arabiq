@@ -1,0 +1,132 @@
+// seed/demos.json
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "virtual-furniture-showroom",
+      "demoType": "matterport",
+      "accessLevel": "public",
+      "featured": true,
+      "order": 1,
+      "en": {
+        "title": "Virtual Furniture Showroom",
+        "summary": "Explore a fully interactive 3D furniture showroom with click-to-buy functionality",
+        "description": "Experience how Arabiq transforms retail spaces into immersive shopping experiences. This demo showcases a complete furniture showroom with:\n\n- Photorealistic 3D environment captured with Matterport Pro3\n- Interactive product hotspots with pricing and specifications\n- Add-to-cart functionality directly from the 3D space\n- Dollhouse view for complete store overview\n- Measurement tools to check product dimensions\n\nClick any product tag to see details and purchase options.",
+        "duration": "5-10 minutes",
+        "ctaText": "Explore Showroom"
+      },
+      "ar": {
+        "title": "صالة عرض أثاث افتراضية",
+        "summary": "استكشف صالة عرض أثاث ثلاثية الأبعاد تفاعلية بالكامل مع وظيفة الشراء بنقرة",
+        "description": "اختبر كيف تحوّل Arabiq مساحات التجزئة إلى تجارب تسوق غامرة. يعرض هذا العرض صالة عرض أثاث كاملة مع:\n\n- بيئة ثلاثية الأبعاد فوتوغرافية ملتقطة بـ Matterport Pro3\n- نقاط منتجات تفاعلية مع الأسعار والمواصفات\n- وظيفة الإضافة للسلة مباشرة من المساحة ثلاثية الأبعاد\n- عرض الدمية لنظرة عامة كاملة على المتجر\n- أدوات القياس للتحقق من أبعاد المنتج\n\nانقر على أي علامة منتج لرؤية التفاصيل وخيارات الشراء.",
+        "duration": "5-10 دقائق",
+        "ctaText": "استكشف صالة العرض"
+      }
+    },
+    {
+      "slug": "ai-shopping-assistant",
+      "demoType": "ai-chat",
+      "accessLevel": "public",
+      "featured": true,
+      "order": 2,
+      "en": {
+        "title": "Arabic AI Shopping Assistant",
+        "summary": "Chat with our intelligent Arabic assistant that understands dialects and helps you shop",
+        "description": "Try our Arabic-first AI shopping assistant. This demo showcases:\n\n- Natural Arabic conversation in multiple dialects (Gulf, Egyptian, Levantine)\n- Product recommendations based on your preferences\n- Size and color guidance\n- Price comparisons and availability checks\n- Order tracking and support\n\nTry asking in Arabic or English—our AI understands both and can switch seamlessly.",
+        "duration": "2-5 minutes",
+        "ctaText": "Start Chatting"
+      },
+      "ar": {
+        "title": "مساعد التسوق بالذكاء الاصطناعي العربي",
+        "summary": "تحدث مع مساعدنا العربي الذكي الذي يفهم اللهجات ويساعدك في التسوق",
+        "description": "جرب مساعد التسوق بالذكاء الاصطناعي العربي أولاً. يعرض هذا العرض:\n\n- محادثة عربية طبيعية بلهجات متعددة (خليجية، مصرية، شامية)\n- توصيات منتجات بناءً على تفضيلاتك\n- إرشادات الحجم واللون\n- مقارنات الأسعار والتحقق من التوفر\n- تتبع الطلبات والدعم\n\nجرب السؤال بالعربية أو الإنجليزية — ذكاؤنا الاصطناعي يفهم كليهما ويمكنه التبديل بسلاسة.",
+        "duration": "2-5 دقائق",
+        "ctaText": "ابدأ المحادثة"
+      }
+    },
+    {
+      "slug": "virtual-hotel-tour",
+      "demoType": "matterport",
+      "accessLevel": "public",
+      "featured": true,
+      "order": 3,
+      "en": {
+        "title": "Luxury Hotel Virtual Tour",
+        "summary": "Walk through a 5-star hotel and explore rooms, amenities, and facilities",
+        "description": "See how hotels use Arabiq to showcase their properties. This demo features a luxury hotel with:\n\n- Multiple room type explorations (Standard, Deluxe, Suite, Presidential)\n- Spa, pool, and fitness center tours\n- Restaurant and dining area previews\n- Conference and event space visualization\n- Direct booking integration\n\nExperience the hotel as if you were there, then book with confidence.",
+        "duration": "10-15 minutes",
+        "ctaText": "Tour the Hotel"
+      },
+      "ar": {
+        "title": "جولة فندق فاخر افتراضية",
+        "summary": "تجول في فندق 5 نجوم واستكشف الغرف والمرافق والخدمات",
+        "description": "شاهد كيف تستخدم الفنادق Arabiq لعرض عقاراتها. يعرض هذا العرض فندقاً فاخراً مع:\n\n- استكشاف أنواع غرف متعددة (قياسية، ديلوكس، جناح، رئاسي)\n- جولات السبا والمسبح ومركز اللياقة\n- معاينات المطعم ومنطقة الطعام\n- تصور مساحات المؤتمرات والفعاليات\n- تكامل الحجز المباشر\n\nاختبر الفندق كأنك هناك، ثم احجز بثقة.",
+        "duration": "10-15 دقيقة",
+        "ctaText": "تجول في الفندق"
+      }
+    },
+    {
+      "slug": "virtual-event-platform",
+      "demoType": "vfair",
+      "accessLevel": "authenticated",
+      "featured": false,
+      "order": 4,
+      "en": {
+        "title": "Virtual Event Platform",
+        "summary": "Experience our VFair platform with virtual booths, networking, and live sessions",
+        "description": "Explore our complete virtual event solution. This demo includes:\n\n- 3D exhibition hall with interactive sponsor booths\n- Live session viewing with Q&A\n- AI-powered networking lounge\n- Document downloads and lead capture\n- Gamification and engagement features\n\nNote: This demo requires login to experience the full networking features.",
+        "duration": "15-20 minutes",
+        "ctaText": "Enter Event"
+      },
+      "ar": {
+        "title": "منصة الفعاليات الافتراضية",
+        "summary": "اختبر منصة VFair لدينا مع أجنحة افتراضية وتواصل وجلسات مباشرة",
+        "description": "استكشف حل الفعاليات الافتراضية الكامل لدينا. يشمل هذا العرض:\n\n- قاعة معارض ثلاثية الأبعاد مع أجنحة رعاة تفاعلية\n- مشاهدة جلسات مباشرة مع أسئلة وأجوبة\n- صالة تواصل مدعومة بالذكاء الاصطناعي\n- تحميل المستندات والتقاط العملاء المحتملين\n- ميزات التلعيب والتفاعل\n\nملاحظة: يتطلب هذا العرض تسجيل الدخول لتجربة ميزات التواصل الكاملة.",
+        "duration": "15-20 دقيقة",
+        "ctaText": "ادخل الفعالية"
+      }
+    },
+    {
+      "slug": "real-estate-property-tour",
+      "demoType": "matterport",
+      "accessLevel": "public",
+      "featured": false,
+      "order": 5,
+      "en": {
+        "title": "Luxury Villa Property Tour",
+        "summary": "Explore a premium residential property with detailed room-by-room walkthrough",
+        "description": "See how real estate professionals use Arabiq to sell properties faster. This villa tour features:\n\n- Complete interior and exterior capture\n- Room measurements and floor plan view\n- Neighborhood and amenity information\n- Agent contact integration\n- Mortgage calculator\n\nPerfect for international buyers or anyone who wants to preview before scheduling a physical visit.",
+        "duration": "8-12 minutes",
+        "ctaText": "Tour Property"
+      },
+      "ar": {
+        "title": "جولة فيلا فاخرة",
+        "summary": "استكشف عقاراً سكنياً فاخراً بجولة مفصلة غرفة بغرفة",
+        "description": "شاهد كيف يستخدم المتخصصون العقاريون Arabiq لبيع العقارات بشكل أسرع. تعرض جولة الفيلا هذه:\n\n- التقاط داخلي وخارجي كامل\n- قياسات الغرف وعرض مخطط الطابق\n- معلومات الحي والمرافق\n- تكامل الاتصال بالوكيل\n- حاسبة الرهن العقاري\n\nمثالي للمشترين الدوليين أو أي شخص يريد المعاينة قبل جدولة زيارة فعلية.",
+        "duration": "8-12 دقيقة",
+        "ctaText": "تجول في العقار"
+      }
+    },
+    {
+      "slug": "museum-virtual-gallery",
+      "demoType": "matterport",
+      "accessLevel": "public",
+      "featured": false,
+      "order": 6,
+      "en": {
+        "title": "Museum Virtual Gallery",
+        "summary": "Experience a cultural heritage site with AI-powered audio narration",
+        "description": "Discover how museums and cultural sites use Arabiq for digital preservation and global access. This demo includes:\n\n- High-resolution artifact capture\n- AI-generated audio narration in Arabic and English\n- Detailed exhibit information cards\n- Educational quiz integration\n- Accessibility features\n\nExperience the museum from anywhere in the world.",
+        "duration": "10-20 minutes",
+        "ctaText": "Visit Museum"
+      },
+      "ar": {
+        "title": "معرض متحف افتراضي",
+        "summary": "اختبر موقعاً للتراث الثقافي مع سرد صوتي مدعوم بالذكاء الاصطناعي",
+        "description": "اكتشف كيف تستخدم المتاحف والمواقع الثقافية Arabiq للحفظ الرقمي والوصول العالمي. يشمل هذا العرض:\n\n- التقاط قطع أثرية بدقة عالية\n- سرد صوتي مولّد بالذكاء الاصطناعي بالعربية والإنجليزية\n- بطاقات معلومات معرض مفصلة\n- تكامل اختبار تعليمي\n- ميزات إمكانية الوصول\n\nاختبر المتحف من أي مكان في العالم.",
+        "duration": "10-20 دقيقة",
+        "ctaText": "زر المتحف"
+      }
+    }
+  ]
+}

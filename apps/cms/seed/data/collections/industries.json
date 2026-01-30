@@ -1,90 +1,0 @@
-{
-  "apiId": "industries",
-  "identifierField": "slug",
-  "items": [
-    {
-      "slug": "retail-ecommerce",
-      "icon": "🛍️",
-      "en": {
-        "title": "Retail & E-commerce",
-        "summary": "Virtual malls, 3D showrooms, and immersive shopping experiences",
-        "description": "# Retail & E-commerce\n\nTransform online shopping with immersive 3D experiences."
-      },
-      "ar": {
-        "title": "التجزئة والتجارة الإلكترونية",
-        "summary": "مراكز تسوق افتراضية وصالات عرض ثلاثية الأبعاد وتجارب تسوق غامرة",
-        "description": "# التجزئة والتجارة الإلكترونية\n\nحوّل التسوق الإلكتروني بتجارب ثلاثية الأبعاد غامرة."
-      }
-    },
-    {
-      "slug": "real-estate",
-      "icon": "🏢",
-      "en": {
-        "title": "Real Estate",
-        "summary": "Virtual property tours, digital twin listings, and remote viewings",
-        "description": "# Real Estate\n\nRevolutionize property sales with digital twins."
-      },
-      "ar": {
-        "title": "العقارات",
-        "summary": "جولات عقارية افتراضية وقوائم التوأم الرقمي والمشاهدة عن بُعد",
-        "description": "# العقارات\n\nأحدث ثورة في مبيعات العقارات بالتوائم الرقمية."
-      }
-    },
-    {
-      "slug": "tourism-hospitality",
-      "icon": "✈️",
-      "en": {
-        "title": "Tourism & Hospitality",
-        "summary": "Hotel virtual tours, restaurant previews, and destination marketing",
-        "description": "# Tourism & Hospitality\n\nShowcase venues with photorealistic 3D."
-      },
-      "ar": {
-        "title": "السياحة والضيافة",
-        "summary": "جولات فنادق افتراضية ومعاينات مطاعم وتسويق الوجهات",
-        "description": "# السياحة والضيافة\n\nاعرض الأماكن بتقنية 3D فوتوغرافية."
-      }
-    },
-    {
-      "slug": "events-exhibitions",
-      "icon": "🎪",
-      "en": {
-        "title": "Events & Exhibitions",
-        "summary": "Virtual trade shows, hybrid conferences, and digital exhibition halls",
-        "description": "# Events & Exhibitions\n\nExtend events into the virtual space."
-      },
-      "ar": {
-        "title": "الفعاليات والمعارض",
-        "summary": "معارض تجارية افتراضية ومؤتمرات هجينة وقاعات معارض رقمية",
-        "description": "# الفعاليات والمعارض\n\nوسّع الفعاليات إلى الفضاء الافتراضي."
-      }
-    },
-    {
-      "slug": "education",
-      "icon": "🎓",
-      "en": {
-        "title": "Education",
-        "summary": "Virtual campus tours, lab walkthroughs, and immersive learning",
-        "description": "# Education\n\nCreate engaging 3D learning environments."
-      },
-      "ar": {
-        "title": "التعليم",
-        "summary": "جولات حرم جامعية افتراضية وجولات مختبرات وتعليم غامر",
-        "description": "# التعليم\n\nأنشئ بيئات تعليمية ثلاثية الأبعاد جذابة."
-      }
-    },
-    {
-      "slug": "healthcare",
-      "icon": "⚕️",
-      "en": {
-        "title": "Healthcare",
-        "summary": "Hospital virtual tours, patient wayfinding, and facility showcases",
-        "description": "# Healthcare\n\nImprove patient experience with virtual access."
-      },
-      "ar": {
-        "title": "الرعاية الصحية",
-        "summary": "جولات مستشفيات افتراضية وتوجيه المرضى وعروض المنشآت",
-        "description": "# الرعاية الصحية\n\nحسّن تجربة المرضى بالوصول الافتراضي."
-      }
-    }
-  ]
-}

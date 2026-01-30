@@ -1,0 +1,45 @@
+// seed/pricing-page.json
+{
+  "en": {
+    "heroTitle": "Simple, Transparent Pricing",
+    "heroSubtitle": "Choose the plan that fits your business. No hidden fees, no surprises.",
+    "monthlyLabel": "Monthly",
+    "annualLabel": "Annual",
+    "annualDiscount": "Save 20%",
+    "popularBadge": "Most Popular",
+    "featuresTitle": "All Plans Include",
+    "feature1": "Matterport 3D scanning",
+    "feature2": "Cloud hosting with CDN",
+    "feature3": "Mobile responsive",
+    "feature4": "Basic analytics",
+    "feature5": "Email support",
+    "comparisonTitle": "Detailed Plan Comparison",
+    "enterpriseTitle": "Need a Custom Solution?",
+    "enterpriseSubtitle": "For large organizations with complex requirements, we offer tailored packages with dedicated support.",
+    "enterpriseCta": "Contact Enterprise Sales",
+    "faqTitle": "Pricing FAQs",
+    "guaranteeTitle": "30-Day Money-Back Guarantee",
+    "guaranteeText": "Try any plan risk-free. If you're not completely satisfied within the first 30 days, we'll refund your payment in full."
+  },
+  "ar": {
+    "heroTitle": "تسعير بسيط وشفاف",
+    "heroSubtitle": "اختر الخطة المناسبة لعملك. بدون رسوم خفية، بدون مفاجآت.",
+    "monthlyLabel": "شهري",
+    "annualLabel": "سنوي",
+    "annualDiscount": "وفر 20%",
+    "popularBadge": "الأكثر شيوعاً",
+    "featuresTitle": "جميع الخطط تشمل",
+    "feature1": "مسح Matterport ثلاثي الأبعاد",
+    "feature2": "استضافة سحابية مع CDN",
+    "feature3": "متجاوب مع الجوال",
+    "feature4": "تحليلات أساسية",
+    "feature5": "دعم بالبريد الإلكتروني",
+    "comparisonTitle": "مقارنة الخطط التفصيلية",
+    "enterpriseTitle": "تحتاج حلاً مخصصاً؟",
+    "enterpriseSubtitle": "للمؤسسات الكبيرة ذات المتطلبات المعقدة، نقدم باقات مخصصة مع دعم مخصص.",
+    "enterpriseCta": "تواصل مع مبيعات المؤسسات",
+    "faqTitle": "الأسئلة الشائعة عن التسعير",
+    "guaranteeTitle": "ضمان استرداد الأموال خلال 30 يوماً",
+    "guaranteeText": "جرب أي خطة بدون مخاطرة. إذا لم تكن راضياً تماماً خلال الـ 30 يوماً الأولى، سنسترد دفعتك بالكامل."
+  }
+}

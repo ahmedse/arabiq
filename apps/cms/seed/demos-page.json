@@ -1,0 +1,35 @@
+// seed/demos-page.json
+{
+  "en": {
+    "heroTitle": "Experience the Technology",
+    "heroSubtitle": "Try our interactive demos and see how Arabiq can transform your business",
+    "filterAll": "All Demos",
+    "filterMatterport": "3D Tours",
+    "filterAi": "AI Features",
+    "filterVfair": "Virtual Events",
+    "accessPublic": "Public Demo",
+    "accessAuth": "Login Required",
+    "accessEnterprise": "Enterprise Only",
+    "tryNowButton": "Try Now",
+    "requestAccessButton": "Request Access",
+    "ctaTitle": "Want a Custom Demo?",
+    "ctaSubtitle": "We'll create a personalized demo showing exactly how Arabiq works for your specific use case.",
+    "ctaButton": "Request Custom Demo"
+  },
+  "ar": {
+    "heroTitle": "جرّب التقنية",
+    "heroSubtitle": "جرب عروضنا التفاعلية وشاهد كيف يمكن لـ Arabiq تحويل عملك",
+    "filterAll": "جميع العروض",
+    "filterMatterport": "جولات ثلاثية الأبعاد",
+    "filterAi": "ميزات الذكاء الاصطناعي",
+    "filterVfair": "الفعاليات الافتراضية",
+    "accessPublic": "عرض عام",
+    "accessAuth": "يتطلب تسجيل الدخول",
+    "accessEnterprise": "للمؤسسات فقط",
+    "tryNowButton": "جرب الآن",
+    "requestAccessButton": "اطلب الوصول",
+    "ctaTitle": "تريد عرضاً مخصصاً؟",
+    "ctaSubtitle": "سننشئ عرضاً مخصصاً يُظهر بالضبط كيف يعمل Arabiq لحالتك المحددة.",
+    "ctaButton": "اطلب عرضاً مخصصاً"
+  }
+}

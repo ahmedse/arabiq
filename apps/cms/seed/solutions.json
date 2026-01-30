@@ -1,0 +1,150 @@
+// seed/solutions.json
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "vmall-platform",
+      "icon": "🏬",
+      "category": "platform",
+      "order": 1,
+      "en": {
+        "title": "Vmall Platform",
+        "tagline": "Your Virtual Mall, Open 24/7",
+        "summary": "Create immersive 3D virtual malls, shops, and exhibitions using Matterport technology with full e-commerce integration.",
+        "description": "## Transform Physical Retail Into Digital Experiences\n\nThe Vmall Platform is our flagship solution for retailers looking to create stunning virtual shopping experiences. Using industry-leading Matterport technology, we capture your physical space in photorealistic 3D and enhance it with interactive e-commerce features.\n\n### Key Features\n\n**Photorealistic 3D Capture**: Our Matterport Pro3 cameras capture every detail of your space with millimeter accuracy.\n\n**Interactive Hotspots**: Add clickable product tags, video embeds, promotional banners, and direct checkout links throughout your virtual space.\n\n**E-commerce Integration**: Seamlessly connect with Shopify, WooCommerce, Magento, or custom platforms for real-time inventory and checkout.\n\n**Multi-Language Support**: Automatic RTL support with Arabic-first interface design.\n\n**Analytics Dashboard**: Track visitor behavior, heatmaps, conversion funnels, and ROI metrics.\n\n### Use Cases\n\n- Virtual showrooms for furniture and home goods\n- Fashion boutique digital twins\n- Electronics and appliance demonstrations\n- Luxury brand immersive experiences\n- Multi-vendor shopping malls",
+        "features": "Matterport Pro3 scanning|Interactive product hotspots|E-commerce integration|Multi-language support|Real-time analytics|Mobile and VR compatible",
+        "benefits": "Increase online sales by up to 340%|Reach customers in any location|Reduce return rates with accurate previews|Open 24/7 with no staffing costs|Stand out from traditional e-commerce",
+        "ctaText": "Launch Your Virtual Mall"
+      },
+      "ar": {
+        "title": "منصة Vmall",
+        "tagline": "مولك الافتراضي، مفتوح على مدار الساعة",
+        "summary": "أنشئ مراكز تسوق ومتاجر ومعارض افتراضية ثلاثية الأبعاد غامرة باستخدام تقنية Matterport مع تكامل كامل للتجارة الإلكترونية.",
+        "description": "## حوّل التجزئة الفعلية إلى تجارب رقمية\n\nمنصة Vmall هي حلنا الرئيسي لتجار التجزئة الراغبين في إنشاء تجارب تسوق افتراضية مذهلة. باستخدام تقنية Matterport الرائدة في الصناعة، نلتقط مساحتك الفعلية بتقنية ثلاثية الأبعاد فوتوغرافية ونعززها بميزات التجارة الإلكترونية التفاعلية.\n\n### الميزات الرئيسية\n\n**التقاط ثلاثي الأبعاد فوتوغرافي**: كاميرات Matterport Pro3 لدينا تلتقط كل تفصيل في مساحتك بدقة ملليمترية.\n\n**نقاط تفاعلية**: أضف علامات منتجات قابلة للنقر، وتضمينات فيديو، ولافتات ترويجية، وروابط دفع مباشرة في مساحتك الافتراضية.\n\n**تكامل التجارة الإلكترونية**: اتصال سلس مع Shopify و WooCommerce و Magento أو المنصات المخصصة للمخزون والدفع الفوري.\n\n**دعم متعدد اللغات**: دعم تلقائي لـ RTL مع تصميم واجهة عربية أولاً.\n\n**لوحة تحليلات**: تتبع سلوك الزوار، وخرائط الحرارة، ومسارات التحويل، ومقاييس العائد.\n\n### حالات الاستخدام\n\n- صالات عرض افتراضية للأثاث والمنزل\n- توائم رقمية لمتاجر الأزياء\n- عروض الإلكترونيات والأجهزة\n- تجارب غامرة للعلامات الفاخرة\n- مراكز تسوق متعددة البائعين",
+        "features": "مسح Matterport Pro3|نقاط منتجات تفاعلية|تكامل التجارة الإلكترونية|دعم متعدد اللغات|تحليلات فورية|متوافق مع الجوال و VR",
+        "benefits": "زيادة المبيعات الإلكترونية حتى 340%|الوصول للعملاء في أي مكان|تقليل معدلات الإرجاع بمعاينات دقيقة|مفتوح على مدار الساعة بدون تكاليف موظفين|تميّز عن التجارة الإلكترونية التقليدية",
+        "ctaText": "أطلق مولك الافتراضي"
+      }
+    },
+    {
+      "slug": "arabiq-ai-suite",
+      "icon": "🤖",
+      "category": "ai",
+      "order": 2,
+      "en": {
+        "title": "Arabiq AI Suite",
+        "tagline": "Intelligence That Speaks Your Language",
+        "summary": "Arabic-first AI tools including voice narration, intelligent chatbots, personalized recommendations, and computer vision analytics.",
+        "description": "## AI Built for Arabic Markets\n\nThe Arabiq AI Suite is a comprehensive collection of artificial intelligence tools designed specifically for Arabic-speaking markets. Unlike generic AI solutions, our models are trained on Arabic data and understand regional dialects, cultural nuances, and local business contexts.\n\n### Voice AI Narration\n\nTransform your virtual tours with professional AI-generated voice narration in 6 Arabic dialects: Gulf, Egyptian, Levantine, Moroccan, Iraqi, and Modern Standard Arabic. Our voices are natural, expressive, and culturally appropriate.\n\n### Intelligent Chatbot\n\nProvide instant customer support with our Arabic-first conversational AI. It understands mixed Arabic-English queries, regional slang, and can handle complex product questions while maintaining your brand voice.\n\n### Smart Recommendations\n\nBoost conversions with AI-powered product recommendations that understand Arabic shopping patterns, seasonal preferences, and regional trends.\n\n### Vision AI\n\nAutomatically analyze visitor behavior in your virtual spaces. Track attention patterns, identify popular products, and optimize your layout based on data-driven insights.",
+        "features": "Voice narration in 6 Arabic dialects|Intelligent Arabic chatbot|Personalized recommendations|Behavior analytics|Sentiment analysis|Automated content tagging",
+        "benefits": "Native Arabic language understanding|Cultural context awareness|24/7 intelligent customer support|Increased engagement and conversions|Data-driven optimization",
+        "ctaText": "Add AI to Your Experience"
+      },
+      "ar": {
+        "title": "مجموعة Arabiq للذكاء الاصطناعي",
+        "tagline": "ذكاء يتحدث لغتك",
+        "summary": "أدوات ذكاء اصطناعي عربية أولاً تشمل السرد الصوتي وروبوتات المحادثة الذكية والتوصيات المخصصة وتحليلات الرؤية الحاسوبية.",
+        "description": "## ذكاء اصطناعي مبني للأسواق العربية\n\nمجموعة Arabiq للذكاء الاصطناعي هي مجموعة شاملة من أدوات الذكاء الاصطناعي المصممة خصيصاً للأسواق الناطقة بالعربية. على عكس حلول الذكاء الاصطناعي العامة، نماذجنا مدربة على بيانات عربية وتفهم اللهجات الإقليمية والفروق الثقافية وسياقات الأعمال المحلية.\n\n### السرد الصوتي بالذكاء الاصطناعي\n\nحوّل جولاتك الافتراضية بسرد صوتي احترافي مولّد بالذكاء الاصطناعي بـ 6 لهجات عربية: الخليجية والمصرية والشامية والمغربية والعراقية والعربية الفصحى الحديثة. أصواتنا طبيعية ومعبرة وملائمة ثقافياً.\n\n### روبوت المحادثة الذكي\n\nوفر دعم عملاء فوري مع ذكاءنا الاصطناعي المحادثاتي العربي أولاً. يفهم الاستفسارات المختلطة عربي-إنجليزي واللغة العامية الإقليمية ويمكنه التعامل مع أسئلة المنتجات المعقدة مع الحفاظ على صوت علامتك.\n\n### التوصيات الذكية\n\nعزز التحويلات بتوصيات منتجات مدعومة بالذكاء الاصطناعي تفهم أنماط التسوق العربية والتفضيلات الموسمية والاتجاهات الإقليمية.\n\n### الرؤية الحاسوبية\n\nحلل سلوك الزوار تلقائياً في مساحاتك الافتراضية. تتبع أنماط الانتباه وحدد المنتجات الشائعة وحسّن تخطيطك بناءً على رؤى مبنية على البيانات.",
+        "features": "سرد صوتي بـ 6 لهجات عربية|روبوت محادثة عربي ذكي|توصيات مخصصة|تحليلات السلوك|تحليل المشاعر|وسم المحتوى التلقائي",
+        "benefits": "فهم لغة عربية أصلي|وعي بالسياق الثقافي|دعم عملاء ذكي على مدار الساعة|زيادة التفاعل والتحويلات|تحسين مبني على البيانات",
+        "ctaText": "أضف الذكاء الاصطناعي لتجربتك"
+      }
+    },
+    {
+      "slug": "arabiq-commerce",
+      "icon": "🛒",
+      "category": "platform",
+      "order": 3,
+      "en": {
+        "title": "Arabiq Commerce",
+        "tagline": "E-commerce Built for the Region",
+        "summary": "Complete e-commerce backend with MENA payment gateways, regional shipping integrations, multi-currency support, and VAT compliance.",
+        "description": "## E-commerce Infrastructure for MENA\n\nArabiq Commerce provides everything you need to sell online in the Middle East and North Africa. We've solved the complex challenges of regional e-commerce so you can focus on your business.\n\n### Payment Gateways\n\nAccept payments from customers across the region with pre-integrated support for:\n- PayTabs (Saudi Arabia, UAE, Egypt)\n- PayFort (Amazon Payment Services)\n- Moyasar (Saudi Arabia)\n- Tap Payments (GCC)\n- Fawry (Egypt)\n- Cash on Delivery options\n\n### Shipping & Logistics\n\nSeamless integration with regional and international carriers:\n- Aramex\n- SMSA Express\n- DHL Express\n- FedEx\n- Local last-mile providers\n\n### Compliance & Localization\n\n- Automatic VAT calculation for GCC countries\n- ZATCA e-invoicing compliance (Saudi Arabia)\n- Multi-currency support (SAR, AED, EGP, KWD, etc.)\n- Arabic-first checkout experience",
+        "features": "MENA payment gateways|Regional shipping integration|Multi-currency support|VAT compliance|Arabic checkout|Inventory management",
+        "benefits": "Accept payments from all MENA countries|Automated shipping and tracking|Full tax compliance|Reduced cart abandonment|Unified commerce platform",
+        "ctaText": "Power Your E-commerce"
+      },
+      "ar": {
+        "title": "Arabiq Commerce",
+        "tagline": "تجارة إلكترونية مبنية للمنطقة",
+        "summary": "بنية تحتية كاملة للتجارة الإلكترونية مع بوابات دفع الشرق الأوسط وتكاملات الشحن الإقليمية ودعم العملات المتعددة والامتثال لضريبة القيمة المضافة.",
+        "description": "## بنية تجارة إلكترونية للشرق الأوسط\n\nتوفر Arabiq Commerce كل ما تحتاجه للبيع عبر الإنترنت في الشرق الأوسط وشمال أفريقيا. حللنا التحديات المعقدة للتجارة الإلكترونية الإقليمية لتتمكن من التركيز على عملك.\n\n### بوابات الدفع\n\nاقبل المدفوعات من العملاء عبر المنطقة بدعم متكامل مسبقاً لـ:\n- PayTabs (السعودية، الإمارات، مصر)\n- PayFort (خدمات أمازون للدفع)\n- Moyasar (السعودية)\n- Tap Payments (دول الخليج)\n- فوري (مصر)\n- خيارات الدفع عند الاستلام\n\n### الشحن واللوجستيات\n\nتكامل سلس مع شركات الشحن الإقليمية والدولية:\n- أرامكس\n- SMSA Express\n- DHL Express\n- FedEx\n- مزودي التوصيل المحليين\n\n### الامتثال والتوطين\n\n- حساب ضريبة القيمة المضافة التلقائي لدول الخليج\n- امتثال الفوترة الإلكترونية لـ ZATCA (السعودية)\n- دعم العملات المتعددة (ريال، درهم، جنيه، دينار، إلخ)\n- تجربة دفع عربية أولاً",
+        "features": "بوابات دفع الشرق الأوسط|تكامل شحن إقليمي|دعم عملات متعددة|امتثال ضريبة القيمة المضافة|دفع بالعربية|إدارة المخزون",
+        "benefits": "اقبل المدفوعات من جميع دول المنطقة|شحن وتتبع آلي|امتثال ضريبي كامل|تقليل التخلي عن السلة|منصة تجارة موحدة",
+        "ctaText": "شغّل تجارتك الإلكترونية"
+      }
+    },
+    {
+      "slug": "digital-twin-production",
+      "icon": "📸",
+      "category": "service",
+      "order": 4,
+      "en": {
+        "title": "Digital Twin Production",
+        "tagline": "Professional 3D Capture Services",
+        "summary": "End-to-end 3D scanning, modeling, and hosting services with professional Matterport capture and post-production enhancement.",
+        "description": "## Full-Service 3D Production\n\nOur Digital Twin Production service handles everything from initial consultation to final delivery. Our certified technicians use the latest Matterport Pro3 cameras and follow industry best practices to create stunning digital twins of any space.\n\n### The Process\n\n**1. Consultation**: We assess your space and requirements to plan the optimal capture strategy.\n\n**2. On-Site Scanning**: Our technicians arrive with professional equipment and complete the scan with minimal disruption to your operations.\n\n**3. Post-Production**: We enhance your scan with color correction, lighting optimization, and cleanup of any artifacts.\n\n**4. Enhancement**: Add interactive hotspots, information tags, guided tours, and custom branding.\n\n**5. Delivery**: Your digital twin is hosted on our high-performance CDN and ready to embed anywhere.\n\n### What We Scan\n\n- Retail spaces and showrooms\n- Hotels and resorts\n- Real estate properties\n- Museums and cultural sites\n- Event venues\n- Office spaces\n- Industrial facilities",
+        "features": "Matterport Pro3 scanning|Post-production enhancement|Custom hotspots and tags|Guided tour creation|CDN hosting|White-label options",
+        "benefits": "48-hour turnaround available|Professional quality guaranteed|No equipment purchase needed|Ongoing hosting included|Expert technician support",
+        "ctaText": "Schedule a Scan"
+      },
+      "ar": {
+        "title": "إنتاج التوأم الرقمي",
+        "tagline": "خدمات التقاط ثلاثية الأبعاد احترافية",
+        "summary": "خدمات مسح ونمذجة واستضافة ثلاثية الأبعاد شاملة مع التقاط Matterport احترافي وتحسين ما بعد الإنتاج.",
+        "description": "## إنتاج ثلاثي الأبعاد متكامل الخدمة\n\nتتولى خدمة إنتاج التوأم الرقمي لدينا كل شيء من الاستشارة الأولية إلى التسليم النهائي. يستخدم الفنيون المعتمدون لدينا أحدث كاميرات Matterport Pro3 ويتبعون أفضل ممارسات الصناعة لإنشاء توائم رقمية مذهلة لأي مساحة.\n\n### العملية\n\n**1. الاستشارة**: نقيّم مساحتك ومتطلباتك لتخطيط استراتيجية الالتقاط المثلى.\n\n**2. المسح في الموقع**: يصل فنيونا بمعدات احترافية ويكملون المسح بأقل إزعاج لعملياتك.\n\n**3. ما بعد الإنتاج**: نحسّن المسح بتصحيح الألوان وتحسين الإضاءة وتنظيف أي شوائب.\n\n**4. التحسين**: إضافة نقاط تفاعلية وعلامات معلومات وجولات موجهة وعلامة تجارية مخصصة.\n\n**5. التسليم**: يُستضاف توأمك الرقمي على CDN عالي الأداء وجاهز للتضمين في أي مكان.\n\n### ما نمسحه\n\n- مساحات التجزئة وصالات العرض\n- الفنادق والمنتجعات\n- العقارات\n- المتاحف والمواقع الثقافية\n- أماكن الفعاليات\n- مساحات المكاتب\n- المنشآت الصناعية",
+        "features": "مسح Matterport Pro3|تحسين ما بعد الإنتاج|نقاط وعلامات مخصصة|إنشاء جولات موجهة|استضافة CDN|خيارات العلامة البيضاء",
+        "benefits": "تسليم خلال 48 ساعة متاح|جودة احترافية مضمونة|لا حاجة لشراء معدات|استضافة مستمرة مضمنة|دعم فني خبير",
+        "ctaText": "احجز مسحاً"
+      }
+    },
+    {
+      "slug": "vfair-edition",
+      "icon": "🎪",
+      "category": "platform",
+      "order": 5,
+      "en": {
+        "title": "VFair Edition",
+        "tagline": "Virtual Events That Connect",
+        "summary": "Complete virtual events platform for conferences, trade shows, exhibitions, and corporate events with networking and live streaming.",
+        "description": "## Next-Generation Virtual Events\n\nVFair Edition transforms how organizations host events. Whether you're running a trade show, conference, career fair, or product launch, our platform provides an immersive experience that rivals in-person events.\n\n### Event Features\n\n**Virtual Booths**: Exhibitors get customizable 3D booth spaces with product displays, video content, downloadable resources, and live chat.\n\n**Networking Lounges**: AI-powered matchmaking connects attendees with similar interests. Video chat, text messaging, and business card exchange built-in.\n\n**Auditorium & Stages**: Host keynotes and sessions with live streaming, Q&A, polls, and breakout rooms. Supports up to 10,000 concurrent viewers.\n\n**Gamification**: Leaderboards, scavenger hunts, prizes, and achievements keep attendees engaged throughout the event.\n\n### Event Types\n\n- Trade shows and exhibitions\n- Corporate conferences\n- Career fairs and recruitment\n- Product launches\n- Training and workshops\n- Award ceremonies",
+        "features": "Customizable 3D booths|Live streaming stages|AI-powered networking|Interactive Q&A and polls|Gamification engine|Comprehensive analytics",
+        "benefits": "Reach global audiences|Reduce event costs by 70%|Generate qualified leads|Extend event lifespan|Detailed engagement data",
+        "ctaText": "Plan Your Virtual Event"
+      },
+      "ar": {
+        "title": "إصدار VFair",
+        "tagline": "فعاليات افتراضية تربط",
+        "summary": "منصة فعاليات افتراضية كاملة للمؤتمرات والمعارض التجارية والمعارض والفعاليات المؤسسية مع التواصل والبث المباشر.",
+        "description": "## الجيل القادم من الفعاليات الافتراضية\n\nيحوّل إصدار VFair طريقة استضافة المؤسسات للفعاليات. سواء كنت تنظم معرضاً تجارياً أو مؤتمراً أو معرض توظيف أو إطلاق منتج، توفر منصتنا تجربة غامرة تنافس الفعاليات الحضورية.\n\n### ميزات الفعالية\n\n**أجنحة افتراضية**: يحصل العارضون على مساحات أجنحة ثلاثية الأبعاد قابلة للتخصيص مع عروض المنتجات ومحتوى الفيديو والموارد القابلة للتحميل والدردشة المباشرة.\n\n**صالات التواصل**: مطابقة مدعومة بالذكاء الاصطناعي تربط الحاضرين ذوي الاهتمامات المتشابهة. دردشة فيديو ورسائل نصية وتبادل بطاقات أعمال مدمجة.\n\n**القاعة والمنصات**: استضف الكلمات الرئيسية والجلسات مع البث المباشر والأسئلة والأجوبة والاستطلاعات وغرف جانبية. تدعم حتى 10,000 مشاهد متزامن.\n\n**التلعيب**: لوحات المتصدرين والبحث عن الكنز والجوائز والإنجازات تبقي الحاضرين متفاعلين طوال الفعالية.\n\n### أنواع الفعاليات\n\n- المعارض التجارية والمعارض\n- المؤتمرات المؤسسية\n- معارض التوظيف والتوظيف\n- إطلاق المنتجات\n- التدريب وورش العمل\n- حفلات التكريم",
+        "features": "أجنحة ثلاثية الأبعاد قابلة للتخصيص|منصات بث مباشر|تواصل مدعوم بالذكاء الاصطناعي|أسئلة وأجوبة واستطلاعات تفاعلية|محرك تلعيب|تحليلات شاملة",
+        "benefits": "الوصول لجماهير عالمية|تقليل تكاليف الفعالية بنسبة 70%|توليد عملاء محتملين مؤهلين|تمديد عمر الفعالية|بيانات تفاعل مفصلة",
+        "ctaText": "خطط لفعاليتك الافتراضية"
+      }
+    },
+    {
+      "slug": "system-integration",
+      "icon": "🔗",
+      "category": "service",
+      "order": 6,
+      "en": {
+        "title": "System Integration",
+        "tagline": "Connect Everything Seamlessly",
+        "summary": "Connect Arabiq with your existing CRM, ERP, POS, inventory management, and e-commerce systems through our robust API and pre-built integrations.",
+        "description": "## Unified Business Systems\n\nArabiq doesn't replace your existing systems—it enhances them. Our System Integration service connects your virtual experiences with the tools you already use, creating a seamless flow of data across your organization.\n\n### Pre-Built Integrations\n\n**E-commerce Platforms**:\n- Shopify and Shopify Plus\n- WooCommerce\n- Magento / Adobe Commerce\n- Salla (Arabic e-commerce)\n- Zid (Saudi e-commerce)\n\n**ERP & CRM**:\n- Odoo\n- SAP Business One\n- Microsoft Dynamics 365\n- Salesforce\n- HubSpot\n\n**POS Systems**:\n- Square\n- Lightspeed\n- Foodics (MENA)\n\n### Custom Integration\n\nNeed something specific? Our team can build custom integrations using our REST API and webhooks. Full documentation and developer support included.",
+        "features": "Pre-built e-commerce connectors|ERP and CRM integration|POS synchronization|REST API access|Webhook support|Custom development",
+        "benefits": "No data silos|Real-time synchronization|Reduced manual work|Unified analytics|Future-proof architecture",
+        "ctaText": "Discuss Integration"
+      },
+      "ar": {
+        "title": "تكامل الأنظمة",
+        "tagline": "اربط كل شيء بسلاسة",
+        "summary": "اربط Arabiq بأنظمتك الحالية CRM و ERP و POS وإدارة المخزون والتجارة الإلكترونية من خلال واجهة برمجة التطبيقات القوية والتكاملات الجاهزة.",
+        "description": "## أنظمة أعمال موحدة\n\nلا تحل Arabiq محل أنظمتك الحالية — بل تعززها. تربط خدمة تكامل الأنظمة لدينا تجاربك الافتراضية بالأدوات التي تستخدمها بالفعل، مما يخلق تدفقاً سلساً للبيانات عبر مؤسستك.\n\n### التكاملات الجاهزة\n\n**منصات التجارة الإلكترونية**:\n- Shopify و Shopify Plus\n- WooCommerce\n- Magento / Adobe Commerce\n- سلة (تجارة إلكترونية عربية)\n- زد (تجارة إلكترونية سعودية)\n\n**ERP و CRM**:\n- Odoo\n- SAP Business One\n- Microsoft Dynamics 365\n- Salesforce\n- HubSpot\n\n**أنظمة نقاط البيع**:\n- Square\n- Lightspeed\n- Foodics (الشرق الأوسط)\n\n### التكامل المخصص\n\nتحتاج شيئاً محدداً؟ يمكن لفريقنا بناء تكاملات مخصصة باستخدام REST API و webhooks. توثيق كامل ودعم مطورين مضمن.",
+        "features": "موصلات تجارة إلكترونية جاهزة|تكامل ERP و CRM|مزامنة نقاط البيع|وصول REST API|دعم Webhook|تطوير مخصص",
+        "benefits": "لا صوامع بيانات|مزامنة فورية|تقليل العمل اليدوي|تحليلات موحدة|بنية مستقبلية",
+        "ctaText": "ناقش التكامل"
+      }
+    }
+  ]
+}
