@@ -1,8 +1,8 @@
 "use client";
 
-// No providers needed with Strapi authentication
-// Authentication is handled server-side via cookies
+import { AuthProvider } from '@/contexts/AuthContext';
 
+// Wrap app in AuthProvider so client components can access auth state
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return <AuthProvider>{children}</AuthProvider>;
 }

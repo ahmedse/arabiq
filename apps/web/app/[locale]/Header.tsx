@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { UserMenu } from "@/components/auth/UserMenu";
 import { MobileNav } from "./mobile-nav";
@@ -14,6 +15,11 @@ interface HeaderProps {
 }
 
 export function Header({ locale, otherLocale, headerNav, dir, lang }: HeaderProps) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-lg">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
@@ -54,7 +60,11 @@ export function Header({ locale, otherLocale, headerNav, dir, lang }: HeaderProp
           </Link>
 
           {/* User menu or login button */}
-          <UserMenu locale={locale} />
+          {!mounted ? (
+            <div className="w-10 h-10" />
+          ) : (
+            <UserMenu locale={locale} />
+          )}
 
           <MobileNav locale={locale} navItems={headerNav} />
         </div>

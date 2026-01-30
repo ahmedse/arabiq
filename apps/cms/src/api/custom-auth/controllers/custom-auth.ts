@@ -113,7 +113,7 @@ const controller = ({ strapi }) => ({
 
     const knex = strapi.db.connection;
 
-    // Fetch full user
+    // Fetch full user with custom fields
     const fullUser = await knex('up_users')
       .select(
         'id',
@@ -126,6 +126,7 @@ const controller = ({ strapi }) => ({
         'display_name as displayName',
         'account_status as accountStatus',
         'sales_contact_allowed as salesContactAllowed',
+        'last_login as lastLogin',
         'provider',
         'confirmed',
         'blocked',
@@ -139,25 +140,27 @@ const controller = ({ strapi }) => ({
       return ctx.notFound('User not found');
     }
 
-    // Get role
-    const roleLink = await knex('up_users_role_lnk')
-      .where('user_id', user.id)
-      .first();
-
-    let role = null;
-    if (roleLink) {
-      role = await knex('up_roles')
-        .select('id', 'document_id as documentId', 'name', 'description', 'type')
-        .where('id', roleLink.role_id)
-        .first();
-    }
-
+    // Return only end-user safe fields (no role metadata)
     ctx.body = {
-      ...fullUser,
-      role,
+      id: fullUser.id,
+      documentId: fullUser.documentId,
+      username: fullUser.username,
+      email: fullUser.email,
+      displayName: fullUser.displayName,
+      phone: fullUser.phone,
+      country: fullUser.country,
+      company: fullUser.company,
+      accountStatus: fullUser.accountStatus || 'pending',
+      salesContactAllowed: fullUser.salesContactAllowed === true,
+      lastLogin: fullUser.lastLogin || null,
+      confirmed: fullUser.confirmed,
+      blocked: fullUser.blocked,
+      provider: fullUser.provider,
+      createdAt: fullUser.createdAt,
+      updatedAt: fullUser.updatedAt,
     };
   },
-  
+
 });
 
 export default controller;
