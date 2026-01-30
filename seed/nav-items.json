@@ -1,0 +1,221 @@
+{
+  "identifierField": "order",
+  "items": [
+    {
+      "href": "/",
+      "location": "header",
+      "order": 1,
+      "isExternal": false,
+      "en": { "label": "Home" },
+      "ar": { "label": "الرئيسية" }
+    },
+    {
+      "href": "/solutions",
+      "location": "header",
+      "order": 2,
+      "isExternal": false,
+      "en": { "label": "Solutions" },
+      "ar": { "label": "الحلول" }
+    },
+    {
+      "href": "/industries",
+      "location": "header",
+      "order": 3,
+      "isExternal": false,
+      "en": { "label": "Industries" },
+      "ar": { "label": "الصناعات" }
+    },
+    {
+      "href": "/case-studies",
+      "location": "header",
+      "order": 4,
+      "isExternal": false,
+      "en": { "label": "Case Studies" },
+      "ar": { "label": "دراسات الحالة" }
+    },
+    {
+      "href": "/pricing",
+      "location": "header",
+      "order": 5,
+      "isExternal": false,
+      "en": { "label": "Pricing" },
+      "ar": { "label": "الأسعار" }
+    },
+    {
+      "href": "/demos",
+      "location": "header",
+      "order": 6,
+      "isExternal": false,
+      "en": { "label": "Demos" },
+      "ar": { "label": "العروض" }
+    },
+    {
+      "href": "/about",
+      "location": "header",
+      "order": 7,
+      "isExternal": false,
+      "en": { "label": "About" },
+      "ar": { "label": "من نحن" }
+    },
+    {
+      "href": "/contact",
+      "location": "header",
+      "order": 8,
+      "isExternal": false,
+      "en": { "label": "Contact" },
+      "ar": { "label": "اتصل بنا" }
+    },
+    {
+      "href": "/about",
+      "location": "footer-company",
+      "order": 10,
+      "isExternal": false,
+      "en": { "label": "About Us" },
+      "ar": { "label": "من نحن" }
+    },
+    {
+      "href": "/careers",
+      "location": "footer-company",
+      "order": 11,
+      "isExternal": false,
+      "en": { "label": "Careers" },
+      "ar": { "label": "الوظائف" }
+    },
+    {
+      "href": "/contact",
+      "location": "footer-company",
+      "order": 12,
+      "isExternal": false,
+      "en": { "label": "Contact" },
+      "ar": { "label": "اتصل بنا" }
+    },
+    {
+      "href": "/press",
+      "location": "footer-company",
+      "order": 13,
+      "isExternal": false,
+      "en": { "label": "Press" },
+      "ar": { "label": "الصحافة" }
+    },
+    {
+      "href": "/solutions/vmall-platform",
+      "location": "footer-products",
+      "order": 20,
+      "isExternal": false,
+      "en": { "label": "Vmall Platform" },
+      "ar": { "label": "منصة Vmall" }
+    },
+    {
+      "href": "/solutions/arabiq-ai-suite",
+      "location": "footer-products",
+      "order": 21,
+      "isExternal": false,
+      "en": { "label": "AI Suite" },
+      "ar": { "label": "مجموعة الذكاء الاصطناعي" }
+    },
+    {
+      "href": "/solutions/arabiq-commerce",
+      "location": "footer-products",
+      "order": 22,
+      "isExternal": false,
+      "en": { "label": "Commerce" },
+      "ar": { "label": "التجارة" }
+    },
+    {
+      "href": "/solutions/vfair-edition",
+      "location": "footer-products",
+      "order": 23,
+      "isExternal": false,
+      "en": { "label": "VFair Events" },
+      "ar": { "label": "فعاليات VFair" }
+    },
+    {
+      "href": "/case-studies",
+      "location": "footer-resources",
+      "order": 30,
+      "isExternal": false,
+      "en": { "label": "Case Studies" },
+      "ar": { "label": "دراسات الحالة" }
+    },
+    {
+      "href": "/demos",
+      "location": "footer-resources",
+      "order": 31,
+      "isExternal": false,
+      "en": { "label": "Demos" },
+      "ar": { "label": "العروض" }
+    },
+    {
+      "href": "/faq",
+      "location": "footer-resources",
+      "order": 32,
+      "isExternal": false,
+      "en": { "label": "FAQ" },
+      "ar": { "label": "الأسئلة الشائعة" }
+    },
+    {
+      "href": "/blog",
+      "location": "footer-resources",
+      "order": 33,
+      "isExternal": false,
+      "en": { "label": "Blog" },
+      "ar": { "label": "المدونة" }
+    },
+    {
+      "href": "/support",
+      "location": "footer-support",
+      "order": 40,
+      "isExternal": false,
+      "en": { "label": "Help Center" },
+      "ar": { "label": "مركز المساعدة" }
+    },
+    {
+      "href": "/privacy",
+      "location": "footer-support",
+      "order": 41,
+      "isExternal": false,
+      "en": { "label": "Privacy Policy" },
+      "ar": { "label": "سياسة الخصوصية" }
+    },
+    {
+      "href": "/terms",
+      "location": "footer-support",
+      "order": 42,
+      "isExternal": false,
+      "en": { "label": "Terms of Service" },
+      "ar": { "label": "شروط الخدمة" }
+    },
+    {
+      "href": "https://twitter.com/arabiqtech",
+      "location": "footer-social",
+      "order": 50,
+      "isExternal": true,
+      "en": { "label": "Twitter" },
+      "ar": { "label": "تويتر" }
+    },
+    {
+      "href": "https://linkedin.com/company/arabiq",
+      "location": "footer-social",
+      "order": 51,
+      "isExternal": true,
+      "en": { "label": "LinkedIn" },
+      "ar": { "label": "لينكد إن" }
+    },
+    {
+      "href": "https://instagram.com/arabiqtech",
+      "location": "footer-social",
+      "order": 52,
+      "isExternal": true,
+      "en": { "label": "Instagram" },
+      "ar": { "label": "انستغرام" }
+    },
+    {
+      "href": "https://youtube.com/@arabiqtech",
+      "location": "footer-social",
+      "order": 53,
+      "isExternal": true,
+      "en": { "label": "YouTube" },
+      "ar": { "label": "يوتيوب" }
+    }
+  ]
+}

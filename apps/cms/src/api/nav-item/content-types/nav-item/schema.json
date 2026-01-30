@@ -30,7 +30,7 @@
     },
     "location": {
       "type": "enumeration",
-      "enum": ["header", "footer", "footer-company", "footer-products", "footer-resources", "footer-social"],
+      "enum": ["header", "footer", "footer-company", "footer-products", "footer-resources", "footer-support", "footer-social"],
       "default": "header",
       "required": true
     },

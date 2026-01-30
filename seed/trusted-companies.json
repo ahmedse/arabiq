@@ -1,0 +1,13 @@
+{
+  "identifierField": "order",
+  "items": [
+    {"order": 1, "name": "Saudi Telecom Company", "logo": null},
+    {"order": 2, "name": "Emaar Properties", "logo": null},
+    {"order": 3, "name": "Majid Al Futtaim", "logo": null},
+    {"order": 4, "name": "Almarai", "logo": null},
+    {"order": 5, "name": "Saudi Aramco", "logo": null},
+    {"order": 6, "name": "Dubai Tourism", "logo": null},
+    {"order": 7, "name": "Jarir Bookstore", "logo": null},
+    {"order": 8, "name": "ROSHN", "logo": null}
+  ]
+}

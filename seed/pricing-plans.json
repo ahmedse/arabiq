@@ -1,0 +1,113 @@
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "starter",
+      "order": 1,
+      "popular": false,
+      "en": {
+        "name": "Starter",
+        "price": "5,000",
+        "currency": "SAR",
+        "period": "one-time",
+        "description": "Perfect for small spaces and one-time projects",
+        "features": "Up to 200 sqm scanning|Basic 3D virtual tour|5 interactive hotspots|1 year hosting included|Dollhouse and floor plan views|Mobile responsive|Email support|Basic analytics",
+        "limitations": "No e-commerce integration|No AI features|No custom branding",
+        "cta": "Get Started",
+        "idealFor": "Small retail stores, real estate listings, restaurant previews"
+      },
+      "ar": {
+        "name": "البداية",
+        "price": "5,000",
+        "currency": "ريال",
+        "period": "مرة واحدة",
+        "description": "مثالي للمساحات الصغيرة والمشاريع لمرة واحدة",
+        "features": "مسح حتى 200 متر مربع|جولة افتراضية ثلاثية الأبعاد أساسية|5 نقاط تفاعلية|سنة استضافة مضمنة|عرض الدمية ومخطط الطابق|متجاوب مع الجوال|دعم بالبريد الإلكتروني|تحليلات أساسية",
+        "limitations": "بدون تكامل تجارة إلكترونية|بدون ميزات ذكاء اصطناعي|بدون علامة تجارية مخصصة",
+        "cta": "ابدأ الآن",
+        "idealFor": "متاجر التجزئة الصغيرة، قوائم العقارات، معاينات المطاعم"
+      }
+    },
+    {
+      "slug": "professional",
+      "order": 2,
+      "popular": true,
+      "en": {
+        "name": "Professional",
+        "price": "2,500",
+        "currency": "SAR",
+        "period": "month",
+        "description": "For growing businesses needing ongoing virtual presence",
+        "features": "Up to 500 sqm scanning|Advanced 3D tour with all views|Unlimited hotspots|E-commerce integration|Arabic AI chatbot|Full analytics dashboard|Custom branding|Priority support|Quarterly re-scan included|Lead capture forms",
+        "limitations": "Single location|Standard AI voices",
+        "cta": "Start Free Trial",
+        "idealFor": "Medium retail, showrooms, hotels, multi-room properties"
+      },
+      "ar": {
+        "name": "الاحترافي",
+        "price": "2,500",
+        "currency": "ريال",
+        "period": "شهرياً",
+        "description": "للشركات النامية التي تحتاج حضوراً افتراضياً مستمراً",
+        "features": "مسح حتى 500 متر مربع|جولة ثلاثية الأبعاد متقدمة بجميع العروض|نقاط تفاعلية غير محدودة|تكامل التجارة الإلكترونية|روبوت محادثة عربي بالذكاء الاصطناعي|لوحة تحليلات كاملة|علامة تجارية مخصصة|دعم أولوية|إعادة مسح ربعية مضمنة|نماذج التقاط العملاء",
+        "limitations": "موقع واحد|أصوات ذكاء اصطناعي قياسية",
+        "cta": "ابدأ تجربة مجانية",
+        "idealFor": "التجزئة المتوسطة، صالات العرض، الفنادق، العقارات متعددة الغرف"
+      }
+    },
+    {
+      "slug": "business",
+      "order": 3,
+      "popular": false,
+      "en": {
+        "name": "Business",
+        "price": "7,500",
+        "currency": "SAR",
+        "period": "month",
+        "description": "For established businesses with multiple locations",
+        "features": "Up to 2,000 sqm scanning|Up to 3 locations|All Professional features|Custom AI voice cloning|Advanced e-commerce features|API access|Monthly re-scans|Dedicated account manager|Phone support|Custom integrations",
+        "limitations": "Up to 3 locations",
+        "cta": "Contact Sales",
+        "idealFor": "Multi-location retail, real estate agencies, hotel chains"
+      },
+      "ar": {
+        "name": "الأعمال",
+        "price": "7,500",
+        "currency": "ريال",
+        "period": "شهرياً",
+        "description": "للشركات الراسخة ذات المواقع المتعددة",
+        "features": "مسح حتى 2,000 متر مربع|حتى 3 مواقع|جميع ميزات الاحترافي|استنساخ صوت ذكاء اصطناعي مخصص|ميزات تجارة إلكترونية متقدمة|وصول API|إعادة مسح شهرية|مدير حساب مخصص|دعم هاتفي|تكاملات مخصصة",
+        "limitations": "حتى 3 مواقع",
+        "cta": "تواصل مع المبيعات",
+        "idealFor": "التجزئة متعددة المواقع، الوكالات العقارية، سلاسل الفنادق"
+      }
+    },
+    {
+      "slug": "enterprise",
+      "order": 4,
+      "popular": false,
+      "en": {
+        "name": "Enterprise",
+        "price": "Custom",
+        "currency": "",
+        "period": "",
+        "description": "For large organizations with complex requirements",
+        "features": "Unlimited scanning|Unlimited locations|All Business features|White-label solution|SSO integration|Custom SLA (99.9% uptime)|Dedicated infrastructure|On-site training|24/7 phone support|Custom development|Data residency options|Compliance documentation",
+        "limitations": "",
+        "cta": "Contact Enterprise Sales",
+        "idealFor": "Large retailers, government, museums, enterprise real estate"
+      },
+      "ar": {
+        "name": "المؤسسات",
+        "price": "مخصص",
+        "currency": "",
+        "period": "",
+        "description": "للمؤسسات الكبيرة ذات المتطلبات المعقدة",
+        "features": "مسح غير محدود|مواقع غير محدودة|جميع ميزات الأعمال|حل العلامة البيضاء|تكامل SSO|اتفاقية SLA مخصصة (وقت تشغيل 99.9%)|بنية تحتية مخصصة|تدريب في الموقع|دعم هاتفي 24/7|تطوير مخصص|خيارات إقامة البيانات|وثائق الامتثال",
+        "limitations": "",
+        "cta": "تواصل مع مبيعات المؤسسات",
+        "idealFor": "تجار التجزئة الكبار، الحكومة، المتاحف، العقارات المؤسسية"
+      }
+    }
+  ]
+}

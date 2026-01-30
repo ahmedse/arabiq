@@ -1,0 +1,40 @@
+{
+  "en": {
+    "heroTitle": "Pioneering Virtual Experiences in the Middle East",
+    "heroSubtitle": "We transform physical spaces into stunning digital twins, making them accessible to anyone, anywhere in the world.",
+    "missionTitle": "Our Mission",
+    "missionText": "To democratize access to immersive 3D technology, empowering MENA businesses to reach global audiences while preserving cultural authenticity and delivering exceptional customer experiences.",
+    "visionTitle": "Our Vision",
+    "visionText": "A world where every physical space has a digital twin, enabling limitless virtual exploration and transforming how people discover, shop, learn, and connect.",
+    "valuesTitle": "Our Core Values",
+    "value1Title": "Arabic-First",
+    "value1Text": "Built from the ground up for Arabic language and RTL design. We don't translate—we create native Arabic experiences.",
+    "value2Title": "Innovation",
+    "value2Text": "We push the boundaries of what's possible with 3D, AI, and immersive technology.",
+    "value3Title": "Excellence",
+    "value3Text": "We deliver photorealistic quality, enterprise-grade security, and 99.9% uptime.",
+    "teamTitle": "Leadership Team",
+    "teamSubtitle": "Visionaries and experts driving innovation in virtual experiences",
+    "ctaTitle": "Join Our Journey",
+    "ctaButton": "Get in Touch"
+  },
+  "ar": {
+    "heroTitle": "رواد التجارب الافتراضية في الشرق الأوسط",
+    "heroSubtitle": "نحوّل المساحات الفعلية إلى توائم رقمية مذهلة، ونجعلها في متناول أي شخص في أي مكان في العالم.",
+    "missionTitle": "مهمتنا",
+    "missionText": "إتاحة الوصول إلى تقنية ثلاثية الأبعاد الغامرة، وتمكين شركات الشرق الأوسط من الوصول لجماهير عالمية مع الحفاظ على الأصالة الثقافية.",
+    "visionTitle": "رؤيتنا",
+    "visionText": "عالم حيث كل مساحة فعلية لها توأم رقمي، يتيح استكشافاً افتراضياً بلا حدود.",
+    "valuesTitle": "قيمنا الأساسية",
+    "value1Title": "العربية أولاً",
+    "value1Text": "مبني من الأساس للغة العربية وتصميم RTL. لا نترجم — ننشئ تجارب عربية أصلية.",
+    "value2Title": "الابتكار",
+    "value2Text": "ندفع حدود الممكن مع تقنية 3D والذكاء الاصطناعي والتقنية الغامرة.",
+    "value3Title": "التميز",
+    "value3Text": "نقدم جودة فوتوغرافية وأمان على مستوى المؤسسات ووقت تشغيل 99.9%.",
+    "teamTitle": "فريق القيادة",
+    "teamSubtitle": "أصحاب رؤية وخبراء يقودون الابتكار في التجارب الافتراضية",
+    "ctaTitle": "انضم لرحلتنا",
+    "ctaButton": "تواصل معنا"
+  }
+}

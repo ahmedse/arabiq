@@ -108,7 +108,17 @@ export default {
         'api::solution.solution',
         'api::industry.industry',
         'api::case-study.case-study',
-        'api::demo.demo'
+        'api::demo.demo',
+        // New content types
+        'api::faq.faq',
+        'api::testimonial.testimonial',
+        'api::pricing-plan.pricing-plan',
+        'api::partner.partner',
+        'api::pricing-page.pricing-page',
+        'api::solutions-page.solutions-page',
+        'api::industries-page.industries-page',
+        'api::demos-page.demos-page',
+        'api::case-studies-page.case-studies-page'
       ];
 
       const permissions = await strapi

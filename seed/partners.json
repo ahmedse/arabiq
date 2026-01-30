@@ -1,0 +1,107 @@
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "matterport",
+      "order": 1,
+      "partnerType": "technology",
+      "logoUrl": null,
+      "websiteUrl": "https://matterport.com",
+      "en": {
+        "name": "Matterport",
+        "description": "World leader in 3D capture technology. Arabiq is a certified Matterport partner using Pro3 cameras for all scanning projects.",
+        "partnership": "Certified Partner"
+      },
+      "ar": {
+        "name": "Matterport",
+        "description": "الرائد العالمي في تقنية الالتقاط ثلاثي الأبعاد. Arabiq شريك Matterport معتمد يستخدم كاميرات Pro3 لجميع مشاريع المسح.",
+        "partnership": "شريك معتمد"
+      }
+    },
+    {
+      "slug": "aws",
+      "order": 2,
+      "partnerType": "technology",
+      "logoUrl": null,
+      "websiteUrl": "https://aws.amazon.com",
+      "en": {
+        "name": "Amazon Web Services",
+        "description": "Our cloud infrastructure partner providing enterprise-grade hosting with regional data centers in Bahrain and UAE.",
+        "partnership": "Advanced Partner"
+      },
+      "ar": {
+        "name": "Amazon Web Services",
+        "description": "شريك البنية التحتية السحابية لدينا يوفر استضافة على مستوى المؤسسات مع مراكز بيانات إقليمية في البحرين والإمارات.",
+        "partnership": "شريك متقدم"
+      }
+    },
+    {
+      "slug": "paytabs",
+      "order": 3,
+      "partnerType": "payment",
+      "logoUrl": null,
+      "websiteUrl": "https://paytabs.com",
+      "en": {
+        "name": "PayTabs",
+        "description": "Leading MENA payment gateway integrated into our e-commerce solutions for seamless regional transactions.",
+        "partnership": "Integration Partner"
+      },
+      "ar": {
+        "name": "PayTabs",
+        "description": "بوابة الدفع الرائدة في الشرق الأوسط المدمجة في حلول التجارة الإلكترونية لدينا للمعاملات الإقليمية السلسة.",
+        "partnership": "شريك تكامل"
+      }
+    },
+    {
+      "slug": "shopify",
+      "order": 4,
+      "partnerType": "ecommerce",
+      "logoUrl": null,
+      "websiteUrl": "https://shopify.com",
+      "en": {
+        "name": "Shopify",
+        "description": "Native integration with Shopify and Shopify Plus for seamless product synchronization and checkout.",
+        "partnership": "App Partner"
+      },
+      "ar": {
+        "name": "Shopify",
+        "description": "تكامل أصلي مع Shopify و Shopify Plus لمزامنة المنتجات والدفع السلس.",
+        "partnership": "شريك تطبيقات"
+      }
+    },
+    {
+      "slug": "aramex",
+      "order": 5,
+      "partnerType": "logistics",
+      "logoUrl": null,
+      "websiteUrl": "https://aramex.com",
+      "en": {
+        "name": "Aramex",
+        "description": "Regional logistics partner for e-commerce fulfillment with integrated tracking in our commerce solutions.",
+        "partnership": "Logistics Partner"
+      },
+      "ar": {
+        "name": "أرامكس",
+        "description": "شريك اللوجستيات الإقليمي لتنفيذ التجارة الإلكترونية مع تتبع متكامل في حلول التجارة لدينا.",
+        "partnership": "شريك لوجستي"
+      }
+    },
+    {
+      "slug": "salla",
+      "order": 6,
+      "partnerType": "ecommerce",
+      "logoUrl": null,
+      "websiteUrl": "https://salla.sa",
+      "en": {
+        "name": "Salla",
+        "description": "Direct integration with Saudi Arabia's leading Arabic e-commerce platform for local merchants.",
+        "partnership": "App Partner"
+      },
+      "ar": {
+        "name": "سلة",
+        "description": "تكامل مباشر مع منصة التجارة الإلكترونية العربية الرائدة في السعودية للتجار المحليين.",
+        "partnership": "شريك تطبيقات"
+      }
+    }
+  ]
+}

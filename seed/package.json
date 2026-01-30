@@ -1,0 +1,14 @@
+{
+  "name": "arabiq-cms-seed",
+  "version": "2.0.0",
+  "description": "Seed data for Arabiq CMS",
+  "type": "module",
+  "main": "seed.js",
+  "scripts": {
+    "seed": "node seed.js",
+    "seed:fresh": "node seed.js --fresh"
+  },
+  "dependencies": {
+    "transliteration": "^2.3.5"
+  }
+}

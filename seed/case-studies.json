@@ -1,0 +1,80 @@
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "suites-egypt-furniture-showroom",
+      "client": "Suites Egypt",
+      "industry": "Retail",
+      "en": {
+        "title": "Suites Egypt: 340% Sales Growth with Virtual Showrooms",
+        "summary": "Premium furniture retailer transformed their sales approach with immersive virtual showrooms.",
+        "description": "## The Challenge\n\nSuites Egypt faced challenges reaching customers outside Cairo and Alexandria.\n\n## The Solution\n\nArabiq created comprehensive virtual showrooms using Matterport Pro3 technology.\n\n## The Results\n\n- 340% increase in online sales\n- 12,000+ virtual visitors monthly\n- 45% reduction in return rates"
+      },
+      "ar": {
+        "title": "Suites Egypt: نمو مبيعات 340% مع صالات العرض الافتراضية",
+        "summary": "بائع أثاث فاخر حوّل نهج مبيعاته بصالات عرض افتراضية غامرة.",
+        "description": "## التحدي\n\nواجهت Suites Egypt تحديات في الوصول للعملاء خارج القاهرة والإسكندرية.\n\n## الحل\n\nأنشأت Arabiq صالات عرض افتراضية شاملة باستخدام تقنية Matterport Pro3.\n\n## النتائج\n\n- زيادة 340% في المبيعات الإلكترونية\n- أكثر من 12,000 زائر افتراضي شهرياً\n- انخفاض 45% في معدلات الإرجاع"
+      }
+    },
+    {
+      "slug": "cairo-fashion-hub-virtual-mall",
+      "client": "Cairo Fashion Hub",
+      "industry": "Retail",
+      "en": {
+        "title": "Cairo Fashion Hub: $2.1M Revenue in Year One",
+        "summary": "A 50-vendor fashion marketplace achieved remarkable success with virtual shopping mall.",
+        "description": "## The Challenge\n\nCairo Fashion Hub wanted to create a unified online presence for 50+ independent fashion vendors.\n\n## The Solution\n\nArabiq designed a complete virtual mall experience.\n\n## The Results\n\n- $2.1M in sales in the first year\n- 200% increase in daily visitors"
+      },
+      "ar": {
+        "title": "Cairo Fashion Hub: إيرادات 2.1 مليون دولار في السنة الأولى",
+        "summary": "سوق أزياء 50 بائع حقق نجاحاً ملحوظاً بمول تسوق افتراضي.",
+        "description": "## التحدي\n\nأرادت Cairo Fashion Hub إنشاء حضور إلكتروني موحد لأكثر من 50 بائع أزياء مستقل.\n\n## الحل\n\nصممت Arabiq تجربة مول افتراضي كاملة.\n\n## النتائج\n\n- 2.1 مليون دولار مبيعات في السنة الأولى\n- زيادة 200% في الزوار اليوميين"
+      }
+    },
+    {
+      "slug": "alexandria-national-museum",
+      "client": "Alexandria National Museum",
+      "industry": "Tourism",
+      "en": {
+        "title": "Alexandria Museum: 500K+ Global Visitors",
+        "summary": "Egypt's historic museum achieved UNESCO recognition for digital preservation.",
+        "description": "## The Challenge\n\nThe museum wanted to preserve treasures digitally while expanding global access.\n\n## The Solution\n\nArabiq conducted comprehensive 3D documentation with AI narration.\n\n## The Results\n\n- 500,000+ virtual visitors from 89 countries\n- UNESCO recognition for digital heritage"
+      },
+      "ar": {
+        "title": "متحف الإسكندرية: أكثر من 500 ألف زائر عالمي",
+        "summary": "متحف مصر التاريخي حقق اعتراف اليونسكو للحفظ الرقمي.",
+        "description": "## التحدي\n\nأراد المتحف حفظ الكنوز رقمياً مع توسيع الوصول العالمي.\n\n## الحل\n\nأجرت Arabiq توثيقاً ثلاثي الأبعاد شاملاً مع سرد بالذكاء الاصطناعي.\n\n## النتائج\n\n- أكثر من 500,000 زائر افتراضي من 89 دولة\n- اعتراف اليونسكو للتراث الرقمي"
+      }
+    },
+    {
+      "slug": "riyadh-motors-automotive",
+      "client": "Riyadh Motors",
+      "industry": "Retail",
+      "en": {
+        "title": "Riyadh Motors: 65% Faster Sales Cycle",
+        "summary": "Premium automotive dealership achieved faster sales through virtual showrooms.",
+        "description": "## The Challenge\n\nBusy executives couldn't visit the showroom, and international customers had no way to inspect cars.\n\n## The Solution\n\nArabiq created detailed virtual showrooms with interior exploration.\n\n## The Results\n\n- 65% faster sales cycle\n- SAR 4.2M in virtual showroom leads"
+      },
+      "ar": {
+        "title": "Riyadh Motors: دورة مبيعات أسرع 65%",
+        "summary": "وكالة سيارات فاخرة حققت مبيعات أسرع عبر صالات العرض الافتراضية.",
+        "description": "## التحدي\n\nالمديرون المشغولون لا يستطيعون زيارة صالة العرض والعملاء الدوليون ليس لديهم طريقة لفحص السيارات.\n\n## الحل\n\nأنشأت Arabiq صالات عرض افتراضية مفصلة مع استكشاف داخلي.\n\n## النتائج\n\n- دورة مبيعات أسرع 65%\n- 4.2 مليون ريال من عملاء صالة العرض الافتراضية"
+      }
+    },
+    {
+      "slug": "gulf-tech-summit",
+      "client": "Gulf Tech Summit",
+      "industry": "Events",
+      "en": {
+        "title": "Gulf Tech Summit: 10,000 Attendees",
+        "summary": "Annual technology conference transformed into a hybrid event.",
+        "description": "## The Challenge\n\nThe conference was limited to 2,000 in-person attendees.\n\n## The Solution\n\nArabiq built a comprehensive virtual event platform.\n\n## The Results\n\n- 10,000 total attendees\n- 60% cost reduction vs physical events"
+      },
+      "ar": {
+        "title": "Gulf Tech Summit: 10,000 حاضر",
+        "summary": "مؤتمر التقنية السنوي تحوّل لفعالية هجينة.",
+        "description": "## التحدي\n\nكان المؤتمر محدوداً بـ 2,000 حاضر شخصياً.\n\n## الحل\n\nبنت Arabiq منصة فعالية افتراضية شاملة.\n\n## النتائج\n\n- 10,000 حاضر إجمالي\n- تقليل التكلفة 60% مقارنة بالفعاليات الفعلية"
+      }
+    }
+  ]
+}

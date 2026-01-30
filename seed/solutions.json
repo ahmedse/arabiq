@@ -1,0 +1,89 @@
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "vmall-platform",
+      "icon": "🏬",
+      "en": {
+        "title": "Vmall Platform",
+        "summary": "Create immersive 3D virtual malls and shops using Matterport technology with full e-commerce integration.",
+        "description": "## Transform Physical Retail Into Digital Experiences\n\nThe Vmall Platform is our flagship solution for retailers looking to create stunning virtual shopping experiences."
+      },
+      "ar": {
+        "title": "منصة Vmall",
+        "summary": "أنشئ مراكز تسوق ومتاجر افتراضية ثلاثية الأبعاد غامرة باستخدام تقنية Matterport مع تكامل كامل للتجارة الإلكترونية.",
+        "description": "## حوّل التجزئة الفعلية إلى تجارب رقمية\n\nمنصة Vmall هي حلنا الرئيسي لتجار التجزئة الراغبين في إنشاء تجارب تسوق افتراضية مذهلة."
+      }
+    },
+    {
+      "slug": "arabiq-ai-suite",
+      "icon": "🤖",
+      "en": {
+        "title": "Arabiq AI Suite",
+        "summary": "Arabic-first AI tools including voice narration, intelligent chatbots, and personalized recommendations.",
+        "description": "## AI Built for Arabic Markets\n\nThe Arabiq AI Suite is a comprehensive collection of AI tools designed specifically for Arabic-speaking markets."
+      },
+      "ar": {
+        "title": "مجموعة Arabiq للذكاء الاصطناعي",
+        "summary": "أدوات ذكاء اصطناعي عربية أولاً تشمل السرد الصوتي وروبوتات المحادثة الذكية والتوصيات المخصصة.",
+        "description": "## ذكاء اصطناعي مبني للأسواق العربية\n\nمجموعة Arabiq للذكاء الاصطناعي هي مجموعة شاملة من أدوات الذكاء الاصطناعي المصممة خصيصاً للأسواق الناطقة بالعربية."
+      }
+    },
+    {
+      "slug": "arabiq-commerce",
+      "icon": "🛒",
+      "en": {
+        "title": "Arabiq Commerce",
+        "summary": "Complete e-commerce backend with MENA payment gateways and regional shipping integrations.",
+        "description": "## E-commerce Infrastructure for MENA\n\nArabiq Commerce provides everything you need to sell online in the Middle East."
+      },
+      "ar": {
+        "title": "Arabiq Commerce",
+        "summary": "بنية تحتية كاملة للتجارة الإلكترونية مع بوابات دفع الشرق الأوسط وتكاملات الشحن الإقليمية.",
+        "description": "## بنية تجارة إلكترونية للشرق الأوسط\n\nتوفر Arabiq Commerce كل ما تحتاجه للبيع عبر الإنترنت في الشرق الأوسط."
+      }
+    },
+    {
+      "slug": "digital-twin-production",
+      "icon": "📸",
+      "en": {
+        "title": "Digital Twin Production",
+        "summary": "End-to-end 3D scanning, modeling, and hosting services with professional Matterport capture.",
+        "description": "## Full-Service 3D Production\n\nOur Digital Twin Production service handles everything from initial consultation to final delivery."
+      },
+      "ar": {
+        "title": "إنتاج التوأم الرقمي",
+        "summary": "خدمات مسح ونمذجة واستضافة ثلاثية الأبعاد شاملة مع التقاط Matterport احترافي.",
+        "description": "## إنتاج ثلاثي الأبعاد متكامل الخدمة\n\nتتولى خدمة إنتاج التوأم الرقمي لدينا كل شيء من الاستشارة الأولية إلى التسليم النهائي."
+      }
+    },
+    {
+      "slug": "vfair-edition",
+      "icon": "🎪",
+      "en": {
+        "title": "VFair Edition",
+        "summary": "Complete virtual events platform for conferences, trade shows, and corporate events.",
+        "description": "## Next-Generation Virtual Events\n\nVFair Edition transforms how organizations host events."
+      },
+      "ar": {
+        "title": "إصدار VFair",
+        "summary": "منصة فعاليات افتراضية كاملة للمؤتمرات والمعارض التجارية والفعاليات المؤسسية.",
+        "description": "## الجيل القادم من الفعاليات الافتراضية\n\nيحوّل إصدار VFair طريقة استضافة المؤسسات للفعاليات."
+      }
+    },
+    {
+      "slug": "system-integration",
+      "icon": "🔗",
+      "en": {
+        "title": "System Integration",
+        "summary": "Connect Arabiq with your existing CRM, ERP, POS, and e-commerce systems.",
+        "description": "## Unified Business Systems\n\nArabiq doesn't replace your existing systems—it enhances them."
+      },
+      "ar": {
+        "title": "تكامل الأنظمة",
+        "summary": "اربط Arabiq بأنظمتك الحالية CRM و ERP و POS والتجارة الإلكترونية.",
+        "description": "## أنظمة أعمال موحدة\n\nلا تحل Arabiq محل أنظمتك الحالية — بل تعززها."
+      }
+    }
+  ]
+}

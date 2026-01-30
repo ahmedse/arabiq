@@ -1,0 +1,53 @@
+{
+  "identifierField": "step",
+  "items": [
+    {
+      "step": 1,
+      "icon": "💬",
+      "en": {
+        "title": "Discovery & Planning",
+        "description": "We start with a detailed consultation to understand your business goals and requirements."
+      },
+      "ar": {
+        "title": "الاكتشاف والتخطيط",
+        "description": "نبدأ باستشارة مفصلة لفهم أهداف عملك ومتطلباتك."
+      }
+    },
+    {
+      "step": 2,
+      "icon": "📸",
+      "en": {
+        "title": "Professional 3D Capture",
+        "description": "Our certified technicians capture your space with Matterport Pro3 equipment."
+      },
+      "ar": {
+        "title": "الالتقاط ثلاثي الأبعاد الاحترافي",
+        "description": "يلتقط فنيونا المعتمدون مساحتك بمعدات Matterport Pro3."
+      }
+    },
+    {
+      "step": 3,
+      "icon": "✨",
+      "en": {
+        "title": "Enhancement & Integration",
+        "description": "We enhance your scan and add interactive hotspots and integrations."
+      },
+      "ar": {
+        "title": "التحسين والتكامل",
+        "description": "نحسّن المسح ونضيف نقاطاً تفاعلية وتكاملات."
+      }
+    },
+    {
+      "step": 4,
+      "icon": "🚀",
+      "en": {
+        "title": "Launch & Optimize",
+        "description": "Your virtual experience goes live with full analytics tracking."
+      },
+      "ar": {
+        "title": "الإطلاق والتحسين",
+        "description": "تنطلق تجربتك الافتراضية مع تتبع تحليلات كامل."
+      }
+    }
+  ]
+}

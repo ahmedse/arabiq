@@ -1,0 +1,89 @@
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "retail-ecommerce",
+      "icon": "🛍️",
+      "en": {
+        "title": "Retail & E-commerce",
+        "summary": "Virtual showrooms, 3D product displays, and immersive shopping experiences.",
+        "description": "## Revolutionize Your Retail Experience\n\nThe retail landscape is evolving. Arabiq helps retailers create immersive shopping experiences."
+      },
+      "ar": {
+        "title": "التجزئة والتجارة الإلكترونية",
+        "summary": "صالات عرض افتراضية وعروض منتجات ثلاثية الأبعاد وتجارب تسوق غامرة.",
+        "description": "## أحدث ثورة في تجربة التجزئة\n\nمشهد التجزئة يتطور. تساعد Arabiq تجار التجزئة في إنشاء تجارب تسوق غامرة."
+      }
+    },
+    {
+      "slug": "real-estate",
+      "icon": "🏢",
+      "en": {
+        "title": "Real Estate",
+        "summary": "Virtual property tours, off-plan visualization, and digital twin listings.",
+        "description": "## Transform Property Sales\n\nReal estate is inherently visual. Arabiq helps developers showcase properties in the most compelling way."
+      },
+      "ar": {
+        "title": "العقارات",
+        "summary": "جولات عقارية افتراضية وتصور على الخارطة وقوائم التوأم الرقمي.",
+        "description": "## حوّل مبيعات العقارات\n\nالعقارات بطبيعتها بصرية. تساعد Arabiq المطورين في عرض العقارات بأكثر طريقة جذابة."
+      }
+    },
+    {
+      "slug": "tourism-hospitality",
+      "icon": "✈️",
+      "en": {
+        "title": "Tourism & Hospitality",
+        "summary": "Hotel virtual tours, restaurant previews, and destination marketing.",
+        "description": "## Inspire Travelers to Book\n\nIn hospitality, the experience is the product. Arabiq helps showcase offerings in immersive 3D."
+      },
+      "ar": {
+        "title": "السياحة والضيافة",
+        "summary": "جولات فنادق افتراضية ومعاينات مطاعم وتسويق الوجهات.",
+        "description": "## ألهم المسافرين للحجز\n\nفي الضيافة، التجربة هي المنتج. تساعد Arabiq في عرض العروض بتقنية ثلاثية الأبعاد غامرة."
+      }
+    },
+    {
+      "slug": "events-exhibitions",
+      "icon": "🎪",
+      "en": {
+        "title": "Events & Exhibitions",
+        "summary": "Virtual trade shows, hybrid conferences, and digital exhibition halls.",
+        "description": "## Reimagine Your Events\n\nPhysical events have limitations. Arabiq's virtual event solutions remove these barriers."
+      },
+      "ar": {
+        "title": "الفعاليات والمعارض",
+        "summary": "معارض تجارية افتراضية ومؤتمرات هجينة وقاعات معارض رقمية.",
+        "description": "## أعد تصور فعالياتك\n\nالفعاليات الفعلية لها قيود. تزيل حلول Arabiq للفعاليات الافتراضية هذه الحواجز."
+      }
+    },
+    {
+      "slug": "education",
+      "icon": "🎓",
+      "en": {
+        "title": "Education",
+        "summary": "Virtual campus tours, immersive learning environments, and lab simulations.",
+        "description": "## Transform Educational Experiences\n\nEducation is evolving beyond the traditional classroom. Arabiq helps create immersive learning experiences."
+      },
+      "ar": {
+        "title": "التعليم",
+        "summary": "جولات حرم جامعية افتراضية وبيئات تعلم غامرة ومحاكاة مختبرات.",
+        "description": "## حوّل التجارب التعليمية\n\nالتعليم يتطور ما وراء الفصل الدراسي التقليدي. تساعد Arabiq في إنشاء تجارب تعلم غامرة."
+      }
+    },
+    {
+      "slug": "healthcare",
+      "icon": "⚕️",
+      "en": {
+        "title": "Healthcare",
+        "summary": "Hospital virtual tours, patient wayfinding, and medical training simulations.",
+        "description": "## Improving Healthcare Experiences\n\nNavigating healthcare facilities can be stressful. Arabiq helps create welcoming digital experiences."
+      },
+      "ar": {
+        "title": "الرعاية الصحية",
+        "summary": "جولات مستشفيات افتراضية وتوجيه المرضى ومحاكاة التدريب الطبي.",
+        "description": "## تحسين تجارب الرعاية الصحية\n\nالتنقل في مرافق الرعاية الصحية يمكن أن يكون مرهقاً. تساعد Arabiq في إنشاء تجارب رقمية مرحبة."
+      }
+    }
+  ]
+}

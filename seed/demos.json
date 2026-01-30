@@ -1,0 +1,101 @@
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "virtual-furniture-showroom",
+      "demoType": "matterport",
+      "accessLevel": "public",
+      "icon": "🏬",
+      "en": {
+        "title": "Virtual Furniture Showroom",
+        "summary": "Explore a fully interactive 3D furniture showroom with click-to-buy functionality",
+        "description": "Experience how Arabiq transforms retail spaces into immersive shopping experiences."
+      },
+      "ar": {
+        "title": "صالة عرض أثاث افتراضية",
+        "summary": "استكشف صالة عرض أثاث ثلاثية الأبعاد تفاعلية بالكامل مع وظيفة الشراء بنقرة",
+        "description": "اختبر كيف تحوّل Arabiq مساحات التجزئة إلى تجارب تسوق غامرة."
+      }
+    },
+    {
+      "slug": "ai-shopping-assistant",
+      "demoType": "ai-chat",
+      "accessLevel": "public",
+      "icon": "🤖",
+      "en": {
+        "title": "Arabic AI Shopping Assistant",
+        "summary": "Chat with our intelligent Arabic assistant that understands dialects",
+        "description": "Try our Arabic-first AI shopping assistant with dialect support."
+      },
+      "ar": {
+        "title": "مساعد التسوق بالذكاء الاصطناعي العربي",
+        "summary": "تحدث مع مساعدنا العربي الذكي الذي يفهم اللهجات",
+        "description": "جرب مساعد التسوق بالذكاء الاصطناعي العربي أولاً."
+      }
+    },
+    {
+      "slug": "virtual-hotel-tour",
+      "demoType": "matterport",
+      "accessLevel": "public",
+      "icon": "🏨",
+      "en": {
+        "title": "Luxury Hotel Virtual Tour",
+        "summary": "Walk through a 5-star hotel and explore rooms and amenities",
+        "description": "See how hotels use Arabiq to showcase their properties."
+      },
+      "ar": {
+        "title": "جولة فندق فاخر افتراضية",
+        "summary": "تجول في فندق 5 نجوم واستكشف الغرف والمرافق",
+        "description": "شاهد كيف تستخدم الفنادق Arabiq لعرض عقاراتها."
+      }
+    },
+    {
+      "slug": "virtual-event-platform",
+      "demoType": "vfair",
+      "accessLevel": "authenticated",
+      "icon": "🎪",
+      "en": {
+        "title": "Virtual Event Platform",
+        "summary": "Experience our VFair platform with virtual booths and networking",
+        "description": "Explore our complete virtual event solution."
+      },
+      "ar": {
+        "title": "منصة الفعاليات الافتراضية",
+        "summary": "اختبر منصة VFair لدينا مع أجنحة افتراضية وتواصل",
+        "description": "استكشف حل الفعاليات الافتراضية الكامل لدينا."
+      }
+    },
+    {
+      "slug": "real-estate-property-tour",
+      "demoType": "matterport",
+      "accessLevel": "public",
+      "icon": "🏠",
+      "en": {
+        "title": "Luxury Villa Property Tour",
+        "summary": "Explore a premium residential property with detailed walkthrough",
+        "description": "See how real estate professionals use Arabiq to sell properties faster."
+      },
+      "ar": {
+        "title": "جولة فيلا فاخرة",
+        "summary": "استكشف عقاراً سكنياً فاخراً بجولة مفصلة",
+        "description": "شاهد كيف يستخدم المتخصصون العقاريون Arabiq لبيع العقارات بشكل أسرع."
+      }
+    },
+    {
+      "slug": "museum-virtual-gallery",
+      "demoType": "matterport",
+      "accessLevel": "public",
+      "icon": "🏛️",
+      "en": {
+        "title": "Museum Virtual Gallery",
+        "summary": "Experience a cultural heritage site with AI-powered narration",
+        "description": "Discover how museums use Arabiq for digital preservation."
+      },
+      "ar": {
+        "title": "معرض متحف افتراضي",
+        "summary": "اختبر موقعاً للتراث الثقافي مع سرد مدعوم بالذكاء الاصطناعي",
+        "description": "اكتشف كيف تستخدم المتاحف Arabiq للحفظ الرقمي."
+      }
+    }
+  ]
+}

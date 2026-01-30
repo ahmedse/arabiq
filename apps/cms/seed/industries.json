@@ -1,132 +1,0 @@
-// seed/industries.json
-{
-  "identifierField": "slug",
-  "items": [
-    {
-      "slug": "retail-ecommerce",
-      "icon": "🛍️",
-      "order": 1,
-      "en": {
-        "title": "Retail & E-commerce",
-        "tagline": "Transform How Customers Shop",
-        "summary": "Virtual showrooms, 3D product displays, and immersive shopping experiences that increase conversions and reduce returns.",
-        "description": "## Revolutionize Your Retail Experience\n\nThe retail landscape is evolving, and customers expect more than static product images. Arabiq helps retailers create immersive shopping experiences that bridge the gap between physical and digital commerce.\n\n### Virtual Showrooms\n\nLet customers walk through your store from anywhere in the world. Our Matterport-powered virtual showrooms capture every detail, from product displays to store ambiance.\n\n### Interactive Product Tags\n\nEvery product in your virtual space becomes clickable. Customers can view details, see pricing, check availability, and add to cart—all without leaving the 3D experience.\n\n### Reduced Returns\n\nWhen customers can see products in context and understand scale, they make better purchasing decisions. Our retail clients see return rates drop by 30-45%.\n\n### 24/7 Sales\n\nYour virtual showroom never closes. Reach customers across time zones and capture sales even when your physical store is closed.",
-        "useCases": "Furniture showrooms|Fashion boutiques|Electronics stores|Jewelry displays|Automotive dealerships|Home improvement",
-        "stats": "340% average sales increase|45% reduction in returns|12,000+ monthly virtual visitors"
-      },
-      "ar": {
-        "title": "التجزئة والتجارة الإلكترونية",
-        "tagline": "حوّل طريقة تسوق العملاء",
-        "summary": "صالات عرض افتراضية وعروض منتجات ثلاثية الأبعاد وتجارب تسوق غامرة تزيد التحويلات وتقلل المرتجعات.",
-        "description": "## أحدث ثورة في تجربة التجزئة\n\nمشهد التجزئة يتطور، ويتوقع العملاء أكثر من صور المنتجات الثابتة. تساعد Arabiq تجار التجزئة في إنشاء تجارب تسوق غامرة تسد الفجوة بين التجارة الفعلية والرقمية.\n\n### صالات العرض الافتراضية\n\nدع العملاء يتجولون في متجرك من أي مكان في العالم. تلتقط صالات العرض الافتراضية المدعومة بـ Matterport كل تفصيل، من عروض المنتجات إلى أجواء المتجر.\n\n### علامات المنتجات التفاعلية\n\nكل منتج في مساحتك الافتراضية يصبح قابلاً للنقر. يمكن للعملاء عرض التفاصيل ورؤية الأسعار والتحقق من التوفر والإضافة للسلة — كل ذلك دون مغادرة التجربة ثلاثية الأبعاد.\n\n### تقليل المرتجعات\n\nعندما يتمكن العملاء من رؤية المنتجات في سياقها وفهم الحجم، يتخذون قرارات شراء أفضل. يرى عملاء التجزئة لدينا انخفاض معدلات الإرجاع بنسبة 30-45%.\n\n### مبيعات على مدار الساعة\n\nصالة العرض الافتراضية لا تغلق أبداً. تواصل مع العملاء عبر المناطق الزمنية واحصل على المبيعات حتى عندما يكون متجرك الفعلي مغلقاً.",
-        "useCases": "صالات عرض الأثاث|متاجر الأزياء|متاجر الإلكترونيات|عرض المجوهرات|وكالات السيارات|تحسين المنزل",
-        "stats": "زيادة مبيعات 340% في المتوسط|تقليل المرتجعات 45%|أكثر من 12,000 زائر افتراضي شهرياً"
-      }
-    },
-    {
-      "slug": "real-estate",
-      "icon": "🏢",
-      "order": 2,
-      "en": {
-        "title": "Real Estate",
-        "tagline": "Sell Properties Before They're Built",
-        "summary": "Virtual property tours, off-plan visualization, and digital twin listings that accelerate sales and reach international buyers.",
-        "description": "## Transform Property Sales\n\nReal estate is inherently visual, and Arabiq helps developers and agents showcase properties in the most compelling way possible. From completed buildings to off-plan developments, we bring properties to life.\n\n### Virtual Property Tours\n\nBuyers can explore every room, examine finishes, and experience the flow of a property from their device. Perfect for international buyers, busy executives, and initial screening.\n\n### Off-Plan Visualization\n\nSelling properties before construction? We create photorealistic 3D visualizations that help buyers understand exactly what they're investing in.\n\n### Neighborhood Context\n\nCombine property tours with area information. Show nearby amenities, views from different floors, and neighborhood highlights.\n\n### Agent Tools\n\nEmpower your sales team with interactive presentations, annotation tools, and lead capture built into every tour.",
-        "useCases": "Residential developments|Commercial properties|Luxury villas|Off-plan sales|Property management|International marketing",
-        "stats": "65% faster sales cycle|3x more international inquiries|200% increase in qualified leads"
-      },
-      "ar": {
-        "title": "العقارات",
-        "tagline": "بع العقارات قبل بنائها",
-        "summary": "جولات عقارية افتراضية وتصور على الخارطة وقوائم التوأم الرقمي التي تسرّع المبيعات وتصل للمشترين الدوليين.",
-        "description": "## حوّل مبيعات العقارات\n\nالعقارات بطبيعتها بصرية، وتساعد Arabiq المطورين والوكلاء في عرض العقارات بأكثر طريقة جذابة ممكنة. من المباني المكتملة إلى التطويرات على الخارطة، نحيي العقارات.\n\n### جولات العقارات الافتراضية\n\nيمكن للمشترين استكشاف كل غرفة وفحص التشطيبات وتجربة تدفق العقار من أجهزتهم. مثالي للمشترين الدوليين والمديرين المشغولين والفرز الأولي.\n\n### تصور على الخارطة\n\nتبيع عقارات قبل البناء؟ ننشئ تصورات ثلاثية الأبعاد فوتوغرافية تساعد المشترين على فهم بالضبط ما يستثمرون فيه.\n\n### سياق الحي\n\nادمج جولات العقارات مع معلومات المنطقة. اعرض المرافق القريبة والمناظر من الطوابق المختلفة ومعالم الحي.\n\n### أدوات الوكيل\n\nمكّن فريق المبيعات بعروض تقديمية تفاعلية وأدوات التعليق والتقاط العملاء المحتملين مدمجة في كل جولة.",
-        "useCases": "التطويرات السكنية|العقارات التجارية|الفلل الفاخرة|مبيعات على الخارطة|إدارة العقارات|التسويق الدولي",
-        "stats": "دورة مبيعات أسرع 65%|استفسارات دولية 3 أضعاف|زيادة 200% في العملاء المحتملين المؤهلين"
-      }
-    },
-    {
-      "slug": "tourism-hospitality",
-      "icon": "✈️",
-      "order": 3,
-      "en": {
-        "title": "Tourism & Hospitality",
-        "tagline": "Preview the Experience",
-        "summary": "Hotel virtual tours, restaurant previews, destination marketing, and attraction showcases that inspire bookings.",
-        "description": "## Inspire Travelers to Book\n\nIn hospitality, the experience is the product. Arabiq helps hotels, restaurants, and destinations showcase their offerings in immersive 3D, giving potential guests the confidence to book.\n\n### Hotel Virtual Tours\n\nLet guests explore room types, amenities, pool areas, and restaurants before they book. Reduce booking anxiety and increase direct reservations.\n\n### Restaurant Previews\n\nShowcase your ambiance, seating options, and dining experience. Perfect for fine dining establishments, event venues, and unique concepts.\n\n### Destination Marketing\n\nTourism boards and DMOs can create immersive destination experiences that inspire travel and showcase local attractions.\n\n### Heritage & Museums\n\nPreserve cultural heritage and expand access to historical sites and museums through detailed 3D documentation.",
-        "useCases": "Hotels and resorts|Restaurants and cafes|Tourist attractions|Museums and galleries|Event venues|Cultural heritage sites",
-        "stats": "45% increase in direct bookings|500K+ virtual museum visitors|85% engagement rate"
-      },
-      "ar": {
-        "title": "السياحة والضيافة",
-        "tagline": "استعرض التجربة مسبقاً",
-        "summary": "جولات فنادق افتراضية ومعاينات مطاعم وتسويق الوجهات وعروض المعالم التي تلهم الحجوزات.",
-        "description": "## ألهم المسافرين للحجز\n\nفي الضيافة، التجربة هي المنتج. تساعد Arabiq الفنادق والمطاعم والوجهات في عرض عروضها بتقنية ثلاثية الأبعاد غامرة، مما يمنح الضيوف المحتملين الثقة للحجز.\n\n### جولات الفنادق الافتراضية\n\nدع الضيوف يستكشفون أنواع الغرف والمرافق ومناطق المسبح والمطاعم قبل الحجز. قلل قلق الحجز وزد الحجوزات المباشرة.\n\n### معاينات المطاعم\n\naعرض أجواءك وخيارات الجلوس وتجربة الطعام. مثالي لمطاعم الطعام الفاخر وأماكن الفعاليات والمفاهيم الفريدة.\n\n### تسويق الوجهات\n\nيمكن لهيئات السياحة ومنظمات إدارة الوجهات إنشاء تجارب وجهات غامرة تلهم السفر وتعرض المعالم المحلية.\n\n### التراث والمتاحف\n\nحافظ على التراث الثقافي ووسّع الوصول للمواقع التاريخية والمتاحف من خلال التوثيق ثلاثي الأبعاد المفصل.",
-        "useCases": "الفنادق والمنتجعات|المطاعم والمقاهي|المعالم السياحية|المتاحف والمعارض|أماكن الفعاليات|مواقع التراث الثقافي",
-        "stats": "زيادة 45% في الحجوزات المباشرة|أكثر من 500 ألف زائر افتراضي للمتاحف|معدل تفاعل 85%"
-      }
-    },
-    {
-      "slug": "events-exhibitions",
-      "icon": "🎪",
-      "order": 4,
-      "en": {
-        "title": "Events & Exhibitions",
-        "tagline": "Events Without Boundaries",
-        "summary": "Virtual trade shows, hybrid conferences, digital exhibition halls, and corporate events that reach global audiences.",
-        "description": "## Reimagine Your Events\n\nPhysical events have limitations—venue capacity, travel requirements, and geographic boundaries. Arabiq's virtual event solutions remove these barriers while maintaining the engagement and networking that make events valuable.\n\n### Virtual Trade Shows\n\nCreate immersive exhibition halls where exhibitors showcase products, generate leads, and connect with attendees from anywhere in the world.\n\n### Hybrid Conferences\n\nCombine in-person and virtual attendance. Live stream sessions, enable remote networking, and extend your event's reach.\n\n### Corporate Events\n\nFrom product launches to annual meetings, create memorable experiences for employees, partners, and stakeholders.\n\n### Extended Lifespan\n\nUnlike physical events that end when doors close, virtual events can remain accessible for months, continuing to generate value and leads.",
-        "useCases": "Trade shows|Corporate conferences|Product launches|Career fairs|Training events|Award ceremonies",
-        "stats": "70% cost reduction vs physical events|10x audience reach|3 months average event lifespan"
-      },
-      "ar": {
-        "title": "الفعاليات والمعارض",
-        "tagline": "فعاليات بلا حدود",
-        "summary": "معارض تجارية افتراضية ومؤتمرات هجينة وقاعات معارض رقمية وفعاليات مؤسسية تصل لجماهير عالمية.",
-        "description": "## أعد تصور فعالياتك\n\nالفعاليات الفعلية لها قيود — سعة المكان ومتطلبات السفر والحدود الجغرافية. تزيل حلول Arabiq للفعاليات الافتراضية هذه الحواجز مع الحفاظ على التفاعل والتواصل الذي يجعل الفعاليات قيّمة.\n\n### المعارض التجارية الافتراضية\n\nأنشئ قاعات معارض غامرة حيث يعرض العارضون المنتجات ويولدون عملاء محتملين ويتواصلون مع الحاضرين من أي مكان في العالم.\n\n### المؤتمرات الهجينة\n\nادمج الحضور الشخصي والافتراضي. بث الجلسات مباشرة وفعّل التواصل عن بُعد ووسّع نطاق فعاليتك.\n\n### الفعاليات المؤسسية\n\nمن إطلاق المنتجات إلى الاجتماعات السنوية، أنشئ تجارب لا تُنسى للموظفين والشركاء وأصحاب المصلحة.\n\n### عمر ممتد\n\nعلى عكس الفعاليات الفعلية التي تنتهي عند إغلاق الأبواب، يمكن للفعاليات الافتراضية البقاء متاحة لأشهر، وتستمر في توليد القيمة والعملاء المحتملين.",
-        "useCases": "المعارض التجارية|المؤتمرات المؤسسية|إطلاق المنتجات|معارض التوظيف|فعاليات التدريب|حفلات التكريم",
-        "stats": "تقليل التكلفة 70% مقارنة بالفعاليات الفعلية|10 أضعاف الوصول للجمهور|3 أشهر متوسط عمر الفعالية"
-      }
-    },
-    {
-      "slug": "education",
-      "icon": "🎓",
-      "order": 5,
-      "en": {
-        "title": "Education",
-        "tagline": "Learning Without Limits",
-        "summary": "Virtual campus tours, immersive learning environments, lab simulations, and interactive training experiences.",
-        "description": "## Transform Educational Experiences\n\nEducation is evolving beyond the traditional classroom. Arabiq helps educational institutions create immersive learning experiences that engage students and expand access to quality education.\n\n### Virtual Campus Tours\n\nProspective students can explore campuses from anywhere in the world. Showcase facilities, dorms, libraries, and campus life to increase enrollment.\n\n### Immersive Learning\n\nCreate 3D environments for subjects that benefit from spatial understanding—architecture, engineering, medicine, and more.\n\n### Lab Simulations\n\nProvide access to virtual laboratories where students can practice procedures, conduct experiments, and learn safely.\n\n### Training Programs\n\nCorporate and vocational training becomes more effective with hands-on virtual experiences.",
-        "useCases": "Universities and colleges|K-12 schools|Corporate training|Vocational institutes|Online learning platforms|Research facilities",
-        "stats": "40% increase in enrollment inquiries|60% better retention in virtual labs|Global student reach"
-      },
-      "ar": {
-        "title": "التعليم",
-        "tagline": "تعلم بلا حدود",
-        "summary": "جولات حرم جامعية افتراضية وبيئات تعلم غامرة ومحاكاة مختبرات وتجارب تدريب تفاعلية.",
-        "description": "## حوّل التجارب التعليمية\n\nالتعليم يتطور ما وراء الفصل الدراسي التقليدي. تساعد Arabiq المؤسسات التعليمية في إنشاء تجارب تعلم غامرة تشرك الطلاب وتوسع الوصول للتعليم الجيد.\n\n### جولات الحرم الجامعي الافتراضية\n\nيمكن للطلاب المحتملين استكشاف الحرم الجامعي من أي مكان في العالم. اعرض المرافق والسكن والمكتبات وحياة الحرم لزيادة التسجيل.\n\n### التعلم الغامر\n\nأنشئ بيئات ثلاثية الأبعاد للمواضيع التي تستفيد من الفهم المكاني — الهندسة المعمارية والهندسة والطب والمزيد.\n\n### محاكاة المختبرات\n\nوفر الوصول لمختبرات افتراضية حيث يمكن للطلاب ممارسة الإجراءات وإجراء التجارب والتعلم بأمان.\n\n### برامج التدريب\n\nالتدريب المؤسسي والمهني يصبح أكثر فعالية مع التجارب الافتراضية العملية.",
-        "useCases": "الجامعات والكليات|المدارس|التدريب المؤسسي|المعاهد المهنية|منصات التعلم الإلكتروني|مرافق البحث",
-        "stats": "زيادة 40% في استفسارات التسجيل|احتفاظ أفضل 60% في المختبرات الافتراضية|وصول طلاب عالمي"
-      }
-    },
-    {
-      "slug": "healthcare",
-      "icon": "⚕️",
-      "order": 6,
-      "en": {
-        "title": "Healthcare",
-        "tagline": "Care Meets Innovation",
-        "summary": "Hospital virtual tours, patient wayfinding, facility showcases, and medical training simulations.",
-        "description": "## Improving Healthcare Experiences\n\nNavigating healthcare facilities can be stressful for patients and families. Arabiq helps healthcare providers create welcoming digital experiences that reduce anxiety and improve patient outcomes.\n\n### Hospital Virtual Tours\n\nHelp patients familiarize themselves with facilities before visits. Show departments, waiting areas, and amenities to reduce first-visit anxiety.\n\n### Patient Wayfinding\n\nInteractive 3D maps help patients and visitors navigate complex hospital layouts efficiently.\n\n### Facility Marketing\n\nShowcase state-of-the-art equipment, comfortable patient rooms, and modern facilities to attract patients and talent.\n\n### Medical Training\n\nCreate realistic simulation environments for medical education and procedure training.",
-        "useCases": "Hospitals and clinics|Dental practices|Rehabilitation centers|Medical schools|Pharmaceutical companies|Senior care facilities",
-        "stats": "35% reduction in patient anxiety|Improved wayfinding efficiency|Enhanced staff training"
-      },
-      "ar": {
-        "title": "الرعاية الصحية",
-        "tagline": "الرعاية تلتقي الابتكار",
-        "summary": "جولات مستشفيات افتراضية وتوجيه المرضى وعروض المرافق ومحاكاة التدريب الطبي.",
-        "description": "## تحسين تجارب الرعاية الصحية\n\nالتنقل في مرافق الرعاية الصحية يمكن أن يكون مرهقاً للمرضى والعائلات. تساعد Arabiq مقدمي الرعاية الصحية في إنشاء تجارب رقمية مرحبة تقلل القلق وتحسن نتائج المرضى.\n\n### جولات المستشفيات الافتراضية\n\nساعد المرضى في التعرف على المرافق قبل الزيارات. اعرض الأقسام ومناطق الانتظار والمرافق لتقليل قلق الزيارة الأولى.\n\n### توجيه المرضى\n\nخرائط ثلاثية الأبعاد تفاعلية تساعد المرضى والزوار في التنقل في تخطيطات المستشفيات المعقدة بكفاءة.\n\n### تسويق المرافق\n\nاعرض المعدات الحديثة وغرف المرضى المريحة والمرافق العصرية لجذب المرضى والمواهب.\n\n### التدريب الطبي\n\nأنشئ بيئات محاكاة واقعية للتعليم الطبي وتدريب الإجراءات.",
-        "useCases": "المستشفيات والعيادات|عيادات الأسنان|مراكز إعادة التأهيل|كليات الطب|شركات الأدوية|مرافق رعاية كبار السن",
-        "stats": "تقليل قلق المرضى 35%|تحسين كفاءة التوجيه|تدريب محسن للموظفين"
-      }
-    }
-  ]
-}

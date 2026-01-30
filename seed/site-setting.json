@@ -1,0 +1,26 @@
+{
+  "en": {
+    "title": "Arabiq - Virtual Reality Experiences for MENA",
+    "description": "Transform your business with immersive 3D virtual spaces. Create virtual malls, showrooms, events, and tours using Matterport technology and Arabic-first AI.",
+    "contactEmail": "hello@arabiq.tech",
+    "contactPhone": "+966 11 234 5678",
+    "footerCompanyTitle": "Company",
+    "footerProductsTitle": "Products",
+    "footerResourcesTitle": "Resources",
+    "footerConnectTitle": "Connect",
+    "copyrightText": "© 2026 Arabiq Technologies. All rights reserved.",
+    "loginButtonText": "Login"
+  },
+  "ar": {
+    "title": "Arabiq - تجارب الواقع الافتراضي للشرق الأوسط",
+    "description": "حوّل أعمالك بمساحات افتراضية ثلاثية الأبعاد غامرة. أنشئ مراكز تسوق ومعارض وفعاليات وجولات افتراضية.",
+    "contactEmail": "hello@arabiq.tech",
+    "contactPhone": "+966 11 234 5678",
+    "footerCompanyTitle": "الشركة",
+    "footerProductsTitle": "المنتجات",
+    "footerResourcesTitle": "الموارد",
+    "footerConnectTitle": "تواصل معنا",
+    "copyrightText": "© 2026 Arabiq Technologies. جميع الحقوق محفوظة.",
+    "loginButtonText": "تسجيل الدخول"
+  }
+}

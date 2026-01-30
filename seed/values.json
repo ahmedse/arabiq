@@ -1,0 +1,77 @@
+{
+  "identifierField": "order",
+  "items": [
+    {
+      "order": 1,
+      "icon": "🌍",
+      "en": {
+        "title": "Arabic-First",
+        "description": "Built from the ground up for Arabic language and RTL design. We don't translate—we create native Arabic experiences that resonate with regional audiences."
+      },
+      "ar": {
+        "title": "العربية أولاً",
+        "description": "مبني من الأساس للغة العربية وتصميم RTL. لا نترجم — ننشئ تجارب عربية أصلية تتجاوب مع الجماهير الإقليمية."
+      }
+    },
+    {
+      "order": 2,
+      "icon": "💡",
+      "en": {
+        "title": "Innovation",
+        "description": "We push the boundaries of what's possible with 3D, AI, and immersive technology. Our R&D team constantly explores new ways to enhance virtual experiences."
+      },
+      "ar": {
+        "title": "الابتكار",
+        "description": "ندفع حدود الممكن مع تقنية 3D والذكاء الاصطناعي والتقنية الغامرة. يستكشف فريق البحث والتطوير لدينا باستمرار طرقاً جديدة لتعزيز التجارب الافتراضية."
+      }
+    },
+    {
+      "order": 3,
+      "icon": "⭐",
+      "en": {
+        "title": "Excellence",
+        "description": "We deliver photorealistic quality, enterprise-grade security, and 99.9% uptime. Every project receives our full attention and highest standards."
+      },
+      "ar": {
+        "title": "التميز",
+        "description": "نقدم جودة فوتوغرافية وأمان على مستوى المؤسسات ووقت تشغيل 99.9%. كل مشروع يحصل على اهتمامنا الكامل وأعلى معاييرنا."
+      }
+    },
+    {
+      "order": 4,
+      "icon": "🤝",
+      "en": {
+        "title": "Partnership",
+        "description": "Your success is our success. We measure ourselves by your results and provide dedicated support every step of the way."
+      },
+      "ar": {
+        "title": "الشراكة",
+        "description": "نجاحك هو نجاحنا. نقيس أنفسنا بنتائجك ونوفر دعماً مخصصاً في كل خطوة على الطريق."
+      }
+    },
+    {
+      "order": 5,
+      "icon": "🔒",
+      "en": {
+        "title": "Trust",
+        "description": "We handle your data with the highest security standards and full transparency. SOC 2 compliant with regional data residency options."
+      },
+      "ar": {
+        "title": "الثقة",
+        "description": "نتعامل مع بياناتك بأعلى معايير الأمان والشفافية الكاملة. متوافقون مع SOC 2 مع خيارات إقامة البيانات الإقليمية."
+      }
+    },
+    {
+      "order": 6,
+      "icon": "🚀",
+      "en": {
+        "title": "Speed",
+        "description": "Time is valuable. Our 48-hour delivery commitment and efficient processes ensure you go live faster than any competitor."
+      },
+      "ar": {
+        "title": "السرعة",
+        "description": "الوقت ثمين. التزامنا بالتسليم خلال 48 ساعة وعملياتنا الفعالة تضمن انطلاقك أسرع من أي منافس."
+      }
+    }
+  ]
+}

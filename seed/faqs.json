@@ -1,0 +1,135 @@
+{
+  "identifierField": "slug",
+  "items": [
+    {
+      "slug": "what-is-matterport",
+      "category": "technology",
+      "order": 1,
+      "en": {
+        "question": "What is Matterport and how does it work?",
+        "answer": "Matterport is the industry-leading 3D capture technology that creates photorealistic digital twins of physical spaces. Our team uses Matterport Pro3 cameras to scan your space, capturing millions of data points that are processed into an immersive 3D model. The result is a virtual experience where visitors can navigate your space as if they were physically present, with the ability to look in any direction and move through the environment freely."
+      },
+      "ar": {
+        "question": "ما هي تقنية Matterport وكيف تعمل؟",
+        "answer": "Matterport هي التقنية الرائدة في الصناعة لالتقاط المساحات ثلاثية الأبعاد وإنشاء توائم رقمية فوتوغرافية للمساحات الفعلية. يستخدم فريقنا كاميرات Matterport Pro3 لمسح مساحتك، والتقاط ملايين نقاط البيانات التي تُعالج لإنشاء نموذج ثلاثي الأبعاد غامر. النتيجة هي تجربة افتراضية حيث يمكن للزوار التنقل في مساحتك كأنهم حاضرون فعلياً، مع القدرة على النظر في أي اتجاه والتحرك عبر البيئة بحرية."
+      }
+    },
+    {
+      "slug": "how-long-does-scanning-take",
+      "category": "process",
+      "order": 2,
+      "en": {
+        "question": "How long does the 3D scanning process take?",
+        "answer": "Scanning time depends on the size and complexity of your space. As a general guide: a small retail store (100-200 sqm) takes 1-2 hours, a medium showroom (200-500 sqm) takes 2-4 hours, and a large space (500+ sqm) may take 4-8 hours. Post-production and enhancement typically adds 24-48 hours. Our standard delivery is within 48 hours of scanning completion, though rush delivery can be arranged for urgent projects."
+      },
+      "ar": {
+        "question": "كم يستغرق المسح ثلاثي الأبعاد؟",
+        "answer": "يعتمد وقت المسح على حجم وتعقيد مساحتك. كدليل عام: متجر تجزئة صغير (100-200 متر مربع) يستغرق 1-2 ساعة، صالة عرض متوسطة (200-500 متر مربع) تستغرق 2-4 ساعات، والمساحات الكبيرة (500+ متر مربع) قد تستغرق 4-8 ساعات. ما بعد الإنتاج والتحسين يضيف عادة 24-48 ساعة. تسليمنا القياسي خلال 48 ساعة من اكتمال المسح، رغم أن التسليم السريع يمكن ترتيبه للمشاريع العاجلة."
+      }
+    },
+    {
+      "slug": "pricing-model",
+      "category": "pricing",
+      "order": 3,
+      "en": {
+        "question": "How is Arabiq priced?",
+        "answer": "We offer flexible pricing to match your needs. One-time scanning projects start at SAR 5,000 for spaces up to 200 sqm, including scanning, post-production, and one year of hosting. Monthly platform subscriptions start at SAR 2,500/month and include unlimited updates, AI features, e-commerce integration, and analytics. Enterprise packages with custom requirements are quoted individually. All plans include our 30-day money-back guarantee."
+      },
+      "ar": {
+        "question": "كيف يتم تسعير خدمات Arabiq؟",
+        "answer": "نقدم تسعيراً مرناً يتناسب مع احتياجاتك. مشاريع المسح لمرة واحدة تبدأ من 5,000 ريال للمساحات حتى 200 متر مربع، شاملة المسح وما بعد الإنتاج وسنة واحدة من الاستضافة. اشتراكات المنصة الشهرية تبدأ من 2,500 ريال/شهرياً وتشمل تحديثات غير محدودة وميزات الذكاء الاصطناعي وتكامل التجارة الإلكترونية والتحليلات. باقات المؤسسات ذات المتطلبات المخصصة يتم تسعيرها بشكل فردي. جميع الخطط تشمل ضمان استرداد الأموال خلال 30 يوماً."
+      }
+    },
+    {
+      "slug": "supported-countries",
+      "category": "general",
+      "order": 4,
+      "en": {
+        "question": "Which countries do you serve?",
+        "answer": "We operate across the entire MENA region with scanning teams based in Saudi Arabia (Riyadh, Jeddah), UAE (Dubai, Abu Dhabi), and Egypt (Cairo, Alexandria). We also serve Qatar, Kuwait, Bahrain, Oman, Jordan, Lebanon, Morocco, Tunisia, and Iraq through our regional partner network. For locations outside our direct coverage, we can arrange scanning through certified local partners or travel our team to your location."
+      },
+      "ar": {
+        "question": "ما هي الدول التي تخدمونها؟",
+        "answer": "نعمل في جميع أنحاء منطقة الشرق الأوسط وشمال أفريقيا مع فرق مسح مقرها السعودية (الرياض، جدة) والإمارات (دبي، أبوظبي) ومصر (القاهرة، الإسكندرية). نخدم أيضاً قطر والكويت والبحرين وعُمان والأردن ولبنان والمغرب وتونس والعراق من خلال شبكة شركائنا الإقليميين. للمواقع خارج تغطيتنا المباشرة، يمكننا ترتيب المسح من خلال شركاء محليين معتمدين أو سفر فريقنا لموقعك."
+      }
+    },
+    {
+      "slug": "integration-existing-website",
+      "category": "technology",
+      "order": 5,
+      "en": {
+        "question": "Can I integrate the virtual tour into my existing website?",
+        "answer": "Absolutely! We provide multiple integration options to fit your technical setup. The simplest method is an iframe embed code that works with any website platform including WordPress, Shopify, Wix, or custom HTML. For advanced integrations, we offer a JavaScript SDK that allows deeper customization, analytics tracking, and e-commerce connections. Our team provides full documentation and technical support to ensure smooth implementation."
+      },
+      "ar": {
+        "question": "هل يمكنني دمج الجولة الافتراضية في موقعي الحالي؟",
+        "answer": "بالتأكيد! نوفر خيارات تكامل متعددة لتناسب إعدادك التقني. الطريقة الأبسط هي كود تضمين iframe الذي يعمل مع أي منصة موقع شاملة WordPress و Shopify و Wix أو HTML المخصص. للتكاملات المتقدمة، نقدم JavaScript SDK الذي يسمح بتخصيص أعمق وتتبع التحليلات واتصالات التجارة الإلكترونية. يوفر فريقنا توثيقاً كاملاً ودعماً تقنياً لضمان التطبيق السلس."
+      }
+    },
+    {
+      "slug": "arabic-ai-dialects",
+      "category": "technology",
+      "order": 6,
+      "en": {
+        "question": "Which Arabic dialects does your AI support?",
+        "answer": "Our Arabic AI Suite supports six major Arabic dialects: Gulf Arabic (Saudi, Emirati, Kuwaiti, Qatari, Bahraini), Egyptian Arabic, Levantine Arabic (Syrian, Lebanese, Jordanian, Palestinian), Iraqi Arabic, Maghrebi Arabic (Moroccan, Algerian, Tunisian), and Modern Standard Arabic (Fusha). The AI automatically detects which dialect a user is speaking and responds appropriately, creating a natural conversational experience for users across the region."
+      },
+      "ar": {
+        "question": "ما هي اللهجات العربية التي يدعمها ذكاؤكم الاصطناعي؟",
+        "answer": "تدعم مجموعة الذكاء الاصطناعي العربية لدينا ست لهجات عربية رئيسية: العربية الخليجية (السعودية، الإماراتية، الكويتية، القطرية، البحرينية)، العربية المصرية، العربية الشامية (السورية، اللبنانية، الأردنية، الفلسطينية)، العربية العراقية، العربية المغاربية (المغربية، الجزائرية، التونسية)، والعربية الفصحى الحديثة. يكتشف الذكاء الاصطناعي تلقائياً أي لهجة يتحدث بها المستخدم ويستجيب بشكل مناسب، مما يخلق تجربة محادثة طبيعية للمستخدمين عبر المنطقة."
+      }
+    },
+    {
+      "slug": "ecommerce-integration",
+      "category": "technology",
+      "order": 7,
+      "en": {
+        "question": "How does e-commerce integration work?",
+        "answer": "Our e-commerce integration connects your virtual space with your existing online store. When you tag a product in the 3D environment, it links directly to your product database. Customers can view product details, check real-time availability, see pricing, and add items to their cart—all without leaving the virtual experience. We support direct integration with Shopify, WooCommerce, Magento, Salla, and Zid. For other platforms, we provide API connections for custom integration."
+      },
+      "ar": {
+        "question": "كيف يعمل تكامل التجارة الإلكترونية؟",
+        "answer": "يربط تكامل التجارة الإلكترونية لدينا مساحتك الافتراضية بمتجرك الإلكتروني الحالي. عندما تضع علامة على منتج في البيئة ثلاثية الأبعاد، يرتبط مباشرة بقاعدة بيانات منتجاتك. يمكن للعملاء عرض تفاصيل المنتج والتحقق من التوفر الفوري ورؤية الأسعار وإضافة العناصر لسلتهم — كل ذلك دون مغادرة التجربة الافتراضية. ندعم التكامل المباشر مع Shopify و WooCommerce و Magento وسلة وزد. للمنصات الأخرى، نوفر اتصالات API للتكامل المخصص."
+      }
+    },
+    {
+      "slug": "data-security",
+      "category": "security",
+      "order": 8,
+      "en": {
+        "question": "How do you handle data security and privacy?",
+        "answer": "Security is fundamental to our platform. We maintain SOC 2 Type II compliance and offer data residency options in Saudi Arabia and UAE to meet local regulations. All data is encrypted in transit and at rest. We provide role-based access control, single sign-on (SSO) integration, and comprehensive audit logs. For enterprise customers, we offer dedicated infrastructure, custom security configurations, and compliance documentation for regulatory requirements."
+      },
+      "ar": {
+        "question": "كيف تتعاملون مع أمان البيانات والخصوصية؟",
+        "answer": "الأمان أساسي لمنصتنا. نحافظ على امتثال SOC 2 Type II ونقدم خيارات إقامة البيانات في السعودية والإمارات لتلبية اللوائح المحلية. جميع البيانات مشفرة أثناء النقل والتخزين. نوفر التحكم في الوصول المبني على الأدوار وتكامل تسجيل الدخول الموحد (SSO) وسجلات تدقيق شاملة. لعملاء المؤسسات، نقدم بنية تحتية مخصصة وتكوينات أمان مخصصة ووثائق امتثال للمتطلبات التنظيمية."
+      }
+    },
+    {
+      "slug": "update-virtual-space",
+      "category": "process",
+      "order": 9,
+      "en": {
+        "question": "Can I update my virtual space after it's created?",
+        "answer": "Yes! Virtual spaces can be updated in two ways. For minor changes like updating product information, prices, or hotspot content, you can make changes yourself through our content management dashboard—no technical skills required. For physical changes to your space (new layout, renovations, new products on display), we offer re-scanning services at discounted rates for existing customers. Many clients on our subscription plans include quarterly or annual re-scans as part of their package."
+      },
+      "ar": {
+        "question": "هل يمكنني تحديث مساحتي الافتراضية بعد إنشائها؟",
+        "answer": "نعم! يمكن تحديث المساحات الافتراضية بطريقتين. للتغييرات الطفيفة مثل تحديث معلومات المنتج أو الأسعار أو محتوى النقاط التفاعلية، يمكنك إجراء التغييرات بنفسك من خلال لوحة إدارة المحتوى لدينا — لا تحتاج مهارات تقنية. للتغييرات الفعلية في مساحتك (تخطيط جديد، تجديدات، منتجات جديدة معروضة)، نقدم خدمات إعادة المسح بأسعار مخفضة للعملاء الحاليين. العديد من العملاء على خطط الاشتراك لدينا يضمنون إعادة المسح الربعية أو السنوية كجزء من باقتهم."
+      }
+    },
+    {
+      "slug": "roi-expectations",
+      "category": "general",
+      "order": 10,
+      "en": {
+        "question": "What kind of ROI can I expect?",
+        "answer": "ROI varies by industry and use case, but our clients typically see significant returns. Retail clients report 200-400% increases in online sales, 30-45% reduction in return rates, and expanded geographic reach. Real estate clients see 40-65% faster sales cycles and 2-3x more international inquiries. Event organizers reduce costs by 60-70% while reaching 5-10x more attendees. We provide analytics dashboards to track your specific ROI metrics, and our team can share relevant case studies from your industry during consultation."
+      },
+      "ar": {
+        "question": "ما نوع العائد على الاستثمار الذي يمكن أن أتوقعه؟",
+        "answer": "يختلف العائد على الاستثمار حسب الصناعة وحالة الاستخدام، لكن عملاءنا يرون عادة عوائد كبيرة. عملاء التجزئة يبلغون عن زيادات 200-400% في المبيعات الإلكترونية، وتقليل 30-45% في معدلات الإرجاع، وتوسع الوصول الجغرافي. عملاء العقارات يرون دورات مبيعات أسرع 40-65% واستفسارات دولية 2-3 أضعاف. منظمو الفعاليات يقللون التكاليف 60-70% بينما يصلون لـ 5-10 أضعاف الحاضرين. نوفر لوحات تحليلات لتتبع مقاييس عائدك المحددة، ويمكن لفريقنا مشاركة دراسات حالة ذات صلة من صناعتك خلال الاستشارة."
+      }
+    }
+  ]
+}

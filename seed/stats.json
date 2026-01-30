@@ -1,0 +1,35 @@
+{
+  "identifierField": "order",
+  "items": [
+    {
+      "order": 1,
+      "en": { "value": "100+", "label": "Businesses Transformed" },
+      "ar": { "value": "+100", "label": "شركة تم تحويلها" }
+    },
+    {
+      "order": 2,
+      "en": { "value": "12", "label": "Countries Served" },
+      "ar": { "value": "12", "label": "دولة نخدمها" }
+    },
+    {
+      "order": 3,
+      "en": { "value": "2M+", "label": "Virtual Visitors" },
+      "ar": { "value": "+2 مليون", "label": "زائر افتراضي" }
+    },
+    {
+      "order": 4,
+      "en": { "value": "48hr", "label": "Average Delivery" },
+      "ar": { "value": "48 ساعة", "label": "متوسط التسليم" }
+    },
+    {
+      "order": 5,
+      "en": { "value": "340%", "label": "Average Sales Lift" },
+      "ar": { "value": "340%", "label": "متوسط زيادة المبيعات" }
+    },
+    {
+      "order": 6,
+      "en": { "value": "4.9/5", "label": "Client Satisfaction" },
+      "ar": { "value": "4.9/5", "label": "رضا العملاء" }
+    }
+  ]
+}

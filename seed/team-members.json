@@ -1,0 +1,89 @@
+{
+  "identifierField": "order",
+  "items": [
+    {
+      "order": 1,
+      "linkedinUrl": "https://linkedin.com/in/",
+      "en": {
+        "name": "Ahmed Al-Rashid",
+        "position": "Chief Executive Officer & Founder",
+        "bio": "Former CTO at a leading MENA e-commerce platform. 15+ years building technology companies across the region."
+      },
+      "ar": {
+        "name": "أحمد الراشد",
+        "position": "الرئيس التنفيذي والمؤسس",
+        "bio": "مدير تقني سابق في منصة تجارة إلكترونية رائدة في الشرق الأوسط. أكثر من 15 عاماً في بناء شركات التقنية."
+      }
+    },
+    {
+      "order": 2,
+      "linkedinUrl": "https://linkedin.com/in/",
+      "en": {
+        "name": "Dr. Fatima Hassan",
+        "position": "Chief Technology Officer",
+        "bio": "AI and Computer Vision expert with PhD from MIT. Previously led machine learning teams at major tech companies."
+      },
+      "ar": {
+        "name": "د. فاطمة حسن",
+        "position": "المديرة التنفيذية للتقنية",
+        "bio": "خبيرة ذكاء اصطناعي ورؤية حاسوبية مع دكتوراه من MIT. قادت سابقاً فرق تعلم الآلة في شركات تقنية كبرى."
+      }
+    },
+    {
+      "order": 3,
+      "linkedinUrl": "https://linkedin.com/in/",
+      "en": {
+        "name": "Omar Khalil",
+        "position": "Head of Design",
+        "bio": "Award-winning UX designer specializing in Arabic-first interfaces. 12 years of experience."
+      },
+      "ar": {
+        "name": "عمر خليل",
+        "position": "رئيس التصميم",
+        "bio": "مصمم UX حائز على جوائز متخصص في الواجهات العربية أولاً. 12 عاماً من الخبرة."
+      }
+    },
+    {
+      "order": 4,
+      "linkedinUrl": "https://linkedin.com/in/",
+      "en": {
+        "name": "Layla Mansour",
+        "position": "Vice President of Sales",
+        "bio": "10+ years in enterprise technology sales across MENA. Built teams that closed $50M+ in annual revenue."
+      },
+      "ar": {
+        "name": "ليلى منصور",
+        "position": "نائبة رئيس المبيعات",
+        "bio": "أكثر من 10 سنوات في مبيعات تقنية المؤسسات عبر الشرق الأوسط."
+      }
+    },
+    {
+      "order": 5,
+      "linkedinUrl": "https://linkedin.com/in/",
+      "en": {
+        "name": "Youssef Ibrahim",
+        "position": "Head of Operations",
+        "bio": "Operations excellence leader with background in logistics and service delivery."
+      },
+      "ar": {
+        "name": "يوسف إبراهيم",
+        "position": "رئيس العمليات",
+        "bio": "قائد تميز العمليات بخلفية في اللوجستيات وتقديم الخدمات."
+      }
+    },
+    {
+      "order": 6,
+      "linkedinUrl": "https://linkedin.com/in/",
+      "en": {
+        "name": "Nour Al-Sayed",
+        "position": "Head of Customer Success",
+        "bio": "Customer experience champion with 8 years in SaaS customer success."
+      },
+      "ar": {
+        "name": "نور السيد",
+        "position": "رئيسة نجاح العملاء",
+        "bio": "بطلة تجربة العملاء مع 8 سنوات في نجاح عملاء SaaS."
+      }
+    }
+  ]
+}
