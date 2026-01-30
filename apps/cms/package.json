@@ -5,7 +5,7 @@
   "description": "A Strapi application",
   "scripts": {
     "copy-schemas": "for d in src/api/*/; do name=$(basename \"$d\"); if [ -d \"src/api/$name/content-types\" ]; then mkdir -p \"dist/src/api/$name/content-types\"; cp -r \"src/api/$name/content-types/\"* \"dist/src/api/$name/content-types/\"; fi; done",
-    "build": "npx strapi build && npm run copy-schemas",
+    "build": "strapi build && npm run copy-schemas",
     "build-backend": "npx tsc --project tsconfig.json && npm run copy-schemas",
     "console": "npx strapi console",
     "deploy": "npx strapi deploy",
@@ -27,11 +27,11 @@
     "@strapi/strapi": "5.33.4",
     "bcryptjs": "^3.0.3",
     "pg": "^8.17.2",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^6.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.3",
     "resend": "^6.9.1",
-    "styled-components": "^6.0.0",
+    "styled-components": "^6.3.8",
     "transliteration": "^2.6.1"
   },
   "devDependencies": {

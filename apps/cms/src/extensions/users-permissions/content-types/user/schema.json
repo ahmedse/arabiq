@@ -67,34 +67,26 @@
     },
     "phone": {
       "type": "string",
-      "required": true,
       "unique": true,
-      "regex": "^\\+?[1-9]\\d{1,14}$"
+      "required": true
     },
     "country": {
-      "type": "string",
-      "required": false
+      "type": "string"
     },
     "company": {
-      "type": "string",
-      "required": false
+      "type": "string"
     },
     "salesContactAllowed": {
       "type": "boolean",
       "default": true
     },
+    "displayName": {
+      "type": "string"
+    },
     "accountStatus": {
       "type": "enumeration",
       "enum": ["pending", "active", "suspended"],
       "default": "pending"
-    },
-    "displayName": {
-      "type": "string",
-      "required": false
-    },
-    "lastLoginAt": {
-      "type": "datetime"
     }
-
   }
 }
