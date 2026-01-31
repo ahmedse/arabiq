@@ -89,5 +89,52 @@ module.exports = (plugin) => {
     ctx.send({ message: 'Logged out successfully' });
   };
 
+  // Override emailConfirmation to also activate account_status and return user when requested
+  const originalEmailConfirmation = plugin.controllers.auth.emailConfirmation;
+  plugin.controllers.auth.emailConfirmation = async (ctx, next, returnUser) => {
+    try {
+      // Validate input token
+      const confirmationToken = ctx.query.confirmation || ctx.request.body?.confirmation;
+      if (!confirmationToken) {
+        // fallback to original for validation error handling
+        return await originalEmailConfirmation(ctx, next, returnUser);
+      }
+
+      const userService = strapi.plugin('users-permissions').service('user');
+      const [user] = await userService.fetchAll({ filters: { confirmationToken } });
+
+      if (!user) {
+        // let original throw the 'Invalid token' ValidationError
+        return await originalEmailConfirmation(ctx, next, returnUser);
+      }
+
+      // Mark user confirmed and set account_status to active
+      await userService.edit(user.id, { confirmed: true, confirmationToken: null });
+      try {
+        await strapi.db.connection('up_users').where('id', user.id).update({ account_status: 'active' });
+      } catch (e) {
+        // Non-fatal: log and continue
+        strapi.log.error('[users-permissions] Failed to set account_status to active on email confirmation', e);
+      }
+
+      if (returnUser) {
+        const jwt = strapi.plugin('users-permissions').service('jwt').issue({ id: user.id });
+        const sanitized = await (async () => {
+          const userSchema = strapi.getModel('plugin::users-permissions.user');
+          return strapi.contentAPI.sanitize.output(user, userSchema, { auth: ctx.state.auth });
+        })();
+        ctx.send({ jwt, user: sanitized });
+        return;
+      }
+
+      // default behavior: redirect to configured URL
+      const settings = await strapi.store({ type: 'plugin', name: 'users-permissions', key: 'advanced' }).get();
+      ctx.redirect(settings.email_confirmation_redirection || '/');
+    } catch (err) {
+      // Delegate to original to preserve error shapes
+      return await originalEmailConfirmation(ctx, next, returnUser);
+    }
+  };
+
   return plugin;
 };

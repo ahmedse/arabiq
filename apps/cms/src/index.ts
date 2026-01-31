@@ -21,6 +21,21 @@ export default {
     const { createCustomRoles } = await import('./bootstrap/create-roles');
     await createCustomRoles(strapi);
 
+    // Ensure users-permissions email confirmation defaults to ON for fresh installs
+    try {
+      const pluginStore = strapi.store({ type: 'plugin', name: 'users-permissions' });
+      const advanced = (await pluginStore.get({ key: 'advanced' })) || {};
+
+      // Only set default when unset to avoid overriding existing installs
+      if (advanced.email_confirmation === undefined) {
+        advanced.email_confirmation = true;
+        await pluginStore.set({ key: 'advanced', value: advanced });
+        strapi.log.info('[bootstrap] Enabled users-permissions email confirmation by default');
+      }
+    } catch (e) {
+      strapi.log.error('[bootstrap] Failed to set default email_confirmation', e);
+    }
+
     // Optionally disable AI localizations via env var to avoid noisy errors when no AI provider is configured.
     if (process.env.DISABLE_AI_LOCALIZATIONS === 'true' || process.env.DISABLE_AI_LOCALIZATIONS === '1') {
       try {

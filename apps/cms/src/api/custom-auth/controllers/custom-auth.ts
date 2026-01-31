@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 const controller = ({ strapi }) => ({
   async register(ctx) {
     const pluginStore = await strapi.store({
@@ -92,9 +94,22 @@ const controller = ({ strapi }) => ({
         confirmed: fullUser.confirmed,
         blocked: fullUser.blocked,
         createdAt: fullUser.created_at,
+        lastLogin: fullUser.last_login || null,
         role: defaultRole,
       };
 
+      // If email confirmation is enabled, send confirmation email and DO NOT return JWT
+      if (settings.email_confirmation) {
+        try {
+          await userService.sendConfirmationEmail(user);
+          return ctx.send({ user: sanitizedUser, message: 'Confirmation email sent. Please check your inbox to activate your account.' });
+        } catch (e: any) {
+          strapi.log.error('[custom-auth] failed to send confirmation email', e);
+          return ctx.send({ user: sanitizedUser, message: 'Account created. We were unable to send a confirmation email — please contact support.' });
+        }
+      }
+
+      // No email confirmation required — issue JWT immediately
       const jwt = strapi.plugin('users-permissions').service('jwt').issue({ id: user.id });
 
       return ctx.send({ jwt, user: sanitizedUser });
@@ -102,6 +117,64 @@ const controller = ({ strapi }) => ({
       strapi.log.error('Registration error:', error);
       return ctx.badRequest(error.message || 'Registration failed');
     }
+  },
+
+  async login(ctx) {
+    const { identifier, password } = ctx.request.body;
+
+    if (!identifier || !password) return ctx.badRequest('Identifier and password are required');
+
+    const knex = strapi.db.connection;
+
+    const user = await knex('up_users')
+      .select(
+        'id',
+        'username',
+        'email',
+        'password',
+        'display_name as displayName',
+        'phone',
+        'country',
+        'company',
+        'account_status as accountStatus',
+        'sales_contact_allowed as salesContactAllowed',
+        'provider',
+        'confirmed',
+        'blocked',
+        'created_at as createdAt'
+      )
+      .where(function () {
+        this.where('email', identifier.toLowerCase()).orWhere('username', identifier);
+      })
+      .first();
+
+    if (!user) return ctx.badRequest('Invalid identifier or password');
+
+    if (user.blocked) return ctx.badRequest('Your account has been blocked');
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) return ctx.badRequest('Invalid identifier or password');
+
+    await knex('up_users').where('id', user.id).update({ last_login: new Date() });
+
+    const jwt = strapi.plugin('users-permissions').service('jwt').issue({ id: user.id });
+
+    return ctx.send({
+      jwt,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        displayName: user.displayName,
+        phone: user.phone,
+        company: user.company,
+        country: user.country,
+        accountStatus: user.accountStatus || 'pending',
+        salesContactAllowed: user.salesContactAllowed === true,
+        confirmed: user.confirmed,
+        createdAt: user.createdAt,
+      },
+    });
   },
 
   async me(ctx: any) {
@@ -159,6 +232,84 @@ const controller = ({ strapi }) => ({
       createdAt: fullUser.createdAt,
       updatedAt: fullUser.updatedAt,
     };
+  },
+
+  async updateMe(ctx) {
+    const user = ctx.state.user;
+
+    if (!user) return ctx.unauthorized('You must be logged in');
+
+    const { displayName, phone, country, company, salesContactAllowed } = ctx.request.body;
+
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+    if (phone && !phoneRegex.test(phone)) return ctx.badRequest('Invalid phone number format');
+
+    const knex = strapi.db.connection;
+
+    const updateData: any = {};
+    if (displayName !== undefined) updateData.display_name = displayName;
+    if (phone !== undefined) updateData.phone = phone;
+    if (country !== undefined) updateData.country = country;
+    if (company !== undefined) updateData.company = company;
+    if (salesContactAllowed !== undefined) updateData.sales_contact_allowed = salesContactAllowed;
+
+    const updated = await knex('up_users')
+      .where('id', user.id)
+      .update(updateData)
+      .returning('*');
+
+    const fullUser = updated && updated[0] ? updated[0] : await knex('up_users').where('id', user.id).first();
+
+    ctx.body = {
+      id: fullUser.id,
+      username: fullUser.username,
+      email: fullUser.email,
+      displayName: fullUser.display_name,
+      phone: fullUser.phone,
+      country: fullUser.country,
+      company: fullUser.company,
+      accountStatus: fullUser.account_status || 'pending',
+      salesContactAllowed: fullUser.sales_contact_allowed === true,
+      lastLogin: fullUser.last_login || null,
+      confirmed: fullUser.confirmed,
+      blocked: fullUser.blocked,
+      createdAt: fullUser.created_at,
+      updatedAt: fullUser.updated_at,
+    };
+  },
+
+  async changePassword(ctx) {
+    const user = ctx.state.user;
+
+    if (!user) return ctx.unauthorized('You must be logged in');
+
+    const { currentPassword, newPassword, newPasswordConfirmation } = ctx.request.body;
+
+    if (!currentPassword || !newPassword || !newPasswordConfirmation) return ctx.badRequest('All password fields are required');
+    if (newPassword !== newPasswordConfirmation) return ctx.badRequest('New passwords do not match');
+    if (newPassword.length < 8) return ctx.badRequest('New password must be at least 8 characters');
+
+    const knex = strapi.db.connection;
+
+    const fullUser = await knex('up_users').where('id', user.id).first();
+
+    if (!fullUser) return ctx.notFound('User not found');
+
+    const valid = await bcrypt.compare(currentPassword, fullUser.password);
+    if (!valid) return ctx.badRequest('Current password is incorrect');
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    await knex('up_users').where('id', user.id).update({ password: hashed });
+
+    // Also update plugin users-permissions table if necessary
+    try {
+      await strapi.db.query('plugin::users-permissions.user').update({ where: { id: user.id }, data: { password: hashed } });
+    } catch (e) {
+      // ignore - update best-effort
+    }
+
+    ctx.body = { message: 'Password changed successfully' };
   },
 
 });

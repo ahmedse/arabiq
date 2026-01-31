@@ -87,6 +87,12 @@
       "type": "enumeration",
       "enum": ["pending", "active", "suspended"],
       "default": "pending"
+    },
+    "confirmationTokenExpiresAt": {
+      "type": "datetime"
+    },
+    "lastLogin": {
+      "type": "datetime"
     }
   }
 }

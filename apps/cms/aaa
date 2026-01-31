@@ -1,68 +1,37 @@
-                   table_name                   
-------------------------------------------------
- admin_permissions
- admin_permissions_role_lnk
- admin_roles
- admin_users
- admin_users_roles_lnk
- contact_pages
- demos
- demos_pages
- faqs
- features
- files
- files_folder_lnk
- files_related_mph
- homepages
- i18n_locale
- industries
- industries_pages
- nav_items
- partners
- pricing_pages
- pricing_plans
- process_steps
- site_settings
- solutions
- solutions_pages
- stats
- strapi_ai_localization_jobs
- strapi_api_token_permissions
- strapi_api_token_permissions_token_lnk
- strapi_api_tokens
- strapi_audit_logs
- strapi_audit_logs_user_lnk
- strapi_core_store_settings
- strapi_database_schema
- strapi_history_versions
- strapi_migrations
- strapi_migrations_internal
- strapi_release_actions
- strapi_release_actions_release_lnk
- strapi_releases
- strapi_sessions
- strapi_transfer_token_permissions
- strapi_transfer_token_permissions_token_lnk
- strapi_transfer_tokens
- strapi_webhooks
- strapi_workflows
- strapi_workflows_stage_required_to_publish_lnk
- strapi_workflows_stages
- strapi_workflows_stages_permissions_lnk
- strapi_workflows_stages_workflow_lnk
- team_members
- testimonials
- trusted_companies
- up_permissions
- up_permissions_role_lnk
- up_roles
- up_users
- up_users_role_lnk
- upload_folders
- upload_folders_parent_lnk
- user_audit_logs
- user_audit_logs_target_demo_lnk
- user_audit_logs_user_lnk
- values
-(64 rows)
+                                               Table "public.up_users"
+        Column         |              Type              | Collation | Nullable |               Default                
+-----------------------+--------------------------------+-----------+----------+--------------------------------------
+ id                    | integer                        |           | not null | nextval('up_users_id_seq'::regclass)
+ document_id           | character varying(255)         |           |          | 
+ username              | character varying(255)         |           |          | 
+ email                 | character varying(255)         |           |          | 
+ provider              | character varying(255)         |           |          | 
+ password              | character varying(255)         |           |          | 
+ reset_password_token  | character varying(255)         |           |          | 
+ confirmation_token    | character varying(255)         |           |          | 
+ confirmed             | boolean                        |           |          | 
+ blocked               | boolean                        |           |          | 
+ created_at            | timestamp(6) without time zone |           |          | 
+ updated_at            | timestamp(6) without time zone |           |          | 
+ published_at          | timestamp(6) without time zone |           |          | 
+ created_by_id         | integer                        |           |          | 
+ updated_by_id         | integer                        |           |          | 
+ locale                | character varying(255)         |           |          | 
+ phone                 | character varying(255)         |           |          | 
+ country               | character varying(255)         |           |          | 
+ company               | character varying(255)         |           |          | 
+ sales_contact_allowed | boolean                        |           |          | true
+ display_name          | character varying(255)         |           |          | 
+ account_status        | character varying(255)         |           |          | 'pending'::character varying
+Indexes:
+    "up_users_pkey" PRIMARY KEY, btree (id)
+    "up_users_created_by_id_fk" btree (created_by_id)
+    "up_users_documents_idx" btree (document_id, locale, published_at)
+    "up_users_updated_by_id_fk" btree (updated_by_id)
+Foreign-key constraints:
+    "up_users_created_by_id_fk" FOREIGN KEY (created_by_id) REFERENCES admin_users(id) ON DELETE SET NULL
+    "up_users_updated_by_id_fk" FOREIGN KEY (updated_by_id) REFERENCES admin_users(id) ON DELETE SET NULL
+Referenced by:
+    TABLE "up_users_role_lnk" CONSTRAINT "up_users_role_lnk_fk" FOREIGN KEY (user_id) REFERENCES up_users(id) ON DELETE CASCADE
+    TABLE "user_audit_logs_user_lnk" CONSTRAINT "user_audit_logs_user_lnk_ifk" FOREIGN KEY (user_id) REFERENCES up_users(id) ON DELETE CASCADE
 
