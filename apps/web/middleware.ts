@@ -64,14 +64,14 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    // Check account status
-    if (user.accountStatus === 'suspended') {
+    // Check account status and avoid redirect loops by ensuring we are not already on the target page
+    if (user.accountStatus === 'suspended' && pathname !== `/${locale}/account-suspended`) {
       const url = request.nextUrl.clone();
       url.pathname = `/${locale}/account-suspended`;
       return NextResponse.redirect(url);
     }
 
-    if (user.accountStatus === 'pending') {
+    if (user.accountStatus === 'pending' && pathname !== `/${locale}/account-pending`) {
       const url = request.nextUrl.clone();
       url.pathname = `/${locale}/account-pending`;
       return NextResponse.redirect(url);
