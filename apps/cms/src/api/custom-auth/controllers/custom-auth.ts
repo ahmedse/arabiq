@@ -98,13 +98,62 @@ const controller = ({ strapi }) => ({
         role: defaultRole,
       };
 
+      // Log registration attempt
+      try {
+        await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+          data: {
+            user: user.id,
+            action: 'register',
+            ipAddress: ctx.request.ip,
+            userAgent: ctx.request.header['user-agent'],
+            success: true,
+          },
+        });
+      } catch (e) {
+        strapi.log.error('[custom-auth] failed to create registration audit log', e);
+      }
+
       // If email confirmation is enabled, send confirmation email and DO NOT return JWT
       if (settings.email_confirmation) {
         try {
           await userService.sendConfirmationEmail(user);
+
+          // Audit: confirmation email sent
+          try {
+            await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+              data: {
+                user: user.id,
+                action: 'register',
+                ipAddress: ctx.request.ip,
+                userAgent: ctx.request.header['user-agent'],
+                success: true,
+                metadata: { emailSent: true },
+              },
+            });
+          } catch (e) {
+            strapi.log.error('[custom-auth] failed to create confirmation-sent audit log', e);
+          }
+
           return ctx.send({ user: sanitizedUser, message: 'Confirmation email sent. Please check your inbox to activate your account.' });
         } catch (e: any) {
           strapi.log.error('[custom-auth] failed to send confirmation email', e);
+
+          // Audit failure to send
+          try {
+            await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+              data: {
+                user: user.id,
+                action: 'register',
+                ipAddress: ctx.request.ip,
+                userAgent: ctx.request.header['user-agent'],
+                success: false,
+                errorMessage: e?.message || String(e),
+              },
+            });
+          } catch (e2) {
+            strapi.log.error('[custom-auth] failed to create confirmation-failure audit log', e2);
+          }
+
           return ctx.send({ user: sanitizedUser, message: 'Account created. We were unable to send a confirmation email — please contact support.' });
         }
       }
@@ -143,7 +192,7 @@ const controller = ({ strapi }) => ({
         'blocked',
         'created_at as createdAt'
       )
-      .where(function () {
+      .where(function (this: any) {
         this.where('email', identifier.toLowerCase()).orWhere('username', identifier);
       })
       .first();

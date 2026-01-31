@@ -70,6 +70,55 @@ module.exports = (plugin) => {
     }
   };
 
+  // Wrap sendEmailConfirmation controller to log resends and sends
+  const originalSendEmailConfirmation = plugin.controllers.auth.sendEmailConfirmation;
+  plugin.controllers.auth.sendEmailConfirmation = async (ctx) => {
+    try {
+      const bodyEmail = ctx.request.body?.email;
+      await originalSendEmailConfirmation(ctx);
+
+      // Log successful send/resend
+      try {
+        const user = await strapi.db.query('plugin::users-permissions.user').findOne({ where: { email: bodyEmail?.toLowerCase() } });
+        await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+          data: {
+            user: user ? user.id : null,
+            action: 'register',
+            ipAddress: ctx.request.ip,
+            userAgent: ctx.request.header['user-agent'],
+            success: true,
+            metadata: { email: bodyEmail, resent: true },
+          },
+        });
+      } catch (e) {
+        strapi.log.error('[users-permissions] Failed to audit sendEmailConfirmation', e);
+      }
+
+      return ctx.send(ctx.body || { email: bodyEmail, sent: true });
+    } catch (err) {
+      // Log failed send/resend
+      try {
+        const bodyEmail = ctx.request.body?.email;
+        const user = await strapi.db.query('plugin::users-permissions.user').findOne({ where: { email: bodyEmail?.toLowerCase() } });
+        await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+          data: {
+            user: user ? user.id : null,
+            action: 'register',
+            ipAddress: ctx.request.ip,
+            userAgent: ctx.request.header['user-agent'],
+            success: false,
+            errorMessage: err?.message || String(err),
+            metadata: { email: bodyEmail, resent: true },
+          },
+        });
+      } catch (e) {
+        strapi.log.error('[users-permissions] Failed to audit failed sendEmailConfirmation', e);
+      }
+
+      throw err;
+    }
+  };
+
   // Add custom logout endpoint with audit logging
   plugin.controllers.auth.logout = async (ctx) => {
     const user = ctx.state.user;
@@ -89,7 +138,7 @@ module.exports = (plugin) => {
     ctx.send({ message: 'Logged out successfully' });
   };
 
-  // Override emailConfirmation to also activate account_status and return user when requested
+  // Override emailConfirmation to also activate account_status, check expiry and return user when requested
   const originalEmailConfirmation = plugin.controllers.auth.emailConfirmation;
   plugin.controllers.auth.emailConfirmation = async (ctx, next, returnUser) => {
     try {
@@ -105,16 +154,74 @@ module.exports = (plugin) => {
 
       if (!user) {
         // let original throw the 'Invalid token' ValidationError
+        await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+          data: {
+            user: null,
+            action: 'email_confirmed',
+            ipAddress: ctx.request.ip,
+            userAgent: ctx.request.header['user-agent'],
+            success: false,
+            errorMessage: 'Invalid confirmation token',
+          },
+        });
+
         return await originalEmailConfirmation(ctx, next, returnUser);
       }
 
+      // Check expiry
+      const expiresAt = user.confirmationTokenExpiresAt || user.confirmation_token_expires_at;
+      if (expiresAt && new Date(expiresAt) < new Date()) {
+        // Log expiration
+        try {
+          await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+            data: {
+              user: user.id,
+              action: 'email_confirmed',
+              ipAddress: ctx.request.ip,
+              userAgent: ctx.request.header['user-agent'],
+              success: false,
+              errorMessage: 'Confirmation token expired',
+            },
+          });
+        } catch (e) {
+          strapi.log.error('[users-permissions] Failed to create audit log for expired confirmation token', e);
+        }
+
+        return ctx.badRequest('Your confirmation link has expired. Please request a new confirmation email.');
+      }
+
       // Mark user confirmed and set account_status to active
-      await userService.edit(user.id, { confirmed: true, confirmationToken: null });
+      await userService.edit(user.id, { confirmed: true, confirmationToken: null, confirmationTokenExpiresAt: null });
       try {
         await strapi.db.connection('up_users').where('id', user.id).update({ account_status: 'active' });
       } catch (e) {
         // Non-fatal: log and continue
         strapi.log.error('[users-permissions] Failed to set account_status to active on email confirmation', e);
+      }
+
+      // Log confirmation success and activation
+      try {
+        await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+          data: {
+            user: user.id,
+            action: 'email_confirmed',
+            ipAddress: ctx.request.ip,
+            userAgent: ctx.request.header['user-agent'],
+            success: true,
+          },
+        });
+
+        await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+          data: {
+            user: user.id,
+            action: 'account_activated',
+            ipAddress: ctx.request.ip,
+            userAgent: ctx.request.header['user-agent'],
+            success: true,
+          },
+        });
+      } catch (e) {
+        strapi.log.error('[users-permissions] Failed to create audit logs for confirmation', e);
       }
 
       if (returnUser) {
@@ -131,7 +238,22 @@ module.exports = (plugin) => {
       const settings = await strapi.store({ type: 'plugin', name: 'users-permissions', key: 'advanced' }).get();
       ctx.redirect(settings.email_confirmation_redirection || '/');
     } catch (err) {
-      // Delegate to original to preserve error shapes
+      // Delegate to original to preserve error shapes and log audit
+      try {
+        await strapi.entityService.create('api::user-audit-log.user-audit-log', {
+          data: {
+            user: null,
+            action: 'email_confirmed',
+            ipAddress: ctx.request.ip,
+            userAgent: ctx.request.header['user-agent'],
+            success: false,
+            errorMessage: err?.message || String(err),
+          },
+        });
+      } catch (e) {
+        strapi.log.error('[users-permissions] Failed to create audit log for confirmation error', e);
+      }
+
       return await originalEmailConfirmation(ctx, next, returnUser);
     }
   };

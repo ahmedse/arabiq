@@ -15,18 +15,67 @@
     }
   },
   "attributes": {
-    "slug": {"type": "uid", "targetField": "title", "required": true},
-    "title": {"type": "string", "required": true, "pluginOptions": {"i18n": {"localized": true}}},
-    "demoType": {"type": "string"},
-    "summary": {"type": "text", "pluginOptions": {"i18n": {"localized": true}}},
-    "description": {"type": "richtext", "pluginOptions": {"i18n": {"localized": true}}},
-    "body": {"type": "richtext", "pluginOptions": {"i18n": {"localized": true}}},
-    "icon": {"type": "string"},
-    "allowedRoles": {"type": "json", "default": []},
-
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "demoType": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "description": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "body": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "icon": {
+      "type": "string"
+    },
+    "allowedRoles": {
+      "type": "json",
+      "default": []
+    },
     "accessLevel": {
       "type": "enumeration",
-      "enum": ["public", "authenticated", "client", "premium"],
+      "enum": [
+        "public",
+        "authenticated",
+        "client",
+        "premium"
+      ],
       "default": "authenticated"
     }
   }

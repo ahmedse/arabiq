@@ -16,9 +16,14 @@
   },
   "attributes": {
     "slug": {
-      "type": "string",
+      "type": "uid",
+      "targetField": "question",
       "required": true,
-      "unique": true
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "category": {
       "type": "string"

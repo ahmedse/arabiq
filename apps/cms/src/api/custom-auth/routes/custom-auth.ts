@@ -22,8 +22,9 @@ export default {
       method: 'GET',
       path: '/custom-auth/me',
       handler: 'custom-auth.me',
+      info: { type: 'content-api' },
       config: {
-        policies: ['plugin::users-permissions.isAuthenticated'],
+        auth: {},
         middlewares: [],
       },
     },
@@ -31,8 +32,9 @@ export default {
       method: 'PUT',
       path: '/custom-auth/me',
       handler: 'custom-auth.updateMe',
+      info: { type: 'content-api' },
       config: {
-        policies: ['plugin::users-permissions.isAuthenticated'],
+        auth: {},
         middlewares: [],
       },
     },
@@ -40,8 +42,9 @@ export default {
       method: 'POST',
       path: '/custom-auth/change-password',
       handler: 'custom-auth.changePassword',
+      info: { type: 'content-api' },
       config: {
-        policies: ['plugin::users-permissions.isAuthenticated'],
+        auth: {},
         middlewares: [],
       },
     },

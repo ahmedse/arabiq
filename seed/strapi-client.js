@@ -137,37 +137,53 @@ class StrapiClient {
     return items.length;
   }
 
-  async upsertCollection(apiId, identifierField, enData, arData, sharedData = {}) {
-    const identifierValue = sharedData[identifierField] || enData[identifierField];
-    if (!identifierValue) {
-      throw new Error(`Missing identifier '${identifierField}' in item`);
-    }
-
-    const existing = await this.findOne(apiId, identifierField, identifierValue, 'en');
-    let documentId = existing?.documentId;
-
-    // EN locale
-    const enPayload = { ...sharedData, ...enData };
-    if (documentId) {
-      await this.updateCollection(apiId, documentId, enPayload, 'en');
-    } else {
-      const created = await this.createCollection(apiId, enPayload, 'en');
-      documentId = created?.documentId;
-    }
-
-    // AR locale - Don't include slug for AR
-    if (arData && documentId) {
-      const { slug, ...arPayloadWithoutSlug } = { ...sharedData, ...arData };
-      
-      try {
-        await this.updateCollection(apiId, documentId, arPayloadWithoutSlug, 'ar');
-      } catch (err) {
-        console.warn(`  ⚠ AR update failed for ${apiId}/${documentId}: ${err.message}`);
-      }
-    }
-
-    return { documentId, existed: !!existing };
+  /**
+   * Upsert collection item with separate EN and AR content
+   * 
+   * @param {string} apiId - API endpoint (e.g., 'solutions')
+   * @param {string} identifierField - Field to identify record (e.g., 'slug')
+   * @param {object} enData - Complete English content
+   * @param {object} arData - Complete Arabic content  
+   * @param {object} nonLocalizedFields - Fields that are NOT localized (e.g., slug, order, icon)
+   */
+  async upsertCollection(apiId, identifierField, enData, arData, nonLocalizedFields = {}) {
+  const identifierValue = nonLocalizedFields[identifierField];
+  if (!identifierValue) {
+    throw new Error(`Missing identifier '${identifierField}' in nonLocalizedFields`);
   }
+
+  const existing = await this.findOne(apiId, identifierField, identifierValue, 'en');
+  let documentId = existing?.documentId;
+
+  // EN: non-localized fields + EN-specific localized content
+  const enPayload = { ...nonLocalizedFields, ...enData };
+  
+  if (documentId) {
+    await this.updateCollection(apiId, documentId, enPayload, 'en');
+  } else {
+    const created = await this.createCollection(apiId, enPayload, 'en');
+    documentId = created?.documentId;
+    if (!documentId) {
+      throw new Error(`Failed to create EN record for ${apiId}/${identifierValue}`);
+    }
+  }
+
+  // AR: Include ALL non-localized fields (including slug)
+  if (arData && documentId) {
+    const arPayload = { 
+      ...nonLocalizedFields,  // Include slug, icon, order, etc.
+      ...arData               // AR text content
+    };
+    
+    try {
+      await this.updateCollection(apiId, documentId, arPayload, 'ar');
+    } catch (err) {
+      console.error(`   ❌ AR failed for ${identifierValue}: ${err.message}`);
+    }
+  }
+
+  return { documentId, existed: !!existing };
+}
 
   // ─────────────────────────────────────────────────────────────
   // SINGLE-TYPE METHODS
@@ -194,7 +210,7 @@ class StrapiClient {
   }
 
   async upsertSingle(apiId, enData, arData) {
-    // For single types, just PUT directly - it will create or update
+    // EN
     try {
       await this.putSingle(apiId, enData, 'en');
       console.log(`   ✅ EN: created/updated`);
@@ -203,12 +219,13 @@ class StrapiClient {
       throw err;
     }
     
+    // AR - completely separate content
     if (arData) {
       try {
         await this.putSingle(apiId, arData, 'ar');
         console.log(`   ✅ AR: created/updated`);
       } catch (err) {
-        console.warn(`   ⚠ AR failed: ${err.message}`);
+        console.error(`   ❌ AR failed: ${err.message}`);
       }
     }
     
