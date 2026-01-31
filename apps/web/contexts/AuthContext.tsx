@@ -50,6 +50,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const data = await res.json();
         setUser(data);
+        return;
+      }
+
+      // If unauthorized, clear cookie to prevent retry storm and treat user as logged out
+      if (res.status === 401) {
+        Cookies.remove('strapi_jwt');
+        setUser(null);
+        return;
+      }
+
+      // Other non-ok statuses: log for debugging
+      try {
+        const errBody = await res.json();
+        console.error('Failed to refresh user:', res.status, errBody);
+      } catch (_) {
+        console.error('Failed to refresh user:', res.status);
       }
     } catch (error) {
       console.error('Failed to refresh user:', error);
@@ -67,7 +83,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         const currentUser = await getCurrentStrapiUser(token);
-        if (mounted) setUser(currentUser);
+        // If the token is invalid the helper returns null — remove cookie to stop retrying
+        if (!currentUser) {
+          Cookies.remove('strapi_jwt');
+          if (mounted) setUser(null);
+        } else {
+          if (mounted) setUser(currentUser);
+        }
       } catch (e) {
         console.error('Auth bootstrap failed', e);
       } finally {
