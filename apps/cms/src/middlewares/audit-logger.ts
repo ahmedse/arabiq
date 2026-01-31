@@ -63,6 +63,18 @@ module.exports = (config, { strapi }) => {
       action = 'password_reset';
     }
 
+    // If it's a DELETE to an API endpoint, record a generic delete audit action
+    if (!action && method === 'DELETE' && routePath.startsWith('/api/')) {
+      action = 'delete';
+      const idMatch = routePath.match(/\/api\/([^\/]+)\/(\d+)/);
+      if (idMatch) {
+        metadata.deletedResource = idMatch[1];
+        metadata.deletedId = parseInt(idMatch[2]);
+      } else {
+        metadata.deletedResource = routePath.replace('/api/', '');
+      }
+    }
+
     // Only create audit log if we identified an action
     if (action) {
       try {
