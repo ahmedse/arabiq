@@ -897,11 +897,19 @@ seed() {
     return 1
   fi
   
-  cd "$CMS_DIR"
+  local SEED_DIR="$ROOT_DIR/seed"
+  
+  # Check seed folder exists
+  if [[ ! -d "$SEED_DIR" ]]; then
+    log_error "Seed folder not found: $SEED_DIR"
+    return 1
+  fi
+  
+  cd "$SEED_DIR"
   
   # Find seeder script
   local seeder=""
-  for f in "scripts/seed.ts" "scripts/seed.js" "seed.ts" "seed.js"; do
+  for f in "seed.js" "seed.ts"; do
     if [[ -f "$f" ]]; then
       seeder="$f"
       break
@@ -909,24 +917,24 @@ seed() {
   done
   
   if [[ -z "$seeder" ]]; then
-    log_error "No seeder found in $CMS_DIR"
-    log_info "Expected: scripts/seed.ts or scripts/seed.js"
+    log_error "No seeder found in $SEED_DIR"
+    log_info "Expected: seed.js or seed.ts"
     return 1
   fi
   
-  log_info "Found seeder: $seeder"
+  log_info "Found seeder: $SEED_DIR/$seeder"
   
-  # Load env
-  [[ -f .env ]] && { set -a; source .env; set +a; }
-  [[ -f .env.local ]] && { set -a; source .env.local; set +a; }
+  # Load env from CMS (for SEED_TOKEN etc)
+  [[ -f "$CMS_DIR/.env" ]] && { set -a; source "$CMS_DIR/.env"; set +a; }
+  [[ -f "$CMS_DIR/.env.local" ]] && { set -a; source "$CMS_DIR/.env.local"; set +a; }
   
-  # Run seeder
+  # Run seeder with --fresh flag to ensure clean state
   if [[ "$seeder" == *.ts ]]; then
     log_info "Running with ts-node..."
-    npx ts-node "$seeder"
+    npx ts-node "$seeder" --fresh
   else
     log_info "Running with node..."
-    node "$seeder"
+    node "$seeder" --fresh
   fi
   
   local exit_code=$?

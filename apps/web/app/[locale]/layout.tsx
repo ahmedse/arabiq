@@ -6,6 +6,7 @@ import { getSiteSettings, getNavItems, type NavItem } from "@/lib/strapi";
 import { MobileNav } from "./mobile-nav";
 import { Header } from "./Header";
 import { setRequestLocale } from "next-intl/server";
+import { Toaster } from "react-hot-toast";
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
@@ -97,6 +98,29 @@ return (
           headerNav={headerNav}
           dir={dir}
           lang={lang}
+        />
+
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            success: {
+              iconTheme: {
+                primary: '#10B981',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#EF4444',
+                secondary: '#fff',
+              },
+            },
+          }}
         />
 
         <main>{children}</main>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getSiteSettings, getContactPage } from "@/lib/strapi";
 import { Container } from "@/components/ui/container";
+import { ContactForm } from "@/components/ContactForm";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { setRequestLocale } from "next-intl/server";
 
@@ -46,6 +47,22 @@ export default async function ContactPage({ params }: ContactPageProps) {
   const hoursTitle = contact?.hoursTitle || (isRTL ? "ساعات العمل" : "Business Hours");
   const hoursText = contact?.hoursText || (isRTL ? "الأحد - الخميس: 9ص - 6م" : "Sunday - Thursday: 9AM - 6PM");
 
+  // Form labels for the client component
+  const formLabels = {
+    formTitle,
+    nameLabel,
+    namePlaceholder: isRTL ? "أحمد محمد" : "John Doe",
+    emailLabel,
+    phoneLabel,
+    messageLabel,
+    messagePlaceholder: isRTL ? "كيف يمكننا مساعدتك؟" : "How can we help you?",
+    submitButton,
+    sendingText: isRTL ? "جاري الإرسال..." : "Sending...",
+    successTitle: isRTL ? "تم الإرسال بنجاح!" : "Message Sent!",
+    successMessage: isRTL ? "شكراً لرسالتك. سنتواصل معك قريباً." : "Thank you for your message. We'll get back to you soon.",
+    errorMessage: isRTL ? "حدث خطأ. يرجى المحاولة مرة أخرى." : "Something went wrong. Please try again.",
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -68,74 +85,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
         <Container>
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Contact Form */}
-            <div className="rounded-2xl bg-slate-50 p-8 lg:p-10">
-              <h2 className="text-2xl font-bold text-slate-900 mb-8">{formTitle}</h2>
-              
-              <form className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
-                    {nameLabel}
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                    placeholder={isRTL ? "أحمد محمد" : "John Doe"}
-                    dir={isRTL ? "rtl" : "ltr"}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
-                    {emailLabel}
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                    placeholder="email@example.com"
-                    dir="ltr"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-2">
-                    {phoneLabel}
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    className="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                    placeholder="+20 123 456 7890"
-                    dir="ltr"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">
-                    {messageLabel}
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={5}
-                    className="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
-                    placeholder={isRTL ? "كيف يمكننا مساعدتك؟" : "How can we help you?"}
-                    dir={isRTL ? "rtl" : "ltr"}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-4 px-6 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all"
-                >
-                  {submitButton}
-                </button>
-              </form>
-            </div>
+            <ContactForm locale={locale} labels={formLabels} />
 
             {/* Contact Info */}
             <div className="space-y-8">

@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contact_submissions",
+  "info": {
+    "singularName": "contact-submission",
+    "pluralName": "contact-submissions",
+    "displayName": "Contact Submission",
+    "description": "Submissions from the contact form on the website"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "message": {
+      "type": "text",
+      "required": true
+    },
+    "source": {
+      "type": "string",
+      "default": "website",
+      "maxLength": 100
+    },
+    "ipAddress": {
+      "type": "string",
+      "maxLength": 45
+    },
+    "userAgent": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "locale": {
+      "type": "string",
+      "maxLength": 10
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["new", "read", "replied", "archived"],
+      "default": "new"
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}
