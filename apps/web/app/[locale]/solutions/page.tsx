@@ -12,14 +12,42 @@ type SolutionsPageProps = {
 export async function generateMetadata({ params }: SolutionsPageProps): Promise<Metadata> {
   const { locale: localeParam } = await params;
   const locale = localeParam === "ar" ? "ar" : "en";
+  const siteUrl = process.env.SITE_URL ?? "https://arabiq.tech";
+  const isAR = locale === "ar";
+  
   const [site, homepage] = await Promise.all([getSiteSettings(locale), getHomepage(locale)]);
-
-  const title = homepage?.solutionsTitle || (locale === "ar" ? "الحلول" : "Solutions");
+  
   const siteName = site?.title ?? "Arabiq";
+  const title = homepage?.solutionsTitle || (isAR ? "الحلول" : "Solutions");
+  const description = homepage?.solutionsSubtitle || site?.description || (isAR 
+    ? "حلول التوائم الرقمية للتجارة الإلكترونية والفنادق والعقارات والفعاليات"
+    : "Digital twin solutions for e-commerce, hospitality, real estate, and events");
 
   return {
-    title: `${title} | ${siteName}`,
-    description: homepage?.solutionsSubtitle ?? site?.description ?? undefined,
+    title,
+    description,
+    alternates: {
+      canonical: `${siteUrl}/${locale}/solutions`,
+      languages: {
+        'en': `${siteUrl}/en/solutions`,
+        'ar': `${siteUrl}/ar/solutions`,
+      },
+    },
+    openGraph: {
+      title: `${title} | ${siteName}`,
+      description,
+      url: `${siteUrl}/${locale}/solutions`,
+      siteName,
+      locale: isAR ? 'ar_SA' : 'en_US',
+      type: 'website',
+      images: [{ url: `${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ${siteName}`,
+      description,
+      images: [`${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`],
+    },
   };
 }
 

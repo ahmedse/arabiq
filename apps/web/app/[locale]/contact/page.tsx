@@ -12,14 +12,42 @@ type ContactPageProps = {
 export async function generateMetadata({ params }: ContactPageProps): Promise<Metadata> {
   const { locale: localeParam } = await params;
   const locale = localeParam === "ar" ? "ar" : "en";
+  const siteUrl = process.env.SITE_URL ?? "https://arabiq.tech";
+  const isAR = locale === "ar";
+  
   const [site, contact] = await Promise.all([getSiteSettings(locale), getContactPage(locale)]);
   
-  const title = contact?.heroTitle || (locale === "ar" ? "اتصل بنا" : "Contact");
   const siteName = site?.title ?? "Arabiq";
+  const title = contact?.heroTitle || (isAR ? "تواصل معنا" : "Contact Us");
+  const description = contact?.heroSubtitle || site?.description || (isAR 
+    ? "تواصل مع فريق أربيك للحصول على حلول التوائم الرقمية"
+    : "Get in touch with the Arabiq team for digital twin solutions");
 
   return {
-    title: `${title} | ${siteName}`,
-    description: contact?.heroSubtitle ?? site?.description ?? undefined,
+    title,
+    description,
+    alternates: {
+      canonical: `${siteUrl}/${locale}/contact`,
+      languages: {
+        'en': `${siteUrl}/en/contact`,
+        'ar': `${siteUrl}/ar/contact`,
+      },
+    },
+    openGraph: {
+      title: `${title} | ${siteName}`,
+      description,
+      url: `${siteUrl}/${locale}/contact`,
+      siteName,
+      locale: isAR ? 'ar_SA' : 'en_US',
+      type: 'website',
+      images: [{ url: `${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ${siteName}`,
+      description,
+      images: [`${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`],
+    },
   };
 }
 

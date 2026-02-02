@@ -6,6 +6,15 @@ import { UserMenu } from "@/components/auth/UserMenu";
 import { MobileNav } from "./mobile-nav";
 import type { NavItem } from "@/lib/strapi";
 
+// Default navigation fallback when CMS content is unavailable
+const defaultNav = (lang: string): NavItem[] => [
+  { id: 1, label: lang === "ar" ? "الحلول" : "Solutions", href: "/solutions", isExternal: false, order: 1, location: "header" },
+  { id: 2, label: lang === "ar" ? "القطاعات" : "Industries", href: "/industries", isExternal: false, order: 2, location: "header" },
+  { id: 3, label: lang === "ar" ? "العروض" : "Demos", href: "/demos", isExternal: false, order: 3, location: "header" },
+  { id: 4, label: lang === "ar" ? "من نحن" : "About", href: "/about", isExternal: false, order: 4, location: "header" },
+  { id: 5, label: lang === "ar" ? "اتصل بنا" : "Contact", href: "/contact", isExternal: false, order: 5, location: "header" },
+];
+
 interface HeaderProps {
   locale: string;
   otherLocale: string;
@@ -33,7 +42,7 @@ export function Header({ locale, otherLocale, headerNav, dir, lang }: HeaderProp
 
         {/* Desktop Navigation - from Strapi */}
         <nav className={`hidden md:flex items-center gap-8 text-sm font-medium ${dir === "rtl" ? "flex-row-reverse" : ""}`}>
-          {headerNav.length > 0 ? headerNav.map((item) => (
+          {(headerNav.length > 0 ? headerNav : defaultNav(lang)).map((item) => (
             <Link
               key={item.id}
               className="text-slate-600 hover:text-slate-900 transition-colors"
@@ -42,11 +51,7 @@ export function Header({ locale, otherLocale, headerNav, dir, lang }: HeaderProp
             >
               {item.label}
             </Link>
-          )) : (
-            <span className="text-amber-600 text-xs font-medium px-2 py-1 bg-amber-50 border border-amber-200 rounded">
-              ⚠️ {lang === "ar" ? "قائمة مفقودة - أضفها من CMS" : "Nav missing - Add in CMS"}
-            </span>
-          )}
+          ))}
         </nav>
 
         {/* Right side actions */}
@@ -66,7 +71,7 @@ export function Header({ locale, otherLocale, headerNav, dir, lang }: HeaderProp
             <UserMenu locale={locale} />
           )}
 
-          <MobileNav locale={locale} navItems={headerNav} />
+          <MobileNav locale={locale} navItems={headerNav.length > 0 ? headerNav : defaultNav(lang)} />
         </div>
       </div>
     </header>

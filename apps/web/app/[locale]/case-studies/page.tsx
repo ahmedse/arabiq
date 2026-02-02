@@ -12,14 +12,42 @@ type CaseStudiesPageProps = {
 export async function generateMetadata({ params }: CaseStudiesPageProps): Promise<Metadata> {
   const { locale: localeParam } = await params;
   const locale = localeParam === "ar" ? "ar" : "en";
+  const siteUrl = process.env.SITE_URL ?? "https://arabiq.tech";
+  const isAR = locale === "ar";
+  
   const [site, homepage] = await Promise.all([getSiteSettings(locale), getHomepage(locale)]);
-
-  const title = homepage?.caseStudiesTitle || (locale === "ar" ? "قصص النجاح" : "Case Studies");
+  
   const siteName = site?.title ?? "Arabiq";
+  const title = homepage?.caseStudiesTitle || (isAR ? "دراسات الحالة" : "Case Studies");
+  const description = homepage?.caseStudiesSubtitle || site?.description || (isAR 
+    ? "اكتشف كيف ساعدنا عملاءنا في تحقيق أهدافهم"
+    : "Discover how we helped our clients achieve their digital transformation goals");
 
   return {
-    title: `${title} | ${siteName}`,
-    description: homepage?.caseStudiesSubtitle ?? site?.description ?? undefined,
+    title,
+    description,
+    alternates: {
+      canonical: `${siteUrl}/${locale}/case-studies`,
+      languages: {
+        'en': `${siteUrl}/en/case-studies`,
+        'ar': `${siteUrl}/ar/case-studies`,
+      },
+    },
+    openGraph: {
+      title: `${title} | ${siteName}`,
+      description,
+      url: `${siteUrl}/${locale}/case-studies`,
+      siteName,
+      locale: isAR ? 'ar_SA' : 'en_US',
+      type: 'website',
+      images: [{ url: `${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ${siteName}`,
+      description,
+      images: [`${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`],
+    },
   };
 }
 

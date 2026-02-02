@@ -1,4 +1,5 @@
-import { getDemoBySlug } from "@/lib/strapi";
+import type { Metadata } from "next";
+import { getDemoBySlug, getSiteSettings } from "@/lib/strapi";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/serverAuth";
 
@@ -8,6 +9,40 @@ type DemoDetailPageProps = {
     slug: string;
   }>;
 };
+
+export async function generateMetadata({ params }: DemoDetailPageProps): Promise<Metadata> {
+  const { locale: localeParam, slug } = await params;
+  const locale = localeParam === "ar" ? "ar" : "en";
+  const siteUrl = process.env.SITE_URL ?? "https://arabiq.tech";
+  const isAR = locale === "ar";
+  
+  const [site, demo] = await Promise.all([getSiteSettings(locale), getDemoBySlug(locale, slug)]);
+  const siteName = site?.title ?? "Arabiq";
+
+  if (!demo) {
+    return { title: isAR ? "غير موجود" : "Not Found" };
+  }
+
+  const title = demo.title;
+  const description = demo.summary || site?.description || "";
+
+  return {
+    title,
+    description,
+    robots: { index: false, follow: false }, // Demo pages not indexed
+    alternates: {
+      canonical: `${siteUrl}/${locale}/demos/${slug}`,
+    },
+    openGraph: {
+      title: `${title} | ${siteName}`,
+      description,
+      url: `${siteUrl}/${locale}/demos/${slug}`,
+      siteName,
+      locale: isAR ? 'ar_SA' : 'en_US',
+      type: 'article',
+    },
+  };
+}
 
 export default async function DemoDetailPage({ params }: DemoDetailPageProps) {
   const { locale: localeParam, slug } = await params;

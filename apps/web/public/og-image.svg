@@ -1,0 +1,30 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5"/>
+      <stop offset="50%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="1100" cy="-50" r="200" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="-50" cy="680" r="250" fill="rgba(255,255,255,0.05)"/>
+  
+  <!-- Logo box -->
+  <rect x="560" y="120" width="80" height="80" rx="16" fill="white"/>
+  <text x="600" y="180" font-family="system-ui, sans-serif" font-size="48" font-weight="bold" fill="#4f46e5" text-anchor="middle">A</text>
+  
+  <!-- Title -->
+  <text x="600" y="280" font-family="system-ui, sans-serif" font-size="64" font-weight="bold" fill="white" text-anchor="middle">Arabiq</text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="340" font-family="system-ui, sans-serif" font-size="28" fill="rgba(255,255,255,0.9)" text-anchor="middle">Digital Twin &amp; Virtual Tour Solutions</text>
+  <text x="600" y="380" font-family="system-ui, sans-serif" font-size="24" fill="rgba(255,255,255,0.8)" text-anchor="middle">Built for the Arab World</text>
+  
+  <!-- Footer -->
+  <text x="600" y="580" font-family="system-ui, sans-serif" font-size="24" fill="rgba(255,255,255,0.8)" text-anchor="middle">arabiq.tech</text>
+</svg>

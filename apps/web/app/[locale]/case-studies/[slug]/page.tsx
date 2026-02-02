@@ -13,16 +13,44 @@ type CaseStudyDetailPageProps = {
 export async function generateMetadata({ params }: CaseStudyDetailPageProps): Promise<Metadata> {
   const { locale: localeParam, slug } = await params;
   const locale = localeParam === "ar" ? "ar" : "en";
+  const siteUrl = process.env.SITE_URL ?? "https://arabiq.tech";
+  const isAR = locale === "ar";
+  
   const [site, caseStudy] = await Promise.all([getSiteSettings(locale), getCaseStudyBySlug(locale, slug)]);
   const siteName = site?.title ?? "Arabiq";
 
   if (!caseStudy) {
-    return { title: `${locale === "ar" ? "غير موجود" : "Not found"} | ${siteName}` };
+    return { title: isAR ? "غير موجود" : "Not Found" };
   }
 
+  const title = caseStudy.title;
+  const description = caseStudy.summary || site?.description || "";
+
   return {
-    title: `${caseStudy.title} | ${siteName}`,
-    description: caseStudy.summary || site?.description || undefined,
+    title,
+    description,
+    alternates: {
+      canonical: `${siteUrl}/${locale}/case-studies/${slug}`,
+      languages: {
+        'en': `${siteUrl}/en/case-studies/${slug}`,
+        'ar': `${siteUrl}/ar/case-studies/${slug}`,
+      },
+    },
+    openGraph: {
+      title: `${title} | ${siteName}`,
+      description,
+      url: `${siteUrl}/${locale}/case-studies/${slug}`,
+      siteName,
+      locale: isAR ? 'ar_SA' : 'en_US',
+      type: 'article',
+      images: [{ url: `${siteUrl}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&locale=${locale}`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ${siteName}`,
+      description,
+      images: [`${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`],
+    },
   };
 }
 

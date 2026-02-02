@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Container } from '@/components/ui/container';
-import { Home, Search, ArrowLeft } from 'lucide-react';
+import { Home, Search } from 'lucide-react';
 
 export default function NotFound() {
   return (
@@ -33,13 +33,6 @@ export default function NotFound() {
               <Home className="w-4 h-4" />
               Go to homepage
             </Link>
-            <button
-              onClick={() => typeof window !== 'undefined' && window.history.back()}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-colors font-medium border border-slate-200"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Go back
-            </button>
           </div>
 
           {/* Helpful Links */}

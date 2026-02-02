@@ -1,80 +1,271 @@
 {
   "nav": {
+    "home": "Home",
     "solutions": "Solutions",
     "industries": "Industries",
     "caseStudies": "Case Studies",
     "demos": "Demos",
     "contact": "Contact",
     "about": "About",
-    "login": "Sign in"
+    "login": "Sign in",
+    "register": "Sign up",
+    "account": "My Account",
+    "logout": "Sign out",
+    "admin": "Admin"
   },
-  "home": {
-    "hero": {
-      "title": "Digital Twins Powered by Arabic AI",
-      "subtitle": "Enable your business to exist in immersive 3D digital space. Built for the Arab world, powered by cutting-edge AI.",
-      "cta": {
-        "primary": "Get Started",
-        "secondary": "Watch Demo"
+  "ui": {
+    "learnMore": "Learn more",
+    "viewAll": "View all",
+    "getStarted": "Get Started",
+    "readMore": "Read more",
+    "tryDemo": "Try Demo",
+    "watchDemo": "Watch Demo",
+    "contactUs": "Contact Us",
+    "backToHome": "Back to Home",
+    "goBack": "Go Back"
+  },
+  "contact": {
+    "form": {
+      "name": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+20 123 456 7890",
+      "company": "Company",
+      "companyPlaceholder": "Your company name (optional)",
+      "message": "Message",
+      "messagePlaceholder": "How can we help you?",
+      "submit": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent successfully! We'll get back to you soon.",
+      "error": "Failed to send message. Please try again."
+    },
+    "info": {
+      "addressLabel": "Address",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "hoursLabel": "Working Hours"
+    }
+  },
+  "demos": {
+    "loginRequired": "Sign in to access demos",
+    "accessLevel": {
+      "free": "Free",
+      "basic": "Basic",
+      "premium": "Premium"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Enter your credentials",
+      "identifier": "Email or Username",
+      "identifierPlaceholder": "Enter your email or username",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Sign In",
+      "submitting": "Signing in...",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "register": "Create account"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Sign up to access exclusive demos",
+      "username": "Username",
+      "usernamePlaceholder": "Choose a username",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter your password",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+20 123 456 7890",
+      "company": "Company (optional)",
+      "companyPlaceholder": "Your company name",
+      "country": "Country (optional)",
+      "countryPlaceholder": "Select your country",
+      "displayName": "Display Name",
+      "displayNamePlaceholder": "Name shown to others",
+      "salesContact": "I agree to receive updates and offers via email",
+      "submit": "Create Account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in"
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your email to receive a reset link",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "submit": "Send Reset Link",
+      "submitting": "Sending...",
+      "success": "Reset link sent to your email",
+      "backToLogin": "Back to sign in"
+    },
+    "resetPassword": {
+      "title": "Set New Password",
+      "subtitle": "Enter your new password",
+      "password": "New Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Set Password",
+      "submitting": "Setting password..."
+    },
+    "registrationSuccess": {
+      "title": "Account Created!",
+      "confirmationMessage": "A confirmation link has been sent to your email. Please check your inbox.",
+      "pendingMessage": "Your account is under review. We'll notify you when approved.",
+      "backToLogin": "Back to sign in"
+    }
+  },
+  "account": {
+    "title": "My Account",
+    "welcome": "Welcome",
+    "profile": {
+      "title": "Profile",
+      "displayName": "Display Name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "country": "Country",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "success": "Profile updated successfully",
+      "error": "Failed to update profile"
+    },
+    "password": {
+      "title": "Change Password",
+      "current": "Current Password",
+      "new": "New Password",
+      "confirm": "Confirm New Password",
+      "submit": "Change Password",
+      "submitting": "Changing...",
+      "success": "Password changed successfully",
+      "error": "Failed to change password",
+      "mismatch": "Passwords do not match",
+      "minLength": "Must be at least 8 characters"
+    },
+    "status": {
+      "pending": "Your account is under review",
+      "pendingMessage": "Our team will review your account and notify you when approved.",
+      "suspended": "Your account is suspended",
+      "suspendedMessage": "Your account has been suspended. Please contact support for more information.",
+      "active": "Active account"
+    },
+    "demos": {
+      "title": "Available Demos",
+      "empty": "No demos available at this time"
+    },
+    "logout": "Sign out"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": {
+      "title": "User Management",
+      "search": "Search users...",
+      "filter": {
+        "all": "All",
+        "pending": "Pending",
+        "active": "Active",
+        "suspended": "Suspended"
       },
-      "trust": {
-        "award": "Award-winning platform",
-        "global": "Serving MENA region",
-        "fast": "Deploy in days"
+      "status": {
+        "pending": "Pending",
+        "active": "Active",
+        "suspended": "Suspended"
+      },
+      "actions": {
+        "approve": "Approve",
+        "suspend": "Suspend",
+        "viewDetails": "View Details"
+      },
+      "stats": {
+        "total": "Total Users",
+        "pending": "Pending",
+        "active": "Active",
+        "suspended": "Suspended"
       }
-    },
-    "stats": {
-      "projects": {
-        "value": "500+",
-        "label": "Digital Twins"
-      },
-      "clients": {
-        "value": "100+",
-        "label": "Happy Clients"
-      },
-      "satisfaction": {
-        "value": "98%",
-        "label": "Satisfaction"
-      },
-      "countries": {
-        "value": "12",
-        "label": "Countries"
-      }
-    },
-    "solutions": {
-      "title": "Our Solutions",
-      "subtitle": "Comprehensive digital twin solutions powered by AI and built for the Arab market",
-      "learn_more": "Learn more",
-      "view_all": "View all solutions"
-    },
-    "why": {
-      "title": "Why Choose Arabiq?",
-      "subtitle": "The leading digital twin platform designed specifically for the Arab world",
-      "fast": {
-        "title": "Lightning Fast",
-        "description": "Deploy your digital twin in days, not months. Our proven process gets you live quickly."
-      },
-      "bilingual": {
-        "title": "Arabic-First Design",
-        "description": "True bilingual experience with RTL support and Arabic AI that understands your market."
-      },
-      "ai": {
-        "title": "AI-Powered",
-        "description": "Leverage cutting-edge AI for voice narration, chatbots, recommendations, and analytics."
-      }
-    },
-    "cta": {
-      "title": "Ready to transform your business?",
-      "subtitle": "Join hundreds of companies that trust us to build their digital presence",
-      "primary": "Get in touch",
-      "secondary": "View demos"
     }
   },
   "common": {
-    "learnMore": "Learn more",
-    "getStarted": "Get Started",
-    "readMore": "Read more",
-    "viewAll": "View all",
-    "comingSoon": "Coming Soon"
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "noResults": "No results found",
+    "comingSoon": "Coming Soon",
+    "required": "Required",
+    "optional": "Optional",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "and": "and",
+    "close": "Close",
+    "open": "Open",
+    "show": "Show",
+    "hide": "Hide",
+    "all": "All",
+    "none": "None",
+    "refresh": "Refresh"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Page Not Found",
+      "message": "Sorry, we couldn't find the page you're looking for.",
+      "backHome": "Back to Home"
+    },
+    "general": {
+      "title": "Something Went Wrong",
+      "message": "We're experiencing a temporary issue. Please try again in a moment.",
+      "tryAgain": "Try Again"
+    },
+    "accessDenied": {
+      "title": "Access Denied",
+      "message": "You don't have permission to access this page."
+    },
+    "serverError": {
+      "title": "Service Unavailable",
+      "message": "We're working to restore service. Please check back shortly."
+    },
+    "networkError": {
+      "title": "Connection Issue",
+      "message": "Unable to connect. Please check your internet connection."
+    },
+    "contentUnavailable": {
+      "title": "Content Loading",
+      "message": "We're preparing this content for you. Please refresh the page."
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Please enter a valid email address",
+      "phone": "Please enter a valid phone number",
+      "minLength": "Must be at least {min} characters",
+      "maxLength": "Must not exceed {max} characters",
+      "passwordMatch": "Passwords do not match"
+    }
+  },
+  "footer": {
+    "company": "Company",
+    "products": "Products",
+    "resources": "Resources",
+    "connect": "Connect",
+    "copyright": "All rights reserved"
+  },
+  "fallback": {
+    "pageTitle": "Arabiq",
+    "pageDescription": "Digital Twin Solutions",
+    "sectionTitle": "Discover More",
+    "sectionSubtitle": "Explore our solutions",
+    "itemTitle": "Featured",
+    "itemDescription": "Learn more about our offerings"
   }
 }
 

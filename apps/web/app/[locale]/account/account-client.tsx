@@ -122,19 +122,17 @@ export default function AccountClient({ user: initialUser }: { user: StrapiUser 
   };
 
   const getStatusBadge = () => {
-    switch (user.accountStatus) {
-      case 'active':
-      case 'approved':
-        return <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">Approved</span>;
-      case 'pending':
-        return <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-sm">Pending Approval</span>;
-      case 'rejected':
-        return <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-sm">Rejected</span>;
-      case 'suspended':
-        return <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">Suspended</span>;
-      default:
-        return <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">{user.accountStatus || 'Unknown'}</span>;
+    const status = user.accountStatus;
+    if (status === 'active') {
+      return <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">Approved</span>;
     }
+    if (status === 'pending') {
+      return <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-sm">Pending Approval</span>;
+    }
+    if (status === 'suspended') {
+      return <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">Suspended</span>;
+    }
+    return <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">{status || 'Unknown'}</span>;
   };
 
   return (
@@ -209,7 +207,7 @@ export default function AccountClient({ user: initialUser }: { user: StrapiUser 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Last Login</label>
                   <p className="mt-1 text-sm text-gray-900">
-                    {user.lastLogin || user.lastLoginAt ? new Date(user.lastLogin || user.lastLoginAt!).toLocaleString() : 'Never'}
+                    {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString() : 'Never'}
                   </p>
                 </div>
               </div>

@@ -7,6 +7,7 @@ import { MobileNav } from "./mobile-nav";
 import { Header } from "./Header";
 import { setRequestLocale } from "next-intl/server";
 import { Toaster } from "react-hot-toast";
+import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
@@ -27,23 +28,79 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params;
   const normalizedLocale = locale === "ar" ? "ar" : "en";
-  const siteUrl = process.env.SITE_URL ?? "http://localhost:3000";
+  const siteUrl = process.env.SITE_URL ?? "https://arabiq.tech";
   const site = await getSiteSettings(normalizedLocale);
   const siteName = site?.title ?? "Arabiq";
-  const description = site?.description ?? "Arabiq platform.";
+  const description = site?.description ?? (normalizedLocale === "ar" 
+    ? "حلول التوائم الرقمية والجولات الافتراضية للشركات" 
+    : "Digital twin and virtual tour solutions for businesses");
+  const isAR = normalizedLocale === "ar";
 
   return {
     metadataBase: new URL(siteUrl),
-    alternates: { canonical: `/${normalizedLocale}` },
-    title: { default: siteName, template: `%s | ${siteName}` },
+    title: {
+      default: siteName,
+      template: `%s | ${siteName}`,
+    },
     description,
+    keywords: isAR 
+      ? ['توائم رقمية', 'جولات افتراضية', 'ماتربورت', 'تجارة إلكترونية', 'عقارات', 'فنادق', 'VR', 'الذكاء الاصطناعي']
+      : ['digital twins', 'virtual tours', 'Matterport', 'e-commerce', 'real estate', 'hospitality', 'VR', 'AI'],
+    authors: [{ name: 'Arabiq', url: siteUrl }],
+    creator: 'Arabiq',
+    publisher: 'Arabiq',
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    alternates: {
+      canonical: `${siteUrl}/${normalizedLocale}`,
+      languages: {
+        'en': `${siteUrl}/en`,
+        'ar': `${siteUrl}/ar`,
+      },
+    },
+    icons: {
+      icon: '/favicon.ico',
+      shortcut: '/favicon-16x16.png',
+      apple: '/apple-touch-icon.png',
+    },
+    manifest: '/site.webmanifest',
     openGraph: {
+      type: 'website',
+      locale: isAR ? 'ar_SA' : 'en_US',
+      alternateLocale: isAR ? 'en_US' : 'ar_SA',
+      url: `${siteUrl}/${normalizedLocale}`,
+      siteName,
       title: siteName,
       description,
-      url: `/${normalizedLocale}`,
-      siteName,
-      locale: normalizedLocale,
-      type: "website",
+      images: [
+        {
+          url: `${siteUrl}/api/og?title=${encodeURIComponent(siteName)}&description=${encodeURIComponent(description)}&locale=${normalizedLocale}`,
+          width: 1200,
+          height: 630,
+          alt: isAR ? 'أربيك - حلول التوائم الرقمية' : 'Arabiq - Digital Twin Solutions',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@arabiqtech',
+      creator: '@arabiqtech',
+      title: siteName,
+      description,
+      images: [`${siteUrl}/api/og?title=${encodeURIComponent(siteName)}&locale=${normalizedLocale}`],
+    },
+    verification: {
+      // Add when available
+      // google: 'google-verification-code',
     },
   };
 }
@@ -65,23 +122,43 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     getNavItems(lang, "footer-social"),
   ]);
 
-  // Use CMS content or show obvious missing indicator
+  // Use CMS content with graceful fallbacks
   const headerNav = headerNavItems;
   const footerCompany = footerCompanyItems;
   const footerProducts = footerProductsItems;
   const footerResources = footerResourcesItems;
   const footerSocial = footerSocialItems;
 
-  // Footer titles from CMS
-  const footerCompanyTitle = siteSettings?.footerCompanyTitle;
-  const footerProductsTitle = siteSettings?.footerProductsTitle;
-  const footerResourcesTitle = siteSettings?.footerResourcesTitle;
-  const footerConnectTitle = siteSettings?.footerConnectTitle;
-  const copyrightText = siteSettings?.copyrightText;
+  // Footer titles from CMS with fallbacks
+  const footerCompanyTitle = siteSettings?.footerCompanyTitle || (lang === "ar" ? "الشركة" : "Company");
+  const footerProductsTitle = siteSettings?.footerProductsTitle || (lang === "ar" ? "المنتجات" : "Products");
+  const footerResourcesTitle = siteSettings?.footerResourcesTitle || (lang === "ar" ? "الموارد" : "Resources");
+  const footerConnectTitle = siteSettings?.footerConnectTitle || (lang === "ar" ? "تواصل معنا" : "Connect");
+  const copyrightText = siteSettings?.copyrightText || `© ${new Date().getFullYear()} Arabiq. ${lang === "ar" ? "جميع الحقوق محفوظة" : "All rights reserved."}`;
   const loginButtonText = siteSettings?.loginButtonText;
+
+  // Default footer links if CMS is empty
+  const defaultCompanyLinks = [
+    { id: 1, label: lang === "ar" ? "من نحن" : "About", href: "/about", isExternal: false, order: 1, location: "footer-company" },
+    { id: 2, label: lang === "ar" ? "اتصل بنا" : "Contact", href: "/contact", isExternal: false, order: 2, location: "footer-company" },
+  ];
+  const defaultProductLinks = [
+    { id: 1, label: lang === "ar" ? "الحلول" : "Solutions", href: "/solutions", isExternal: false, order: 1, location: "footer-products" },
+    { id: 2, label: lang === "ar" ? "العروض" : "Demos", href: "/demos", isExternal: false, order: 2, location: "footer-products" },
+  ];
+  const defaultResourceLinks = [
+    { id: 1, label: lang === "ar" ? "القطاعات" : "Industries", href: "/industries", isExternal: false, order: 1, location: "footer-resources" },
+    { id: 2, label: lang === "ar" ? "دراسات الحالة" : "Case Studies", href: "/case-studies", isExternal: false, order: 2, location: "footer-resources" },
+  ];
+
+  const displayFooterCompany = footerCompany.length > 0 ? footerCompany : defaultCompanyLinks;
+  const displayFooterProducts = footerProducts.length > 0 ? footerProducts : defaultProductLinks;
+  const displayFooterResources = footerResources.length > 0 ? footerResources : defaultResourceLinks;
 
 return (
     <>
+      <OrganizationSchema locale={lang as 'en' | 'ar'} />
+      <WebsiteSchema />
       <script
         dangerouslySetInnerHTML={{
           __html: `document.documentElement.lang="${lang}";document.documentElement.dir="${dir}";`,
@@ -132,10 +209,10 @@ return (
               {/* Company */}
               <div>
                 <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                  {footerCompanyTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
+                  {footerCompanyTitle}
                 </h3>
                 <ul className="space-y-2 text-sm text-slate-600">
-                  {footerCompany.length > 0 ? footerCompany.map((item) => (
+                  {displayFooterCompany.map((item) => (
                     <li key={item.id}>
                       <Link
                         className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
@@ -145,17 +222,17 @@ return (
                         {item.label}
                       </Link>
                     </li>
-                  )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
+                  ))}
                 </ul>
               </div>
               
               {/* Products */}
               <div>
                 <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                  {footerProductsTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
+                  {footerProductsTitle}
                 </h3>
                 <ul className="space-y-2 text-sm text-slate-600">
-                  {footerProducts.length > 0 ? footerProducts.map((item) => (
+                  {displayFooterProducts.map((item) => (
                     <li key={item.id}>
                       <Link
                         className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
@@ -165,17 +242,17 @@ return (
                         {item.label}
                       </Link>
                     </li>
-                  )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
+                  ))}
                 </ul>
               </div>
               
               {/* Resources */}
               <div>
                 <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                  {footerResourcesTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
+                  {footerResourcesTitle}
                 </h3>
                 <ul className="space-y-2 text-sm text-slate-600">
-                  {footerResources.length > 0 ? footerResources.map((item) => (
+                  {displayFooterResources.map((item) => (
                     <li key={item.id}>
                       <Link
                         className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
@@ -185,35 +262,37 @@ return (
                         {item.label}
                       </Link>
                     </li>
-                  )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
+                  ))}
                 </ul>
               </div>
               
               {/* Social / Connect */}
-              <div>
-                <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
-                  {footerConnectTitle || <span className="text-amber-600">⚠️ {lang === "ar" ? "عنوان مفقود" : "Title missing"}</span>}
-                </h3>
-                <ul className="space-y-2 text-sm text-slate-600">
-                  {footerSocial.length > 0 ? footerSocial.map((item) => (
-                    <li key={item.id}>
-                      <Link
-                        className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  )) : <li className="text-amber-600 text-xs">⚠️ {lang === "ar" ? "روابط مفقودة" : "Links missing"}</li>}
-                </ul>
-              </div>
+              {footerSocial.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900 mb-3 leading-tight">
+                    {footerConnectTitle}
+                  </h3>
+                  <ul className="space-y-2 text-sm text-slate-600">
+                    {footerSocial.map((item) => (
+                      <li key={item.id}>
+                        <Link
+                          className="text-slate-600 hover:text-slate-900 transition-colors leading-relaxed"
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
             
             {/* Bottom bar */}
             <div className="mt-12 pt-8 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-600">
-              <p>{copyrightText || `© ${new Date().getFullYear()} Arabiq. ⚠️ ${lang === "ar" ? "نص مفقود" : "Text missing in CMS"}`}</p>
+              <p>{copyrightText}</p>
               <div className={`flex items-center gap-2 ${dir === "rtl" ? "flex-row-reverse" : ""}`}>
                 <div className="flex items-center justify-center h-6 w-6 rounded bg-gradient-to-br from-indigo-600 to-indigo-800 text-white font-bold text-xs">
                   A

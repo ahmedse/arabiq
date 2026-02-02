@@ -13,16 +13,44 @@ type IndustryDetailPageProps = {
 export async function generateMetadata({ params }: IndustryDetailPageProps): Promise<Metadata> {
   const { locale: localeParam, slug } = await params;
   const locale = localeParam === "ar" ? "ar" : "en";
+  const siteUrl = process.env.SITE_URL ?? "https://arabiq.tech";
+  const isAR = locale === "ar";
+  
   const [site, industry] = await Promise.all([getSiteSettings(locale), getIndustryBySlug(locale, slug)]);
   const siteName = site?.title ?? "Arabiq";
 
   if (!industry) {
-    return { title: `${locale === "ar" ? "غير موجود" : "Not found"} | ${siteName}` };
+    return { title: isAR ? "غير موجود" : "Not Found" };
   }
 
+  const title = industry.title;
+  const description = industry.summary || site?.description || "";
+
   return {
-    title: `${industry.title} | ${siteName}`,
-    description: industry.summary || site?.description || undefined,
+    title,
+    description,
+    alternates: {
+      canonical: `${siteUrl}/${locale}/industries/${slug}`,
+      languages: {
+        'en': `${siteUrl}/en/industries/${slug}`,
+        'ar': `${siteUrl}/ar/industries/${slug}`,
+      },
+    },
+    openGraph: {
+      title: `${title} | ${siteName}`,
+      description,
+      url: `${siteUrl}/${locale}/industries/${slug}`,
+      siteName,
+      locale: isAR ? 'ar_SA' : 'en_US',
+      type: 'article',
+      images: [{ url: `${siteUrl}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&locale=${locale}`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ${siteName}`,
+      description,
+      images: [`${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`],
+    },
   };
 }
 

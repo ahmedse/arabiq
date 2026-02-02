@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getSiteSettings, getAboutPage, getTeamMembers, getValues } from "@/lib/strapi";
 import { Container } from "@/components/ui/container";
 import Link from "next/link";
-import { ArrowRight, Target, Eye, Heart, Users, Sparkles, Globe, Zap, AlertTriangle } from "lucide-react";
+import { ArrowRight, Target, Eye, Heart, Users, Sparkles, Globe, Zap } from "lucide-react";
 import { setRequestLocale } from "next-intl/server";
 
 type AboutPageProps = {
@@ -32,14 +32,42 @@ const colorGradients = [
 export async function generateMetadata({ params }: AboutPageProps): Promise<Metadata> {
   const { locale: localeParam } = await params;
   const locale = localeParam === "ar" ? "ar" : "en";
+  const siteUrl = process.env.SITE_URL ?? "https://arabiq.tech";
+  const isAR = locale === "ar";
+  
   const [site, about] = await Promise.all([getSiteSettings(locale), getAboutPage(locale)]);
   
-  const title = about?.heroTitle || (locale === "ar" ? "عن الشركة" : "About");
   const siteName = site?.title ?? "Arabiq";
+  const title = about?.heroTitle || (isAR ? "من نحن" : "About Us");
+  const description = about?.heroSubtitle || site?.description || (isAR 
+    ? "تعرف على قصتنا ورؤيتنا وفريق العمل في أربيك"
+    : "Learn about our story, vision, and the team behind Arabiq");
 
   return {
-    title: `${title} | ${siteName}`,
-    description: about?.heroSubtitle ?? site?.description ?? undefined,
+    title,
+    description,
+    alternates: {
+      canonical: `${siteUrl}/${locale}/about`,
+      languages: {
+        'en': `${siteUrl}/en/about`,
+        'ar': `${siteUrl}/ar/about`,
+      },
+    },
+    openGraph: {
+      title: `${title} | ${siteName}`,
+      description,
+      url: `${siteUrl}/${locale}/about`,
+      siteName,
+      locale: isAR ? 'ar_SA' : 'en_US',
+      type: 'website',
+      images: [{ url: `${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ${siteName}`,
+      description,
+      images: [`${siteUrl}/api/og?title=${encodeURIComponent(title)}&locale=${locale}`],
+    },
   };
 }
 
@@ -56,28 +84,18 @@ export default async function AboutPage({ params }: AboutPageProps) {
     getValues(locale).catch(() => []),
   ]);
 
-  // Content from CMS (no fallbacks that look like real content!)
-  const heroTitle = about?.heroTitle;
-  const heroSubtitle = about?.heroSubtitle;
-  const missionTitle = about?.missionTitle;
-  const missionText = about?.missionText;
-  const visionTitle = about?.visionTitle;
-  const visionText = about?.visionText;
-  const valuesTitle = about?.valuesTitle;
-  const teamTitle = about?.teamTitle;
-  const teamSubtitle = about?.teamSubtitle;
-  const ctaTitle = about?.ctaTitle;
-  const ctaButton = about?.ctaButton;
-
-  // Warning component for missing content
-  const MissingContent = ({ section }: { section: string }) => (
-    <div className="p-4 rounded-lg border-2 border-dashed border-amber-400 bg-amber-50 text-amber-800 flex items-center gap-3">
-      <AlertTriangle className="w-5 h-5 flex-shrink-0" />
-      <span className="text-sm font-medium">
-        ⚠️ {isRTL ? `محتوى "${section}" مفقود - أضفه من لوحة التحكم CMS` : `"${section}" content missing - Add it in CMS Admin`}
-      </span>
-    </div>
-  );
+  // Content from CMS with graceful fallbacks
+  const heroTitle = about?.heroTitle || (isRTL ? 'من نحن' : 'About Us');
+  const heroSubtitle = about?.heroSubtitle || (isRTL ? 'تعرف على قصتنا ورؤيتنا' : 'Learn about our story and vision');
+  const missionTitle = about?.missionTitle || (isRTL ? 'مهمتنا' : 'Our Mission');
+  const missionText = about?.missionText || (isRTL ? 'تحويل الجولات الافتراضية إلى تجارب تفاعلية غنية' : 'Transform virtual tours into rich interactive experiences');
+  const visionTitle = about?.visionTitle || (isRTL ? 'رؤيتنا' : 'Our Vision');
+  const visionText = about?.visionText || (isRTL ? 'أن نكون الخيار الأول لحلول التوائم الرقمية في المنطقة العربية' : 'To be the leading digital twin solutions provider in the Arab region');
+  const valuesTitle = about?.valuesTitle || (isRTL ? 'قيمنا' : 'Our Values');
+  const teamTitle = about?.teamTitle || (isRTL ? 'فريقنا' : 'Our Team');
+  const teamSubtitle = about?.teamSubtitle || (isRTL ? 'تعرف على فريق العمل' : 'Meet the team');
+  const ctaTitle = about?.ctaTitle || (isRTL ? 'مستعد للبدء؟' : 'Ready to get started?');
+  const ctaButton = about?.ctaButton || (isRTL ? 'تواصل معنا' : 'Contact Us');
 
   return (
     <div className="min-h-screen">
@@ -91,20 +109,12 @@ export default async function AboutPage({ params }: AboutPageProps) {
         
         <Container className="relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            {heroTitle ? (
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
-                {heroTitle}
-              </h1>
-            ) : (
-              <MissingContent section="Hero Title" />
-            )}
-            {heroSubtitle ? (
-              <p className="mt-6 text-xl text-slate-600 leading-relaxed">
-                {heroSubtitle}
-              </p>
-            ) : (
-              <div className="mt-6"><MissingContent section="Hero Subtitle" /></div>
-            )}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight">
+              {heroTitle}
+            </h1>
+            <p className="mt-6 text-xl text-slate-600 leading-relaxed">
+              {heroSubtitle}
+            </p>
           </div>
         </Container>
       </section>
@@ -118,14 +128,8 @@ export default async function AboutPage({ params }: AboutPageProps) {
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-indigo-600 text-white mb-6">
                 <Target className="w-7 h-7" />
               </div>
-              {missionTitle && missionText ? (
-                <>
-                  <h2 className="text-2xl font-bold text-slate-900 mb-4">{missionTitle}</h2>
-                  <p className="text-lg text-slate-600 leading-relaxed">{missionText}</p>
-                </>
-              ) : (
-                <MissingContent section="Mission" />
-              )}
+              <h2 className="text-2xl font-bold text-slate-900 mb-4">{missionTitle}</h2>
+              <p className="text-lg text-slate-600 leading-relaxed">{missionText}</p>
             </div>
 
             {/* Vision */}
@@ -133,31 +137,21 @@ export default async function AboutPage({ params }: AboutPageProps) {
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-purple-600 text-white mb-6">
                 <Eye className="w-7 h-7" />
               </div>
-              {visionTitle && visionText ? (
-                <>
-                  <h2 className="text-2xl font-bold text-slate-900 mb-4">{visionTitle}</h2>
-                  <p className="text-lg text-slate-600 leading-relaxed">{visionText}</p>
-                </>
-              ) : (
-                <MissingContent section="Vision" />
-              )}
+              <h2 className="text-2xl font-bold text-slate-900 mb-4">{visionTitle}</h2>
+              <p className="text-lg text-slate-600 leading-relaxed">{visionText}</p>
             </div>
           </div>
         </Container>
       </section>
 
       {/* Values - Dynamic from CMS */}
-      <section className="py-24 bg-slate-50">
-        <Container>
-          <div className="text-center mb-16">
-            {valuesTitle ? (
+      {values.length > 0 && (
+        <section className="py-24 bg-slate-50">
+          <Container>
+            <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">{valuesTitle}</h2>
-            ) : (
-              <MissingContent section="Values Title" />
-            )}
-          </div>
+            </div>
 
-          {values.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-8">
               {values.map((value, index) => (
                 <div key={value.id} className="p-8 rounded-2xl bg-white border border-slate-200 hover:border-indigo-200 hover:shadow-lg transition-all">
@@ -169,39 +163,19 @@ export default async function AboutPage({ params }: AboutPageProps) {
                 </div>
               ))}
             </div>
-          ) : (
-            <div className="max-w-md mx-auto">
-              <div className="p-8 rounded-2xl border-2 border-dashed border-amber-400 bg-amber-50 text-center">
-                <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-amber-800 mb-2">
-                  {isRTL ? "لا توجد قيم" : "No Values Found"}
-                </h3>
-                <p className="text-amber-700 text-sm">
-                  {isRTL 
-                    ? "أضف قيم الشركة من لوحة التحكم CMS → Values" 
-                    : "Add company values in CMS Admin → Values collection"}
-                </p>
-              </div>
-            </div>
-          )}
-        </Container>
-      </section>
+          </Container>
+        </section>
+      )}
 
       {/* Team - Dynamic from CMS */}
-      <section className="py-24 bg-white">
-        <Container>
-          <div className="text-center mb-16">
-            {teamTitle ? (
+      {teamMembers.length > 0 && (
+        <section className="py-24 bg-white">
+          <Container>
+            <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">{teamTitle}</h2>
-            ) : (
-              <MissingContent section="Team Title" />
-            )}
-            {teamSubtitle && (
               <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">{teamSubtitle}</p>
-            )}
-          </div>
+            </div>
 
-          {teamMembers.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {teamMembers.map((member) => (
                 <div key={member.id} className="text-center group">
@@ -235,42 +209,22 @@ export default async function AboutPage({ params }: AboutPageProps) {
                 </div>
               ))}
             </div>
-          ) : (
-            <div className="max-w-md mx-auto">
-              <div className="p-8 rounded-2xl border-2 border-dashed border-amber-400 bg-amber-50 text-center">
-                <Users className="w-12 h-12 text-amber-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-amber-800 mb-2">
-                  {isRTL ? "لا يوجد أعضاء فريق" : "No Team Members Found"}
-                </h3>
-                <p className="text-amber-700 text-sm">
-                  {isRTL 
-                    ? "أضف أعضاء الفريق من لوحة التحكم CMS → Team Members" 
-                    : "Add team members in CMS Admin → Team Members collection"}
-                </p>
-              </div>
-            </div>
-          )}
-        </Container>
-      </section>
+          </Container>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800" />
         <Container className="relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            {ctaTitle ? (
-              <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{ctaTitle}</h2>
-            ) : (
-              <div className="p-4 rounded-lg border-2 border-dashed border-white/50 bg-white/10 text-white">
-                ⚠️ {isRTL ? "عنوان CTA مفقود - أضفه من CMS" : "CTA Title missing - Add in CMS"}
-              </div>
-            )}
+            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{ctaTitle}</h2>
             <div className="mt-10">
               <Link 
                 href={`/${locale}/contact`} 
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-base font-semibold text-indigo-700 shadow-lg hover:bg-indigo-50 transition-colors"
               >
-                {ctaButton || (isRTL ? "⚠️ زر مفقود" : "⚠️ Button missing")}
+                {ctaButton}
                 <ArrowRight className={`w-5 h-5 ${isRTL ? 'rotate-180' : ''}`} />
               </Link>
             </div>
