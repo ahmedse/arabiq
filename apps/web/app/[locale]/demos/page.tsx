@@ -4,6 +4,8 @@ import { getSiteSettings, getDemos, getHomepage } from "@/lib/strapi";
 import { Container } from "@/components/ui/container";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { setRequestLocale } from "next-intl/server";
+import { getCurrentUser } from "@/lib/serverAuth";
+import { redirect } from "next/navigation";
 
 type DemosPageProps = {
   params: Promise<{ locale: string }>;
@@ -57,14 +59,27 @@ export default async function DemosPage({ params }: DemosPageProps) {
   setRequestLocale(locale);
   const isRTL = locale === "ar";
 
+  // Require authentication for demos page
+  const user = await getCurrentUser();
+  if (!user) {
+    redirect(`/${locale}/login?redirect=/${locale}/demos`);
+  }
+
+  // Check account status - must be active and approved
+  if (user.accountStatus === 'suspended') {
+    redirect(`/${locale}/account-suspended`);
+  }
+  if (user.accountStatus === 'pending') {
+    redirect(`/${locale}/account-pending`);
+  }
+  if (user.accountStatus !== 'active') {
+    redirect(`/${locale}/access-denied`);
+  }
+
   const [homepage, demos] = await Promise.all([
     getHomepage(locale).catch(() => null),
     getDemos(locale),
   ]);
-
-  // Get current user to show access status
-  const { getCurrentUser } = await import('@/lib/serverAuth');
-  const user = await getCurrentUser();
 
   const pageTitle = homepage?.demosTitle || (isRTL ? "جرب العروض التفاعلية" : "Try Our Live Demos");
   const pageSubtitle = homepage?.demosSubtitle || (isRTL ? "استكشف إمكانياتنا بنفسك" : "Explore our capabilities firsthand");
@@ -117,19 +132,17 @@ export default async function DemosPage({ params }: DemosPageProps) {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {demos.map((demo) => {
                 const typeLabel = demo.demoType && demoTypeLabels[demo.demoType];
-                const isRestricted = demo.allowedRoles && demo.allowedRoles.length > 0;
-                const hasUser = !!user?.id;
 
                 return (
                   <Link 
                     key={demo.id} 
-                    href={isRestricted && !hasUser ? `/${locale}/login?callbackUrl=/${locale}/demos/${demo.slug}` : `/${locale}/demos/${demo.slug}`}
+                    href={`/${locale}/demos/${demo.slug}`}
                     className="group relative"
                   >
-                    <div className={`h-full rounded-2xl overflow-hidden border border-slate-200 bg-white transition-all duration-300 ${isRestricted && !hasUser ? 'opacity-80' : 'hover:border-indigo-200 hover:shadow-2xl'}`}>
+                    <div className="h-full rounded-2xl overflow-hidden border border-slate-200 bg-white transition-all duration-300 hover:border-indigo-200 hover:shadow-2xl">
                       {/* Demo Preview */}
                       <div className="h-48 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center relative">
-                        <div className={`w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center ${isRestricted && !hasUser ? 'opacity-70' : 'group-hover:scale-110'} transition-transform`}>
+                        <div className="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                           <Play className="w-8 h-8 text-white ml-1" />
                         </div>
                         {typeLabel && (
@@ -137,28 +150,17 @@ export default async function DemosPage({ params }: DemosPageProps) {
                             {isRTL ? typeLabel.ar : typeLabel.en}
                           </span>
                         )}
-                        {isRestricted && !hasUser && (
-                          <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
-                            <div className="text-center">
-                              <p className="text-sm font-semibold text-slate-900 mb-2">{isRTL ? 'يتطلب تسجيل الدخول' : 'Sign in to view'}</p>
-                              <div className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600">
-                                {isRTL ? 'سجل الآن' : 'Sign in'}
-                                <ArrowRight className="w-4 h-4" />
-                              </div>
-                            </div>
-                          </div>
-                        )}
                       </div>
                       
                       {/* Content */}
                       <div className="p-6">
-                        <h3 className={`text-xl font-semibold text-slate-900 ${isRestricted && !hasUser ? 'text-slate-500' : 'group-hover:text-indigo-600'} transition-colors`}>
+                        <h3 className="text-xl font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
                           {demo.title}
                         </h3> 
                         <p className="mt-2 text-slate-600 line-clamp-2">
                           {demo.summary}
                         </p>
-                        <div className={`mt-4 inline-flex items-center gap-2 text-sm font-semibold ${isRestricted && !hasUser ? 'text-slate-400' : 'text-indigo-600'} ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className={`mt-4 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 ${isRTL ? 'flex-row-reverse' : ''}`}>
                           {isRTL ? 'جرب الآن' : 'Try now'}
                           <ArrowRight className={`w-4 h-4 transition-transform ${isRTL ? 'rotate-180' : ''}`} />
                         </div>

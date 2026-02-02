@@ -2,16 +2,16 @@
   "identifierField": "slug",
   "items": [
     {
-      "slug": "what-is-matterport",
+      "slug": "what-is-3d-capture",
       "category": "technology",
       "order": 1,
       "en": {
-        "question": "What is Matterport and how does it work?",
-        "answer": "Matterport is the industry-leading 3D capture technology that creates photorealistic digital twins of physical spaces. Our team uses Matterport Pro3 cameras to scan your space, capturing millions of data points that are processed into an immersive 3D model. The result is a virtual experience where visitors can navigate your space as if they were physically present, with the ability to look in any direction and move through the environment freely."
+        "question": "What is 3D capture technology and how does it work?",
+        "answer": "3D capture technology creates photorealistic digital twins of physical spaces. Our team uses professional cameras to scan your space, capturing millions of data points that are processed into an immersive 3D model. The result is a virtual experience where visitors can navigate your space as if they were physically present, with the ability to look in any direction and move through the environment freely."
       },
       "ar": {
-        "question": "ما هي تقنية Matterport وكيف تعمل؟",
-        "answer": "Matterport هي التقنية الرائدة في الصناعة لالتقاط المساحات ثلاثية الأبعاد وإنشاء توائم رقمية فوتوغرافية للمساحات الفعلية. يستخدم فريقنا كاميرات Matterport Pro3 لمسح مساحتك، والتقاط ملايين نقاط البيانات التي تُعالج لإنشاء نموذج ثلاثي الأبعاد غامر. النتيجة هي تجربة افتراضية حيث يمكن للزوار التنقل في مساحتك كأنهم حاضرون فعلياً، مع القدرة على النظر في أي اتجاه والتحرك عبر البيئة بحرية."
+        "question": "ما هي تقنية التقاط ثلاثي الأبعاد وكيف تعمل؟",
+        "answer": "تقنية التقاط ثلاثي الأبعاد تخلق توائم رقمية فوتوغرافية للمساحات الفعلية. يستخدم فريقنا كاميرات احترافية لمسح مساحتك، والتقاط ملايين نقاط البيانات التي تُعالج لإنشاء نموذج ثلاثي الأبعاد غامر. النتيجة هي تجربة افتراضية حيث يمكن للزوار التنقل في مساحتك كأنهم حاضرون فعلياً، مع القدرة على النظر في أي اتجاه والتحرك عبر البيئة بحرية."
       }
     },
     {

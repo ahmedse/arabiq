@@ -2,8 +2,8 @@
 
 > **Last Updated**: 2026-02-02  
 > **Status**: 🔴 ACTIVE TASK  
-> **Priority**: HIGH  
-> **Phase**: 2 of 4 - CMS/Web Polish
+> **Priority**: MEDIUM  
+> **Phase**: 2 of 4 - CMS/Web Polish (FINAL TASK)
 
 ---
 
@@ -13,304 +13,321 @@ Read this file to understand your current task. When complete, write your result
 
 ---
 
-## TASK-004: Security Hardening
+## TASK-006: Final Testing & Production Prep
 
-### Priority: HIGH
-### Estimated Effort: 4-5 hours
-### Category: Security & Production Readiness
+### Priority: MEDIUM
+### Estimated Effort: 3-4 hours
+### Category: Quality Assurance & Deployment
 
 ---
 
 ## Objective
 
-Harden the application for production with rate limiting, security headers, CSRF protection, and input validation.
+Complete final testing, fix any remaining issues, and prepare the application for production deployment.
 
 ---
 
 ## Context
 
-- TASK-001: ✅ Foundation (UI components, error handling, contact form)
-- TASK-002: ✅ Account management, admin features, email integration
+- TASK-001: ✅ Foundation (UI, error handling, contact form)
+- TASK-002: ✅ Account management, admin, email (Resend)
 - TASK-003: ✅ SEO, meta tags, translations, graceful fallbacks
+- TASK-004: ✅ Security hardening (rate limiting, CSP, Zod validation)
+- TASK-005: ✅ Performance optimization (images, lazy loading, caching)
 
-Now we secure the application before production deployment.
+This is the **final task** before Phase 2 completion. After this, we move to Phase 3 (VTour Demos).
 
 ---
 
 ## Requirements
 
-### 1. Rate Limiting for API Routes
+### 1. Full Page Testing Checklist
 
-Implement in-memory rate limiting for development/simple deployments:
+Test every page in both English and Arabic:
 
-```typescript
-// lib/rateLimit.ts
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+#### Public Pages
+- [ ] **Homepage** (`/en`, `/ar`)
+  - Hero section renders
+  - All sections show or hide based on CMS data
+  - CTAs link correctly
+  - Language switcher works
+  
+- [ ] **About** (`/en/about`, `/ar/about`)
+  - Content renders from CMS
+  - Values section shows if data exists
+  - Team section shows if data exists
+  
+- [ ] **Contact** (`/en/contact`, `/ar/contact`)
+  - Form submits successfully
+  - Validation errors display
+  - Rate limiting works (try 6+ submissions)
+  - Success message appears
+  
+- [ ] **Solutions** (`/en/solutions`, `/ar/solutions`)
+  - List page shows solutions from CMS
+  - Detail pages (`/solutions/[slug]`) render content
+  
+- [ ] **Industries** (`/en/industries`, `/ar/industries`)
+  - List page shows industries from CMS
+  - Detail pages render content
+  
+- [ ] **Case Studies** (`/en/case-studies`, `/ar/case-studies`)
+  - List page works
+  - Detail pages render rich content
+  
+- [ ] **Demos** (`/en/demos`, `/ar/demos`)
+  - List page works
+  - Ready for Matterport integration later
 
-export function checkRateLimit(
-  identifier: string,
-  limit: number = 10,
-  windowMs: number = 60000
-): { success: boolean; remaining: number } {
-  const now = Date.now();
-  const record = rateLimitMap.get(identifier);
+#### Auth Pages
+- [ ] **Login** (`/en/login`, `/ar/login`)
+  - Form validation works
+  - Login succeeds with valid credentials
+  - Error shows for invalid credentials
+  - Redirects to account after login
+  
+- [ ] **Register** (`/en/register`, `/ar/register`)
+  - Form validation works
+  - Registration creates pending user
+  - Redirects to registration-success
+  
+- [ ] **Registration Success** (`/en/registration-success`)
+  - Shows correct message
+  
+- [ ] **Forgot Password** (`/en/forgot-password`)
+  - Form submits
+  - Success message shows
 
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(identifier, { count: 1, resetTime: now + windowMs });
-    return { success: true, remaining: limit - 1 };
-  }
+#### Protected Pages
+- [ ] **Account** (`/en/account`)
+  - Shows user profile
+  - Profile editing works
+  - Password change works
+  - Redirects to login if not authenticated
+  
+- [ ] **Account Pending** (`/en/account-pending`)
+  - Shows for pending users
+  
+- [ ] **Account Suspended** (`/en/account-suspended`)
+  - Shows for suspended users
+  
+- [ ] **Admin Users** (`/en/admin/users`)
+  - Only accessible by admin role
+  - Lists users
+  - Approve/suspend actions work
 
-  if (record.count >= limit) {
-    return { success: false, remaining: 0 };
-  }
+### 2. Mobile Responsiveness Testing
 
-  record.count++;
-  return { success: true, remaining: limit - record.count };
-}
+Test on mobile viewport (375px width):
 
-// Cleanup old entries periodically
-if (typeof setInterval !== 'undefined') {
-  setInterval(() => {
-    const now = Date.now();
-    for (const [key, value] of rateLimitMap.entries()) {
-      if (now > value.resetTime) {
-        rateLimitMap.delete(key);
-      }
-    }
-  }, 60000);
-}
-```
+- [ ] Navigation menu toggles correctly
+- [ ] All pages are readable
+- [ ] Forms are usable
+- [ ] Images scale properly
+- [ ] No horizontal scroll
+- [ ] Touch targets are large enough (48px min)
 
-**Apply to API routes:**
+### 3. RTL (Arabic) Testing
 
-```typescript
-// app/api/contact/route.ts
-import { checkRateLimit } from '@/lib/rateLimit';
-import { headers } from 'next/headers';
+- [ ] Text aligns right in Arabic
+- [ ] Layout mirrors correctly
+- [ ] Navigation works in RTL
+- [ ] Forms align correctly
+- [ ] Icons don't flip incorrectly
 
-export async function POST(req: Request) {
-  // Get client IP
-  const headersList = await headers();
-  const ip = headersList.get('x-forwarded-for') || 
-             headersList.get('x-real-ip') || 
-             'anonymous';
+### 4. Error Handling Testing
 
-  // Check rate limit
-  const { success, remaining } = checkRateLimit(`contact:${ip}`, 5, 60000);
-  if (!success) {
-    return Response.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429, headers: { 'Retry-After': '60' } }
-    );
-  }
+- [ ] 404 page works (`/en/nonexistent`)
+- [ ] Error boundary catches runtime errors
+- [ ] API errors show user-friendly messages
+- [ ] Network failures handled gracefully
 
-  // ... rest of handler
-}
-```
+### 5. Accessibility Testing
 
-**Routes to protect:**
-- `app/api/contact/route.ts` - 5 requests/minute
-- `app/api/auth/login/route.ts` - 5 requests/minute
-- `app/api/auth/register/route.ts` - 3 requests/minute
-- `app/api/auth/forgot-password/route.ts` - 3 requests/5 minutes
-- `app/api/account/update/route.ts` - 10 requests/minute
-- `app/api/account/password/route.ts` - 3 requests/minute
-
-### 2. Security Headers (CSP, HSTS, etc.)
-
-Update `next.config.ts` to add security headers:
-
-```typescript
-// next.config.ts
-const securityHeaders = [
-  { key: 'X-DNS-Prefetch-Control', value: 'on' },
-  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-  { key: 'X-XSS-Protection', value: '1; mode=block' },
-  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-  { key: 'X-Content-Type-Options', value: 'nosniff' },
-  { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
-  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-  {
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.matterport.com",
-      "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
-      "img-src 'self' blob: data: *.matterport.com *.strapi.io localhost:1337",
-      "font-src 'self' fonts.gstatic.com",
-      "connect-src 'self' *.matterport.com localhost:1337",
-      "frame-src 'self' *.matterport.com",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'self'",
-    ].join('; ')
-  }
-];
-
-// Add to nextConfig:
-async headers() {
-  return [{ source: '/:path*', headers: securityHeaders }];
-}
-```
-
-### 3. Input Validation & Sanitization
-
-Install Zod and create validation utility:
+Run accessibility checks:
 
 ```bash
-pnpm add zod
+# Install axe-core for testing
+pnpm add -D @axe-core/cli
+
+# Run accessibility audit
+npx axe http://localhost:3000/en --exit
 ```
 
-```typescript
-// lib/validation.ts
-import { z } from 'zod';
+- [ ] All images have alt text
+- [ ] Form inputs have labels
+- [ ] Color contrast is sufficient
+- [ ] Keyboard navigation works
+- [ ] Focus indicators visible
 
-export const emailSchema = z.string().email('Invalid email address').max(255);
+### 6. Environment Configuration
 
-export const passwordSchema = z
-  .string()
-  .min(8, 'Password must be at least 8 characters')
-  .max(128, 'Password too long');
+Create production environment template:
 
-export const contactFormSchema = z.object({
-  name: z.string().min(2, 'Name is required').max(100).trim(),
-  email: emailSchema,
-  phone: z.string().max(20).optional(),
-  message: z.string().min(10, 'Message must be at least 10 characters').max(5000).trim(),
-});
+```bash
+# .env.production.example
+STRAPI_URL=https://cms.arabiq.tech
+STRAPI_API_TOKEN=your_production_token
+SITE_URL=https://arabiq.tech
+RESEND_API_KEY=your_resend_key
+ADMIN_EMAIL=admin@arabiq.tech
+NODE_ENV=production
 
-export const registerSchema = z.object({
-  username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_]+$/),
-  email: emailSchema,
-  password: passwordSchema,
-  displayName: z.string().min(2).max(100).optional(),
-  phone: z.string().max(20).optional(),
-  company: z.string().max(100).optional(),
-  country: z.string().max(100).optional(),
-});
-
-export const loginSchema = z.object({
-  identifier: z.string().min(1, 'Email or username required'),
-  password: z.string().min(1, 'Password required'),
-});
-
-export function validateInput<T>(schema: z.ZodSchema<T>, data: unknown): 
-  { success: true; data: T } | { success: false; errors: Record<string, string> } {
-  const result = schema.safeParse(data);
-  
-  if (result.success) {
-    return { success: true, data: result.data };
-  }
-  
-  const errors: Record<string, string> = {};
-  for (const error of result.error.errors) {
-    errors[error.path.join('.')] = error.message;
-  }
-  
-  return { success: false, errors };
-}
+# Optional
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+UPSTASH_REDIS_REST_URL=your_upstash_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_token
 ```
 
-### 4. Secure Cookie Settings
+### 7. Build Verification
 
-Create cookie configuration:
+Verify production build works:
 
-```typescript
-// lib/cookies.ts
-export const AUTH_COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
-  path: '/',
-  maxAge: 60 * 60 * 24 * 7, // 7 days
-};
+```bash
+cd apps/web
+pnpm build
+pnpm start
+# Test the production build locally
 ```
 
-Update `lib/strapiAuth.ts` to use these settings when setting cookies.
+- [ ] Build completes without errors
+- [ ] Production server starts
+- [ ] All pages work in production mode
+- [ ] No console errors
 
-### 5. Environment Variable Validation
+### 8. Documentation Updates
 
-```typescript
-// lib/env.ts
-import { z } from 'zod';
+Update or create:
 
-const envSchema = z.object({
-  STRAPI_URL: z.string().url().default('http://localhost:1337'),
-  STRAPI_API_TOKEN: z.string().optional(),
-  SITE_URL: z.string().url().default('http://localhost:3000'),
-  RESEND_API_KEY: z.string().optional(),
-  ADMIN_EMAIL: z.string().email().optional(),
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-});
+#### README.md Updates
+- Installation instructions
+- Environment variables list
+- Development commands
+- Deployment instructions
 
-export type Env = z.infer<typeof envSchema>;
+#### PRODUCTION_DEPLOYMENT.md
+```markdown
+# Production Deployment Guide
 
-export const env = envSchema.parse(process.env);
+## Prerequisites
+- Node.js 20+
+- PostgreSQL 14+
+- Strapi CMS deployed
+- Domain configured
+
+## Environment Setup
+1. Copy `.env.production.example` to `.env.production`
+2. Fill in all required values
+
+## Build & Deploy
+```bash
+cd apps/web
+pnpm install
+pnpm build
+pnpm start
 ```
+
+## Post-Deployment Checklist
+- [ ] Verify all pages load
+- [ ] Test contact form
+- [ ] Test login/register
+- [ ] Check SSL certificate
+- [ ] Verify DNS settings
+- [ ] Set up monitoring
+```
+
+### 9. Fix Any Remaining Issues
+
+Address any bugs found during testing:
+
+- TypeScript errors
+- Console warnings
+- Broken links
+- Missing translations
+- Layout issues
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] Rate limiting implemented on all sensitive API routes
-- [ ] Security headers configured in next.config.ts
-- [ ] CSP policy allows Matterport, Strapi, and Google Fonts
-- [ ] Input validation with Zod on all form submissions
-- [ ] Secure cookie settings for auth tokens
-- [ ] Environment variables validated
+- [ ] All public pages work in EN and AR
+- [ ] All auth flows work correctly
+- [ ] Mobile responsive on all pages
+- [ ] RTL layout works in Arabic
+- [ ] Error pages display correctly
+- [ ] Accessibility audit passes (no critical issues)
+- [ ] Production build succeeds
+- [ ] Documentation updated
 - [ ] No TypeScript errors
-- [ ] Build passes
-- [ ] Forms still work correctly with new validation
+- [ ] No console errors in production
 
 ---
 
-## Files to Create
-
-```
-apps/web/lib/rateLimit.ts
-apps/web/lib/validation.ts
-apps/web/lib/cookies.ts
-apps/web/lib/env.ts
-```
-
-## Files to Modify
-
-```
-apps/web/next.config.ts               # Add security headers
-apps/web/app/api/contact/route.ts     # Add rate limiting, validation
-apps/web/app/api/auth/login/route.ts  # Add rate limiting, validation
-apps/web/app/api/auth/register/route.ts
-apps/web/app/api/auth/forgot-password/route.ts
-apps/web/app/api/account/update/route.ts
-apps/web/app/api/account/password/route.ts
-apps/web/lib/strapiAuth.ts            # Secure cookie settings
-```
-
----
-
-## Dependencies to Install
+## Testing Commands
 
 ```bash
-cd apps/web && pnpm add zod
+# Start CMS (in apps/cms)
+pnpm develop
+
+# Start Web (in apps/web)
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Run production server
+pnpm start
+
+# Type check
+pnpm tsc --noEmit
+
+# Lint
+pnpm lint
 ```
 
 ---
 
-## Testing Checklist
+## Files to Create/Update
 
-1. **Rate Limiting**: Make 6+ rapid requests to contact form, verify 429 response
-2. **Security Headers**: Check response headers in DevTools Network tab
-3. **Validation**: Submit invalid data, verify error messages
-4. **Cookies**: Check cookie settings in DevTools Application tab
-5. **Build**: `pnpm build` passes without errors
+```
+apps/web/.env.production.example
+apps/web/README.md (update if needed)
+/PRODUCTION_DEPLOYMENT.md (update if needed)
+```
 
 ---
 
-## Next Tasks (Preview)
+## Issue Log Template
 
-After TASK-004:
-- **TASK-005**: Performance optimization (images, lazy loading, caching)
-- **TASK-006**: Final testing and production deployment prep
+If issues are found, document them:
+
+```markdown
+### Issue: [Description]
+**Page**: /en/page-name
+**Severity**: Critical / High / Medium / Low
+**Status**: Fixed / Pending
+**Fix**: [What was done to fix it]
+```
+
+---
+
+## Success Criteria
+
+When this task is complete:
+1. ✅ Phase 2 is COMPLETE
+2. ✅ Site is production-ready
+3. ✅ All features work end-to-end
+4. ✅ Documentation is complete
+5. 🚀 Ready for Phase 3: VTour Demos
+
+---
+
+## Next Phase Preview
+
+**Phase 3: VTour Demo Experiences**
+- 6 interactive Matterport demos
+- E-commerce, Café, Hotel, Real Estate, Exhibition, Office
+- AI Chatbot integration (Poe.com API)
+- Booking/cart systems within virtual tours
 
 ---

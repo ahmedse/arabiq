@@ -3,7 +3,7 @@
   "items": [
     {
       "slug": "virtual-furniture-showroom",
-      "demoType": "matterport",
+      "demoType": "3dtour",
       "accessLevel": "public",
       "icon": "🏬",
       "en": {
@@ -35,7 +35,7 @@
     },
     {
       "slug": "virtual-hotel-tour",
-      "demoType": "matterport",
+      "demoType": "3dtour",
       "accessLevel": "public",
       "icon": "🏨",
       "en": {
@@ -67,7 +67,7 @@
     },
     {
       "slug": "real-estate-property-tour",
-      "demoType": "matterport",
+      "demoType": "3dtour",
       "accessLevel": "public",
       "icon": "🏠",
       "en": {
@@ -83,7 +83,7 @@
     },
     {
       "slug": "museum-virtual-gallery",
-      "demoType": "matterport",
+      "demoType": "3dtour",
       "accessLevel": "public",
       "icon": "🏛️",
       "en": {

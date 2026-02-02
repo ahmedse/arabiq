@@ -59,10 +59,47 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Image optimization configuration
   images: {
-    // Avoid dev-time /_next/image 400s when the optimizer can't load local assets.
-    // If you want optimization, install `sharp` in apps/web and remove this.
-    unoptimized: true,
+    // Enable optimization (requires 'sharp' package in production)
+    unoptimized: process.env.NODE_ENV === 'development',
+    // Remote image patterns for Strapi and external sources
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '1337',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '1337',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.strapi.io',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'my.matterport.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.matterport.com',
+        pathname: '/**',
+      },
+    ],
+    // Modern formats for better compression
+    formats: ['image/avif', 'image/webp'],
+    // Responsive breakpoints
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Minimize external image loader requests
+    minimumCacheTTL: 60 * 60 * 24, // 24 hours
   },
   
   // Security headers for all routes
@@ -73,6 +110,12 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
     ];
+  },
+  
+  // Experimental features for performance
+  experimental: {
+    // Enable optimized package imports
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
 };
 

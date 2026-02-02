@@ -1,7 +1,8 @@
 {
-  "identifierField": "order",
+  "identifierField": "slug",
   "items": [
     {
+      "slug": "header-home",
       "href": "/",
       "location": "header",
       "order": 1,
@@ -10,6 +11,7 @@
       "ar": { "label": "الرئيسية" }
     },
     {
+      "slug": "header-solutions",
       "href": "/solutions",
       "location": "header",
       "order": 2,
@@ -18,6 +20,7 @@
       "ar": { "label": "الحلول" }
     },
     {
+      "slug": "header-industries",
       "href": "/industries",
       "location": "header",
       "order": 3,
@@ -26,6 +29,7 @@
       "ar": { "label": "الصناعات" }
     },
     {
+      "slug": "header-case-studies",
       "href": "/case-studies",
       "location": "header",
       "order": 4,
@@ -34,6 +38,7 @@
       "ar": { "label": "دراسات الحالة" }
     },
     {
+      "slug": "header-pricing",
       "href": "/pricing",
       "location": "header",
       "order": 5,
@@ -42,6 +47,7 @@
       "ar": { "label": "الأسعار" }
     },
     {
+      "slug": "header-demos",
       "href": "/demos",
       "location": "header",
       "order": 6,
@@ -50,6 +56,7 @@
       "ar": { "label": "العروض" }
     },
     {
+      "slug": "header-about",
       "href": "/about",
       "location": "header",
       "order": 7,
@@ -58,6 +65,7 @@
       "ar": { "label": "من نحن" }
     },
     {
+      "slug": "header-contact",
       "href": "/contact",
       "location": "header",
       "order": 8,
@@ -66,6 +74,7 @@
       "ar": { "label": "اتصل بنا" }
     },
     {
+      "slug": "footer-company-about",
       "href": "/about",
       "location": "footer-company",
       "order": 10,
@@ -74,6 +83,7 @@
       "ar": { "label": "من نحن" }
     },
     {
+      "slug": "footer-company-careers",
       "href": "/careers",
       "location": "footer-company",
       "order": 11,
@@ -82,6 +92,7 @@
       "ar": { "label": "الوظائف" }
     },
     {
+      "slug": "footer-company-contact",
       "href": "/contact",
       "location": "footer-company",
       "order": 12,
@@ -90,6 +101,7 @@
       "ar": { "label": "اتصل بنا" }
     },
     {
+      "slug": "footer-company-press",
       "href": "/press",
       "location": "footer-company",
       "order": 13,
@@ -98,6 +110,7 @@
       "ar": { "label": "الصحافة" }
     },
     {
+      "slug": "footer-products-vmall",
       "href": "/solutions/vmall-platform",
       "location": "footer-products",
       "order": 20,
@@ -106,6 +119,7 @@
       "ar": { "label": "منصة Vmall" }
     },
     {
+      "slug": "footer-products-ai-suite",
       "href": "/solutions/arabiq-ai-suite",
       "location": "footer-products",
       "order": 21,
@@ -114,6 +128,7 @@
       "ar": { "label": "مجموعة الذكاء الاصطناعي" }
     },
     {
+      "slug": "footer-products-commerce",
       "href": "/solutions/arabiq-commerce",
       "location": "footer-products",
       "order": 22,
@@ -122,6 +137,7 @@
       "ar": { "label": "التجارة" }
     },
     {
+      "slug": "footer-products-vfair",
       "href": "/solutions/vfair-edition",
       "location": "footer-products",
       "order": 23,
@@ -130,6 +146,7 @@
       "ar": { "label": "فعاليات VFair" }
     },
     {
+      "slug": "footer-resources-case-studies",
       "href": "/case-studies",
       "location": "footer-resources",
       "order": 30,
@@ -138,6 +155,7 @@
       "ar": { "label": "دراسات الحالة" }
     },
     {
+      "slug": "footer-resources-demos",
       "href": "/demos",
       "location": "footer-resources",
       "order": 31,
@@ -146,6 +164,7 @@
       "ar": { "label": "العروض" }
     },
     {
+      "slug": "footer-resources-faq",
       "href": "/faq",
       "location": "footer-resources",
       "order": 32,
@@ -154,6 +173,7 @@
       "ar": { "label": "الأسئلة الشائعة" }
     },
     {
+      "slug": "footer-resources-blog",
       "href": "/blog",
       "location": "footer-resources",
       "order": 33,
@@ -162,6 +182,7 @@
       "ar": { "label": "المدونة" }
     },
     {
+      "slug": "footer-support-help",
       "href": "/support",
       "location": "footer-support",
       "order": 40,
@@ -170,6 +191,7 @@
       "ar": { "label": "مركز المساعدة" }
     },
     {
+      "slug": "footer-support-privacy",
       "href": "/privacy",
       "location": "footer-support",
       "order": 41,
@@ -178,6 +200,7 @@
       "ar": { "label": "سياسة الخصوصية" }
     },
     {
+      "slug": "footer-support-terms",
       "href": "/terms",
       "location": "footer-support",
       "order": 42,
@@ -186,6 +209,7 @@
       "ar": { "label": "شروط الخدمة" }
     },
     {
+      "slug": "footer-social-twitter",
       "href": "https://twitter.com/arabiqtech",
       "location": "footer-social",
       "order": 50,
@@ -194,6 +218,7 @@
       "ar": { "label": "تويتر" }
     },
     {
+      "slug": "footer-social-linkedin",
       "href": "https://linkedin.com/company/arabiq",
       "location": "footer-social",
       "order": 51,
@@ -202,6 +227,7 @@
       "ar": { "label": "لينكد إن" }
     },
     {
+      "slug": "footer-social-instagram",
       "href": "https://instagram.com/arabiqtech",
       "location": "footer-social",
       "order": 52,
@@ -210,6 +236,7 @@
       "ar": { "label": "انستغرام" }
     },
     {
+      "slug": "footer-social-youtube",
       "href": "https://youtube.com/@arabiqtech",
       "location": "footer-social",
       "order": 53,

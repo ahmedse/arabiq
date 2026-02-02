@@ -7,7 +7,7 @@
     "displayName": "Partner"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {
     "i18n": {
@@ -18,7 +18,7 @@
     "slug": {
       "type": "uid",
       "targetField": "name",
-      "required": true,
+
       "pluginOptions": {
         "i18n": {
           "localized": false

@@ -8,6 +8,7 @@ import { Header } from "./Header";
 import { setRequestLocale } from "next-intl/server";
 import { Toaster } from "react-hot-toast";
 import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
+import { Analytics } from "@/components/Analytics";
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
@@ -157,8 +158,15 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
 return (
     <>
+      {/* Preconnect for performance - load external resources faster */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link rel="dns-prefetch" href="https://my.matterport.com" />
+      <link rel="dns-prefetch" href="https://cdn.matterport.com" />
+      
       <OrganizationSchema locale={lang as 'en' | 'ar'} />
       <WebsiteSchema />
+      <Analytics />
       <script
         dangerouslySetInnerHTML={{
           __html: `document.documentElement.lang="${lang}";document.documentElement.dir="${dir}";`,

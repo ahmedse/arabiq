@@ -2,25 +2,8 @@
   "identifierField": "slug",
   "items": [
     {
-      "slug": "matterport",
-      "order": 1,
-      "partnerType": "technology",
-      "logoUrl": null,
-      "websiteUrl": "https://matterport.com",
-      "en": {
-        "name": "Matterport",
-        "description": "World leader in 3D capture technology. Arabiq is a certified Matterport partner using Pro3 cameras for all scanning projects.",
-        "partnership": "Certified Partner"
-      },
-      "ar": {
-        "name": "Matterport",
-        "description": "الرائد العالمي في تقنية الالتقاط ثلاثي الأبعاد. Arabiq شريك Matterport معتمد يستخدم كاميرات Pro3 لجميع مشاريع المسح.",
-        "partnership": "شريك معتمد"
-      }
-    },
-    {
       "slug": "aws",
-      "order": 2,
+      "order": 1,
       "partnerType": "technology",
       "logoUrl": null,
       "websiteUrl": "https://aws.amazon.com",

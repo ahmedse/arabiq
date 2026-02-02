@@ -3,6 +3,8 @@ import "server-only";
 type FetchStrapiOptions = {
   locale?: string;
   revalidate?: number;
+  tags?: string[];
+  cache?: RequestCache;
 };
 
 type StrapiListResponse<T> = {
@@ -20,6 +22,14 @@ function pickAttributes<T extends object>(item: { attributes?: T } & Partial<T>)
 const STRAPI_URL = process.env.STRAPI_URL;
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
 
+// Default cache durations
+export const CACHE_DURATIONS = {
+  short: 60,          // 1 minute - for frequently changing content
+  medium: 300,        // 5 minutes - default for most content
+  long: 3600,         // 1 hour - for static content like pages
+  veryLong: 86400,    // 24 hours - for rarely changing content
+} as const;
+
 export async function fetchStrapi(path: string, options: FetchStrapiOptions = {}) {
   if (!STRAPI_URL) return null;
 
@@ -33,11 +43,26 @@ export async function fetchStrapi(path: string, options: FetchStrapiOptions = {}
     const url = new URL(path, STRAPI_URL);
     if (locale) url.searchParams.set('locale', locale);
 
+    // Build fetch options with caching
+    const fetchOptions: RequestInit & { next?: { revalidate?: number; tags?: string[] } } = {
+      headers: STRAPI_API_TOKEN ? { Authorization: `Bearer ${STRAPI_API_TOKEN}` } : undefined,
+    };
+
+    // Add caching configuration
+    if (options.cache) {
+      fetchOptions.cache = options.cache;
+    } else if (options.revalidate !== undefined || options.tags) {
+      fetchOptions.next = {};
+      if (options.revalidate !== undefined) {
+        fetchOptions.next.revalidate = options.revalidate;
+      }
+      if (options.tags) {
+        fetchOptions.next.tags = options.tags;
+      }
+    }
+
     try {
-      const response = await fetch(url.toString(), {
-        headers: STRAPI_API_TOKEN ? { Authorization: `Bearer ${STRAPI_API_TOKEN}` } : undefined,
-        next: options.revalidate ? { revalidate: options.revalidate } : undefined,
-      });
+      const response = await fetch(url.toString(), fetchOptions);
 
       if (!response.ok) {
         const text = await response.text().catch(() => '');
@@ -602,4 +627,48 @@ export async function getValues(locale: string): Promise<Value[]> {
       order: attrs.order ?? 0,
     };
   });
+}
+
+// ============================================================================
+// CACHE REVALIDATION
+// ============================================================================
+
+/**
+ * Revalidate all CMS content caches.
+ * Call this from webhook handlers when content changes in Strapi.
+ * 
+ * Note: In Next.js 16, revalidateTag requires a cache profile.
+ * We use 'default' which immediately expires the cache.
+ */
+export async function revalidateCmsContent(tags?: string[]) {
+  try {
+    const { revalidateTag } = await import('next/cache');
+    
+    const tagsToRevalidate = tags || ['cms-content', 'pages', 'collections'];
+    for (const tag of tagsToRevalidate) {
+      // Second argument is the cache profile - { expire: 0 } means immediate revalidation
+      revalidateTag(tag, { expire: 0 });
+    }
+    
+    console.log(`[Strapi] Revalidated cache tags: ${tagsToRevalidate.join(', ')}`);
+    return true;
+  } catch (error) {
+    console.error('[Strapi] Failed to revalidate cache:', error);
+    return false;
+  }
+}
+
+/**
+ * Revalidate a specific page path.
+ */
+export async function revalidatePath(path: string) {
+  try {
+    const { revalidatePath: nextRevalidatePath } = await import('next/cache');
+    nextRevalidatePath(path);
+    console.log(`[Strapi] Revalidated path: ${path}`);
+    return true;
+  } catch (error) {
+    console.error('[Strapi] Failed to revalidate path:', error);
+    return false;
+  }
 }

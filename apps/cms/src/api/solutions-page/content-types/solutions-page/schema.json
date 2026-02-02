@@ -7,7 +7,7 @@
     "displayName": "Solutions Page"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {
     "i18n": {

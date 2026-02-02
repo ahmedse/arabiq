@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/container";
 import Link from "next/link";
 import { ArrowRight, Zap, Globe, Sparkles, Building2, Briefcase, Play, CheckCircle2 } from "lucide-react";
 import { setRequestLocale } from "next-intl/server";
+import { LazySection, CardSkeleton, StatsSkeleton } from "@/components/LazySection";
 
 type HomePageProps = {
   params: Promise<{ locale: string }>;
@@ -190,6 +191,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Features Section - Controlled by showFeaturesSection */}
       {showFeatures && features.length > 0 && (
+        <LazySection fallback={<Container className="py-24"><CardSkeleton count={3} /></Container>}>
         <section className="py-24 bg-slate-50">
           <Container>
             <div className="text-center mb-16">
@@ -217,6 +219,7 @@ export default async function HomePage({ params }: HomePageProps) {
             </div>
           </Container>
         </section>
+        </LazySection>
       )}
 
       {/* Solutions Section - Controlled by showSolutionsSection */}
@@ -261,6 +264,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Industries Section - Controlled by showIndustriesSection */}
       {showIndustries && featuredIndustries.length > 0 && (
+        <LazySection fallback={<div className="py-24 bg-slate-900"><Container><CardSkeleton count={6} /></Container></div>}>
         <section className="py-24 bg-slate-900 text-white">
           <Container>
             <div className="text-center mb-16">
@@ -291,6 +295,7 @@ export default async function HomePage({ params }: HomePageProps) {
             </div>
           </Container>
         </section>
+        </LazySection>
       )}
 
       {/* Case Studies Section - Controlled by showCaseStudiesSection */}

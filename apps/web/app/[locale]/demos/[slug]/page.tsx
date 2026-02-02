@@ -48,29 +48,27 @@ export default async function DemoDetailPage({ params }: DemoDetailPageProps) {
   const { locale: localeParam, slug } = await params;
   const locale = localeParam === "ar" ? "ar" : "en";
   
-  // Always require login for demo pages
+  // Require authentication for demo pages
   const user = await getCurrentUser();
   if (!user) {
     redirect(`/${locale}/login?redirect=/${locale}/demos/${slug}`);
   }
 
-  // Check account status
+  // Check account status - must be active and approved
   if (user.accountStatus === 'suspended') {
     redirect(`/${locale}/account-suspended`);
   }
   if (user.accountStatus === 'pending') {
     redirect(`/${locale}/account-pending`);
   }
+  if (user.accountStatus !== 'active') {
+    redirect(`/${locale}/access-denied`);
+  }
 
   const demo = await getDemoBySlug(locale, slug);
 
   if (!demo) {
     return <h1>Demo not found</h1>;
-  }
-
-  // Check role-based access - active users can access demos
-  if (user.accountStatus !== 'active') {
-    redirect(`/${locale}/access-denied`);
   }
 
   return (

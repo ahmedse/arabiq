@@ -7,7 +7,7 @@
     "displayName": "Nav Item"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {
     "i18n": {
@@ -15,6 +15,15 @@
     }
   },
   "attributes": {
+    "slug": {
+      "type": "string",
+      "unique": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
     "label": {
       "type": "string",
       "required": true,

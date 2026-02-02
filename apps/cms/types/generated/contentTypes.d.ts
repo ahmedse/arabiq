@@ -609,7 +609,7 @@ export interface ApiCaseStudiesPageCaseStudiesPage
     singularName: 'case-studies-page';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -718,7 +718,7 @@ export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
     singularName: 'case-study';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -761,7 +761,6 @@ export interface ApiCaseStudyCaseStudy extends Struct.CollectionTypeSchema {
     >;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'> &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: false;
@@ -957,7 +956,7 @@ export interface ApiDemoDemo extends Struct.CollectionTypeSchema {
     singularName: 'demo';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -991,7 +990,6 @@ export interface ApiDemoDemo extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::demo.demo'>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'> &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: false;
@@ -1024,7 +1022,7 @@ export interface ApiDemosPageDemosPage extends Struct.SingleTypeSchema {
     singularName: 'demos-page';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1139,7 +1137,7 @@ export interface ApiFaqFaq extends Struct.CollectionTypeSchema {
     singularName: 'faq';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1170,7 +1168,6 @@ export interface ApiFaqFaq extends Struct.CollectionTypeSchema {
         };
       }>;
     slug: Schema.Attribute.UID<'question'> &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: false;
@@ -1190,7 +1187,7 @@ export interface ApiFeatureFeature extends Struct.CollectionTypeSchema {
     singularName: 'feature';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1236,7 +1233,7 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     singularName: 'homepage';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1435,7 +1432,7 @@ export interface ApiIndustriesPageIndustriesPage
     singularName: 'industries-page';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1502,7 +1499,7 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     singularName: 'industry';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1533,7 +1530,6 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     >;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'> &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: false;
@@ -1566,7 +1562,7 @@ export interface ApiNavItemNavItem extends Struct.CollectionTypeSchema {
     singularName: 'nav-item';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1606,6 +1602,13 @@ export interface ApiNavItemNavItem extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'header'>;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1620,7 +1623,7 @@ export interface ApiPartnerPartner extends Struct.CollectionTypeSchema {
     singularName: 'partner';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1660,7 +1663,6 @@ export interface ApiPartnerPartner extends Struct.CollectionTypeSchema {
     partnerType: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'> &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: false;
@@ -1681,7 +1683,7 @@ export interface ApiPricingPagePricingPage extends Struct.SingleTypeSchema {
     singularName: 'pricing-page';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1826,7 +1828,7 @@ export interface ApiPricingPlanPricingPlan extends Struct.CollectionTypeSchema {
     singularName: 'pricing-plan';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -1902,7 +1904,6 @@ export interface ApiPricingPlanPricingPlan extends Struct.CollectionTypeSchema {
       }>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'> &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: false;
@@ -1922,7 +1923,7 @@ export interface ApiProcessStepProcessStep extends Struct.CollectionTypeSchema {
     singularName: 'process-step';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -2049,7 +2050,7 @@ export interface ApiSolutionSolution extends Struct.CollectionTypeSchema {
     singularName: 'solution';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -2081,7 +2082,6 @@ export interface ApiSolutionSolution extends Struct.CollectionTypeSchema {
     >;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'title'> &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: false;
@@ -2114,7 +2114,7 @@ export interface ApiSolutionsPageSolutionsPage extends Struct.SingleTypeSchema {
     singularName: 'solutions-page';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -2199,7 +2199,7 @@ export interface ApiStatStat extends Struct.CollectionTypeSchema {
     singularName: 'stat';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -2242,7 +2242,7 @@ export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
     singularName: 'team-member';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -2297,7 +2297,7 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
     singularName: 'testimonial';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -2358,7 +2358,7 @@ export interface ApiTrustedCompanyTrustedCompany
     singularName: 'trusted-company';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {
@@ -2450,7 +2450,7 @@ export interface ApiValueValue extends Struct.CollectionTypeSchema {
     singularName: 'value';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   pluginOptions: {
     i18n: {

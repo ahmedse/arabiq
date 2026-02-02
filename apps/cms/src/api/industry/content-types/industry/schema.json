@@ -7,7 +7,7 @@
     "displayName": "Industry"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {
     "i18n": {
@@ -18,7 +18,7 @@
     "slug": {
       "type": "uid",
       "targetField": "title",
-      "required": true,
+
       "pluginOptions": {
         "i18n": {
           "localized": false

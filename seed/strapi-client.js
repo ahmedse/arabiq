@@ -102,39 +102,75 @@ class StrapiClient {
   }
 
   async createCollection(apiId, data, locale) {
+    console.log(`      📤 POST /api/${apiId} (locale=${locale})`);
     const res = await this.request(`/api/${apiId}`, {
       method: 'POST',
       body: JSON.stringify({
         data: { ...data, locale, publishedAt: new Date().toISOString() }
       })
     });
-    return res?.data || null;
+    const result = res?.data || null;
+    console.log(`      📥 Created: ${result?.documentId}, has ${result?.localizations?.length || 0} localizations`);
+    return result;
   }
 
   async updateCollection(apiId, documentId, data, locale) {
+    // Only publish EN explicitly; AR will be auto-published when created
+    const payload = locale === 'en' 
+      ? { ...data, publishedAt: new Date().toISOString() }
+      : { ...data };
+    
+    console.log(`      📤 PUT /api/${apiId}/${documentId}?locale=${locale}`);  
     const res = await this.request(`/api/${apiId}/${documentId}?locale=${locale}`, {
       method: 'PUT',
-      body: JSON.stringify({
-        data: { ...data, publishedAt: new Date().toISOString() }
-      })
+      body: JSON.stringify({ data: payload })
     });
-    return res?.data || null;
+    const result = res?.data || null;
+    console.log(`      📥 Updated: ${result?.documentId}, has ${result?.localizations?.length || 0} localizations`);
+    return result;
+  }
+
+  /**
+   * Create a new locale for an existing document
+   * This uses POST with a special locale parameter to create a new locale variant
+   */
+  async createLocale(apiId, documentId, data, locale) {
+    // Strapi v5: use locale-specific update to create the locale if missing
+    return await this.updateCollection(apiId, documentId, data, locale);
   }
 
   async deleteAll(apiId) {
-    const res = await this.request(`/api/${apiId}?pagination[pageSize]=500`);
-    const items = res?.data || [];
+    // Fetch ALL items across all pages and locales
+    let allItems = [];
+    let page = 1;
+    let hasMore = true;
     
-    for (const item of items) {
+    console.log(`   🔍 Fetching ${apiId} to delete...`);
+    while (hasMore) {
+      const res = await this.request(`/api/${apiId}?pagination[page]=${page}&pagination[pageSize]=100&locale=all`);
+      const items = res?.data || [];
+      console.log(`   📄 Page ${page}: found ${items.length} items`);
+      allItems.push(...items);
+      
+      // Check if there are more pages
+      const pagination = res?.meta?.pagination || {};
+      hasMore = page < (pagination.pageCount || 1);
+      page++;
+    }
+    
+    console.log(`   💥 Deleting ${allItems.length} total items...`);
+    
+    // Delete all collected items
+    for (const item of allItems) {
       const id = item.documentId || item.id;
       try {
-        await this.request(`/api/${apiId}/${id}`, { method: 'DELETE' });
+        await this.request(`/api/${apiId}/${id}?locale=all`, { method: 'DELETE' });
       } catch (err) {
         console.warn(`  ⚠ Delete ${apiId}/${id}: ${err.message}`);
       }
       await this.sleep(50);
     }
-    return items.length;
+    return allItems.length;
   }
 
   /**
@@ -155,28 +191,33 @@ class StrapiClient {
   const existing = await this.findOne(apiId, identifierField, identifierValue, 'en');
   let documentId = existing?.documentId;
 
+  console.log(`   🔍 ${identifierValue}: ${documentId ? 'EXISTS' : 'NEW'} (docId: ${documentId || 'none'})`);
+
   // EN: non-localized fields + EN-specific localized content
   const enPayload = { ...nonLocalizedFields, ...enData };
   
   if (documentId) {
+    console.log(`   ♻️  Updating EN for ${identifierValue}`);
     await this.updateCollection(apiId, documentId, enPayload, 'en');
   } else {
+    console.log(`   ✨ Creating EN for ${identifierValue}`);
     const created = await this.createCollection(apiId, enPayload, 'en');
     documentId = created?.documentId;
     if (!documentId) {
       throw new Error(`Failed to create EN record for ${apiId}/${identifierValue}`);
     }
+    console.log(`   📄 Created with docId: ${documentId}`);
   }
 
-  // AR: Include ALL non-localized fields (including slug)
+  // AR: Only send localized content, exclude non-localized fields  
+  // Non-localized fields (slug, category, order, icon, etc.) are already set in EN
+  // and shared across all locales. Including them in AR update causes "must be unique" errors.
   if (arData && documentId) {
-    const arPayload = { 
-      ...nonLocalizedFields,  // Include slug, icon, order, etc.
-      ...arData               // AR text content
-    };
-    
     try {
-      await this.updateCollection(apiId, documentId, arPayload, 'ar');
+      // Always update AR locale using the documentId from EN
+      // Strapi v5 will create the locale if it doesn't exist
+      console.log(`   🌐 Creating/updating AR for ${identifierValue}`);
+      await this.updateCollection(apiId, documentId, arData, 'ar');
     } catch (err) {
       console.error(`   ❌ AR failed for ${identifierValue}: ${err.message}`);
     }
