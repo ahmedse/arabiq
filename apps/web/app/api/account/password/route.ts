@@ -1,10 +1,24 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIP, rateLimitResponse, RATE_LIMITS } from '@/lib/rateLimit';
+import { changePasswordSchema, validateInput, validationErrorResponse } from '@/lib/validation';
 
 const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit check
+    const clientIP = getClientIP(req.headers);
+    const { success: rateLimitOk, resetTime } = checkRateLimit(
+      `password:${clientIP}`,
+      RATE_LIMITS.passwordChange.limit,
+      RATE_LIMITS.passwordChange.windowMs
+    );
+    
+    if (!rateLimitOk) {
+      return rateLimitResponse(resetTime);
+    }
+
     const cookieStore = await cookies();
     const token = cookieStore.get('strapi_jwt')?.value;
 
@@ -15,36 +29,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { currentPassword, newPassword, confirmPassword } = await req.json();
-
-    // Validation
-    if (!currentPassword || !newPassword) {
+    // Parse and validate input
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
       return NextResponse.json(
-        { error: 'Current password and new password are required' },
+        { error: 'Invalid request body' },
         { status: 400 }
       );
     }
 
-    if (newPassword.length < 6) {
-      return NextResponse.json(
-        { error: 'New password must be at least 6 characters' },
-        { status: 400 }
-      );
+    const validation = validateInput(changePasswordSchema, body);
+    if (!validation.success) {
+      return validationErrorResponse(validation.errors);
     }
 
-    if (confirmPassword && newPassword !== confirmPassword) {
-      return NextResponse.json(
-        { error: 'Passwords do not match' },
-        { status: 400 }
-      );
-    }
-
-    if (currentPassword === newPassword) {
-      return NextResponse.json(
-        { error: 'New password must be different from current password' },
-        { status: 400 }
-      );
-    }
+    const { currentPassword, newPassword } = validation.data;
 
     const res = await fetch(`${STRAPI_URL}/api/custom-auth/change-password`, {
       method: 'POST',

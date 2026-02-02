@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { AUTH_COOKIE_NAME, CLEAR_COOKIE_OPTIONS } from '@/lib/cookies';
 
 export async function POST() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('strapi_jwt')?.value;
+  const token = cookieStore.get(AUTH_COOKIE_NAME)?.value;
 
   if (token) {
     // Log logout to Strapi
@@ -20,8 +21,8 @@ export async function POST() {
     }
   }
 
-  // Delete the JWT cookie
-  cookieStore.delete('strapi_jwt');
+  // Delete the JWT cookie with secure settings
+  cookieStore.set(AUTH_COOKIE_NAME, '', CLEAR_COOKIE_OPTIONS);
 
   return NextResponse.json({ success: true });
 }

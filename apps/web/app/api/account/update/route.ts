@@ -1,10 +1,24 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIP, rateLimitResponse, RATE_LIMITS } from '@/lib/rateLimit';
+import { updateProfileSchema, validateInput, validationErrorResponse } from '@/lib/validation';
 
 const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
 
 export async function PUT(req: NextRequest) {
   try {
+    // Rate limit check
+    const clientIP = getClientIP(req.headers);
+    const { success: rateLimitOk, resetTime } = checkRateLimit(
+      `account-update:${clientIP}`,
+      RATE_LIMITS.accountUpdate.limit,
+      RATE_LIMITS.accountUpdate.windowMs
+    );
+    
+    if (!rateLimitOk) {
+      return rateLimitResponse(resetTime);
+    }
+
     const cookieStore = await cookies();
     const token = cookieStore.get('strapi_jwt')?.value;
 
@@ -15,18 +29,23 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const body = await req.json();
-
-    // Validate allowed fields to prevent unauthorized updates
-    const allowedFields = ['displayName', 'phone', 'company', 'country'];
-    const data: Record<string, string> = {};
-    
-    for (const field of allowedFields) {
-      if (body[field] !== undefined) {
-        // Basic sanitization
-        data[field] = String(body[field]).trim().slice(0, 255);
-      }
+    // Parse and validate input
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid request body' },
+        { status: 400 }
+      );
     }
+
+    const validation = validateInput(updateProfileSchema, body);
+    if (!validation.success) {
+      return validationErrorResponse(validation.errors);
+    }
+
+    const data = validation.data;
 
     if (Object.keys(data).length === 0) {
       return NextResponse.json(
