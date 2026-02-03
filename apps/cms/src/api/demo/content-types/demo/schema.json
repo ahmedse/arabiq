@@ -4,10 +4,11 @@
   "info": {
     "singularName": "demo",
     "pluralName": "demos",
-    "displayName": "Demo"
+    "displayName": "Demo",
+    "description": "VTour demo configurations"
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
   "pluginOptions": {
     "i18n": {
@@ -15,54 +16,86 @@
     }
   },
   "attributes": {
-    "slug": {
-      "type": "uid",
-      "targetField": "title",
-
-      "pluginOptions": {
-        "i18n": {
-          "localized": false
-        }
-      }
-    },
     "title": {
       "type": "string",
       "required": true,
       "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
+        "i18n": { "localized": true }
       }
     },
-    "demoType": {
-      "type": "string"
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
     },
     "summary": {
       "type": "text",
       "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
+        "i18n": { "localized": true }
       }
     },
     "description": {
       "type": "richtext",
       "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
+        "i18n": { "localized": true }
       }
     },
     "body": {
       "type": "richtext",
       "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
+        "i18n": { "localized": true }
       }
+    },
+    "matterportModelId": {
+      "type": "string",
+      "required": true
+    },
+    "demoType": {
+      "type": "enumeration",
+      "enum": ["ecommerce", "cafe", "hotel", "realestate", "showroom", "office", "tour3d", "vfair", "aichat", "training"],
+      "required": true
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "featuredImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
     },
     "icon": {
       "type": "string"
+    },
+    "businessName": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "businessPhone": {
+      "type": "string"
+    },
+    "businessEmail": {
+      "type": "email"
+    },
+    "businessWhatsapp": {
+      "type": "string"
+    },
+    "config": {
+      "type": "json"
+    },
+    "enableVoiceOver": {
+      "type": "boolean",
+      "default": false
+    },
+    "enableLiveChat": {
+      "type": "boolean",
+      "default": false
+    },
+    "enableAiChat": {
+      "type": "boolean",
+      "default": true
     },
     "allowedRoles": {
       "type": "json",
@@ -70,13 +103,43 @@
     },
     "accessLevel": {
       "type": "enumeration",
-      "enum": [
-        "public",
-        "authenticated",
-        "client",
-        "premium"
-      ],
+      "enum": ["public", "authenticated", "client", "premium"],
       "default": "authenticated"
+    },
+    "ownerUser": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::demo-product.demo-product",
+      "mappedBy": "demo"
+    },
+    "menuItems": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::demo-menu-item.demo-menu-item",
+      "mappedBy": "demo"
+    },
+    "rooms": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::demo-room.demo-room",
+      "mappedBy": "demo"
+    },
+    "properties": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::demo-property.demo-property",
+      "mappedBy": "demo"
+    },
+    "voiceOvers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::demo-voice-over.demo-voice-over",
+      "mappedBy": "demo"
     }
   }
 }

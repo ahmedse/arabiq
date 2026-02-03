@@ -272,6 +272,71 @@ class StrapiClient {
     
     return { existed: false };
   }
+
+  // ─────────────────────────────────────────────────────────────
+  // CONVENIENCE ALIASES (for demo seed scripts)
+  // ─────────────────────────────────────────────────────────────
+
+  /**
+   * Create a new item (alias for createCollection)
+   */
+  async create(apiId, data, locale = 'en') {
+    const result = await this.createCollection(apiId, data, locale);
+    return { data: result };
+  }
+
+  /**
+   * Create a localization for an existing document
+   */
+  async localize(apiId, documentId, locale, data) {
+    return await this.updateCollection(apiId, documentId, data, locale);
+  }
+
+  /**
+   * Alias for localize (some seed scripts use this name)
+   */
+  async createLocalization(apiId, documentId, data) {
+    const locale = data.locale || 'ar';
+    const { locale: _, ...rest } = data;
+    return await this.updateCollection(apiId, documentId, rest, locale);
+  }
+
+  /**
+   * Delete a document by slug field
+   */
+  async deleteBySlug(apiId, slug) {
+    const existing = await this.findOne(apiId, 'slug', slug, 'en');
+    if (existing?.documentId) {
+      console.log(`   🗑️  Deleting existing ${apiId}/${slug} (${existing.documentId})`);
+      await this.request(`/api/${apiId}/${existing.documentId}?locale=all`, { method: 'DELETE' });
+      // Wait for delete to propagate
+      await this.sleep(500);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Delete all related items by demo ID
+   */
+  async deleteRelatedByDemo(apiId, demoId) {
+    try {
+      const res = await this.request(`/api/${apiId}?filters[demo][id][$eq]=${demoId}&pagination[pageSize]=100&locale=all`);
+      const items = res?.data || [];
+      console.log(`   🗑️  Deleting ${items.length} related ${apiId} items`);
+      for (const item of items) {
+        const docId = item.documentId || item.id;
+        try {
+          await this.request(`/api/${apiId}/${docId}?locale=all`, { method: 'DELETE' });
+        } catch (e) {
+          // Ignore delete errors
+        }
+      }
+      return items.length;
+    } catch (e) {
+      return 0;
+    }
+  }
 }
 
 export default StrapiClient;

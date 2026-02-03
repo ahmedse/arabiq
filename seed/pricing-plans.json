@@ -8,7 +8,7 @@
       "en": {
         "name": "Starter",
         "price": "5,000",
-        "currency": "SAR",
+        "currency": "EGP",
         "period": "one-time",
         "description": "Perfect for small spaces and one-time projects",
         "features": "Up to 200 sqm scanning|Basic 3D virtual tour|5 interactive hotspots|1 year hosting included|Dollhouse and floor plan views|Mobile responsive|Email support|Basic analytics",
@@ -19,7 +19,7 @@
       "ar": {
         "name": "البداية",
         "price": "5,000",
-        "currency": "ريال",
+        "currency": "جنيه",
         "period": "مرة واحدة",
         "description": "مثالي للمساحات الصغيرة والمشاريع لمرة واحدة",
         "features": "مسح حتى 200 متر مربع|جولة افتراضية ثلاثية الأبعاد أساسية|5 نقاط تفاعلية|سنة استضافة مضمنة|عرض الدمية ومخطط الطابق|متجاوب مع الجوال|دعم بالبريد الإلكتروني|تحليلات أساسية",
@@ -35,7 +35,7 @@
       "en": {
         "name": "Professional",
         "price": "2,500",
-        "currency": "SAR",
+        "currency": "EGP",
         "period": "month",
         "description": "For growing businesses needing ongoing virtual presence",
         "features": "Up to 500 sqm scanning|Advanced 3D tour with all views|Unlimited hotspots|E-commerce integration|Arabic AI chatbot|Full analytics dashboard|Custom branding|Priority support|Quarterly re-scan included|Lead capture forms",
@@ -46,7 +46,7 @@
       "ar": {
         "name": "الاحترافي",
         "price": "2,500",
-        "currency": "ريال",
+        "currency": "جنيه",
         "period": "شهرياً",
         "description": "للشركات النامية التي تحتاج حضوراً افتراضياً مستمراً",
         "features": "مسح حتى 500 متر مربع|جولة ثلاثية الأبعاد متقدمة بجميع العروض|نقاط تفاعلية غير محدودة|تكامل التجارة الإلكترونية|روبوت محادثة عربي بالذكاء الاصطناعي|لوحة تحليلات كاملة|علامة تجارية مخصصة|دعم أولوية|إعادة مسح ربعية مضمنة|نماذج التقاط العملاء",
@@ -62,7 +62,7 @@
       "en": {
         "name": "Business",
         "price": "7,500",
-        "currency": "SAR",
+        "currency": "EGP",
         "period": "month",
         "description": "For established businesses with multiple locations",
         "features": "Up to 2,000 sqm scanning|Up to 3 locations|All Professional features|Custom AI voice cloning|Advanced e-commerce features|API access|Monthly re-scans|Dedicated account manager|Phone support|Custom integrations",
@@ -73,7 +73,7 @@
       "ar": {
         "name": "الأعمال",
         "price": "7,500",
-        "currency": "ريال",
+        "currency": "جنيه",
         "period": "شهرياً",
         "description": "للشركات الراسخة ذات المواقع المتعددة",
         "features": "مسح حتى 2,000 متر مربع|حتى 3 مواقع|جميع ميزات الاحترافي|استنساخ صوت ذكاء اصطناعي مخصص|ميزات تجارة إلكترونية متقدمة|وصول API|إعادة مسح شهرية|مدير حساب مخصص|دعم هاتفي|تكاملات مخصصة",

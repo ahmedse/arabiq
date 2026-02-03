@@ -1,0 +1,70 @@
+{
+  "kind": "collectionType",
+  "collectionName": "demo_voice_overs",
+  "info": {
+    "singularName": "demo-voice-over",
+    "pluralName": "demo-voice-overs",
+    "displayName": "Demo Voice Over",
+    "description": "Voice-over audio for demo tours"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "description": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "audioFile": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["audios"],
+      "required": true
+    },
+    "transcript": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "duration": {
+      "type": "integer"
+    },
+    "triggerType": {
+      "type": "enumeration",
+      "enum": ["hotspot", "location", "manual"],
+      "default": "hotspot"
+    },
+    "hotspotPosition": {
+      "type": "json"
+    },
+    "autoPlay": {
+      "type": "boolean",
+      "default": false
+    },
+    "demo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::demo.demo",
+      "inversedBy": "voiceOvers"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

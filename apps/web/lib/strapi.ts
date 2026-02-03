@@ -548,8 +548,71 @@ export async function getDemos(locale: string) {
   return getCollection(locale, "/api/demos?sort=createdAt:asc", 30);
 }
 
+// Demo-specific attributes for Matterport integration
+type DemoAttributes = {
+  slug?: string;
+  title?: string;
+  summary?: string;
+  body?: unknown;
+  description?: string;
+  demoType?: string;
+  matterportModelId?: string;
+  image?: { url?: string };
+  featuredImage?: { url?: string };
+  businessName?: string;
+  businessPhone?: string;
+  businessEmail?: string;
+  businessWhatsapp?: string;
+  enableVoiceOver?: boolean;
+  enableLiveChat?: boolean;
+  enableAiChat?: boolean;
+  allowedRoles?: unknown;
+  ownerUser?: { id?: number; data?: { id?: number } };
+};
+
 export async function getDemoBySlug(locale: string, slug: string) {
-  return getCollectionItemBySlug(locale, "/api/demos", slug, 30);
+  const query = new URLSearchParams({ 
+    "filters[slug][$eq]": slug,
+    "populate": "*"
+  });
+  const data = (await fetchStrapi(`/api/demos?${query.toString()}`, { locale, revalidate: 30 })) as StrapiListResponse<DemoAttributes> | null;
+
+  const item = data?.data?.[0];
+  if (!item) return null;
+  const attrs = pickAttributes(item);
+
+  // Extract allowedRoles if present
+  const rawAllowed = attrs.allowedRoles;
+  let allowedRoles: string[] = [];
+  if (Array.isArray(rawAllowed)) {
+    allowedRoles = rawAllowed.map((r: unknown) => (typeof r === 'string' ? r : (r as { name?: string })?.name ?? String(r))).filter(Boolean);
+  } else if (typeof rawAllowed === 'string') {
+    allowedRoles = rawAllowed.split(',').map((s: string) => s.trim()).filter(Boolean);
+  }
+
+  // Extract owner user ID if present
+  const ownerUser = attrs.ownerUser;
+  const ownerId = ownerUser?.id ?? ownerUser?.data?.id ?? null;
+
+  return {
+    id: item.id,
+    slug: attrs.slug ?? slug,
+    title: attrs.title ?? "Untitled",
+    summary: attrs.summary ?? attrs.description ?? "",
+    body: attrs.body ?? attrs.description ?? null,
+    demoType: attrs.demoType,
+    matterportModelId: attrs.matterportModelId,
+    image: attrs.image ?? attrs.featuredImage,
+    businessName: attrs.businessName,
+    businessPhone: attrs.businessPhone,
+    businessEmail: attrs.businessEmail,
+    businessWhatsapp: attrs.businessWhatsapp,
+    enableVoiceOver: attrs.enableVoiceOver ?? false,
+    enableLiveChat: attrs.enableLiveChat ?? false,
+    enableAiChat: attrs.enableAiChat ?? true,
+    allowedRoles,
+    ownerId,
+  };
 }
 
 // ============================================================================

@@ -1,0 +1,88 @@
+{
+  "kind": "collectionType",
+  "collectionName": "demo_menu_items",
+  "info": {
+    "singularName": "demo-menu-item",
+    "pluralName": "demo-menu-items",
+    "displayName": "Demo Menu Item",
+    "description": "Menu items for restaurant and cafe demos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "description": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "price": {
+      "type": "decimal",
+      "required": true
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": ["USD", "EUR", "SAR", "AED", "EGP"],
+      "default": "USD"
+    },
+    "category": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "isAvailable": {
+      "type": "boolean",
+      "default": true
+    },
+    "calories": {
+      "type": "integer"
+    },
+    "allergens": {
+      "type": "json"
+    },
+    "isVegetarian": {
+      "type": "boolean",
+      "default": false
+    },
+    "isVegan": {
+      "type": "boolean",
+      "default": false
+    },
+    "isGlutenFree": {
+      "type": "boolean",
+      "default": false
+    },
+    "hotspotPosition": {
+      "type": "json"
+    },
+    "demo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::demo.demo",
+      "inversedBy": "menuItems"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

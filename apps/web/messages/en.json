@@ -56,6 +56,15 @@
       "premium": "Premium"
     }
   },
+  "chat": {
+    "title": "AI Assistant",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "clearChat": "Clear chat",
+    "typing": "Typing...",
+    "location": "Location",
+    "error": "Sorry, something went wrong. Please try again."
+  },
   "auth": {
     "login": {
       "title": "Sign In",

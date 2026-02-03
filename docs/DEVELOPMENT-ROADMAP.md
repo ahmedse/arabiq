@@ -77,47 +77,94 @@ The **arabiq.tech** website serves as:
 
 ---
 
-## Phase 3: Security & Performance (Days 15-18)
+## Phase 3: VTour Demo Infrastructure 🔴 IN PROGRESS
 
-**Goal**: Harden the application for production.
+**Goal**: Build the foundation for immersive VTour demos with real-time features.
+
+### Available Tours
+
+| # | Tour Name | Model ID | Demo Type |
+|---|-----------|----------|-----------|
+| 1 | Awni Electronics | `6WxfcPSW7KM` | E-commerce |
+| 2 | Cavalli Cafe | `dA2YT3w5Jgs` | Restaurant |
+| 3 | Royal Jewel & Lail | `bBwDnZTv2qm` | Hotel |
+| 4 | Office for Sale | `Tv2upLvBLZ6` | Real Estate |
+| 5 | Trust Co. Interior | `wheLaeajqUu` | Showroom |
+| 6 | EAAC Training | `fNbgwVqbf5R` | Corporate |
 
 ### Task Breakdown
 
 | ID | Task | Priority | Hours | Status |
 |----|------|----------|-------|--------|
-| TASK-007 | Rate limiting on all API routes | HIGH | 3 | ⏳ |
-| TASK-008 | CSRF protection for forms | HIGH | 2 | ⏳ |
-| TASK-009 | CSP headers configuration | MEDIUM | 2 | ⏳ |
-| TASK-010 | Image optimization with next/image | MEDIUM | 3 | ⏳ |
-| TASK-011 | Lazy loading for below-fold sections | MEDIUM | 2 | ⏳ |
-| TASK-012 | Database backup automation | MEDIUM | 2 | ⏳ |
+| TASK-007 | CMS Content Types & Tables | HIGH | 4-6 | ✅ DONE |
+| TASK-008 | Matterport SDK Integration | HIGH | 6-8 | ✅ DONE |
+| TASK-009 | Demo 1: E-commerce (Awni) | HIGH | 8-10 | ✅ DONE |
+| TASK-010 | Demo 2: Restaurant (Cavalli) | HIGH | 6-8 | ✅ DONE |
+| TASK-011 | Demo 3: Hotel (Royal Jewel) | MEDIUM | 6-8 | ✅ DONE |
+| TASK-012 | Demo 4: Real Estate (Office) | MEDIUM | 4-6 | ✅ DONE |
+| TASK-013 | Demo 5: Showroom (Trust Co.) | MEDIUM | 4-6 | ✅ DONE |
+| TASK-014 | Demo 6: Training Center (EAAC) | MEDIUM | 4-6 | ✅ DONE |
+| TASK-015 | AI Chatbot (Poe.com API) | HIGH | 6-8 | ✅ DONE |
+| TASK-016 | Real-time Presence & Live Chat | HIGH | 8-10 | ✅ DONE |
+| TASK-017 | Voice-over/Narrative System | MEDIUM | 4-6 | ✅ DONE |
+| TASK-018 | Business Owner Dashboard | HIGH | 6-8 | ✅ DONE |
+
+### 🎉 Phase 4 Complete!
+
+### Key Features
+
+1. **Interactive VTour Demos**
+   - Matterport SDK with custom hotspots
+   - Product/menu/room catalogs
+   - Cart/booking/inquiry systems
+
+2. **Real-time Presence**
+   - See who's in your space NOW
+   - Visitor positions in 3D
+   - Initiate live chat with visitors
+
+3. **Voice-over Narrative**
+   - Audio tour guide
+   - Auto-play at locations
+   - Multi-language support
+
+4. **AI Assistant**
+   - Poe.com API integration
+   - Answer product questions
+   - Guide visitors
+
+5. **Business Owner Dashboard**
+   - View all active visitors
+   - Chat with visitors
+   - Manage orders/bookings
+
+### CMS Content Types (TASK-007)
+
+**Catalog Types:**
+- Demo (enhanced)
+- Demo Product
+- Demo Menu Item
+- Demo Room
+- Demo Property
+- Demo Voice Over
+
+**Action Types (stored & returned to owner):**
+- Demo Order
+- Demo Reservation
+- Demo Booking
+- Demo Inquiry
+- Demo Visitor Session
 
 ### Deliverables
-- ⏳ No security vulnerabilities
-- ⏳ Lighthouse score > 90
-- ⏳ Images optimized
-- ⏳ Backups automated
+- ⏳ 6 working VTour demos
+- ⏳ Real-time visitor tracking
+- ⏳ AI chatbot integration
+- ⏳ Voice-over support
+- ⏳ Business owner dashboard
 
 ---
 
-## Phase 4: Demo Experiences (Weeks 3-5)
-
-**Goal**: Create immersive, server-connected demo experiences.
-
-### Task Breakdown
-
-| ID | Task | Priority | Hours | Status |
-|----|------|----------|-------|--------|
-| TASK-020 | Matterport SDK integration base | HIGH | 8 | ⏳ |
-| TASK-021 | Product catalog API in Strapi | HIGH | 4 | ⏳ |
-| TASK-022 | E-Commerce VTour demo | HIGH | 16 | ⏳ |
-| TASK-023 | AI Chatbot with Poe.com API | HIGH | 12 | ⏳ |
-| TASK-024 | Café booking demo | MEDIUM | 10 | ⏳ |
-| TASK-025 | Tech fair demo | MEDIUM | 10 | ⏳ |
-| TASK-026 | Remaining demos | LOW | 16 | ⏳ |
-
-### Deliverables
-- ✅ 5-6 working VTour demos
+## Phase 4: Polish & Launch (Week 6)
 - ✅ E-commerce with server-synced cart
 - ✅ AI chatbot with Poe.com
 - ✅ All demos bilingual (EN/AR)

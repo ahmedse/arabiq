@@ -9,6 +9,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Toaster } from "react-hot-toast";
 import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { Analytics } from "@/components/Analytics";
+import { CartProvider } from "@/contexts/CartContext";
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
@@ -208,7 +209,11 @@ return (
           }}
         />
 
-        <main>{children}</main>
+        <main>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </main>
 
         {/* Stripe-style footer - from Strapi */}
         <footer className="border-t border-slate-200 bg-slate-50">

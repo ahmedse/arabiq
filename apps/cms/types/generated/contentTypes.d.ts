@@ -948,15 +948,610 @@ export interface ApiContactSubmissionContactSubmission
   };
 }
 
+export interface ApiDemoBookingDemoBooking extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_bookings';
+  info: {
+    description: 'Bookings for hotel demos';
+    displayName: 'Demo Booking';
+    pluralName: 'demo-bookings';
+    singularName: 'demo-booking';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    bookingNumber: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    checkIn: Schema.Attribute.Date & Schema.Attribute.Required;
+    checkOut: Schema.Attribute.Date & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currency: Schema.Attribute.Enumeration<
+      ['USD', 'EUR', 'SAR', 'AED', 'EGP']
+    > &
+      Schema.Attribute.DefaultTo<'USD'>;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    guestEmail: Schema.Attribute.Email & Schema.Attribute.Required;
+    guestName: Schema.Attribute.String & Schema.Attribute.Required;
+    guestPhone: Schema.Attribute.String;
+    guests: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-booking.demo-booking'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    room: Schema.Attribute.Relation<'oneToOne', 'api::demo-room.demo-room'>;
+    roomType: Schema.Attribute.String;
+    specialRequests: Schema.Attribute.Text;
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'confirmed', 'checkedin', 'checkedout', 'cancelled']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    totalPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiDemoInquiryDemoInquiry extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_inquiries';
+  info: {
+    description: 'Inquiries for real estate demos';
+    displayName: 'Demo Inquiry';
+    pluralName: 'demo-inquiries';
+    singularName: 'demo-inquiry';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    inquiryNumber: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    inquiryType: Schema.Attribute.Enumeration<
+      ['viewing', 'information', 'offer', 'general']
+    > &
+      Schema.Attribute.DefaultTo<'information'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-inquiry.demo-inquiry'
+    > &
+      Schema.Attribute.Private;
+    message: Schema.Attribute.Text & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    notes: Schema.Attribute.Text;
+    phone: Schema.Attribute.String;
+    preferredContactMethod: Schema.Attribute.Enumeration<
+      ['email', 'phone', 'whatsapp']
+    > &
+      Schema.Attribute.DefaultTo<'email'>;
+    preferredTime: Schema.Attribute.String;
+    property: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::demo-property.demo-property'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<
+      ['new', 'contacted', 'scheduled', 'completed', 'closed']
+    > &
+      Schema.Attribute.DefaultTo<'new'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiDemoMenuItemDemoMenuItem
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_menu_items';
+  info: {
+    description: 'Menu items for restaurant and cafe demos';
+    displayName: 'Demo Menu Item';
+    pluralName: 'demo-menu-items';
+    singularName: 'demo-menu-item';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    allergens: Schema.Attribute.JSON;
+    calories: Schema.Attribute.Integer;
+    category: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currency: Schema.Attribute.Enumeration<
+      ['USD', 'EUR', 'SAR', 'AED', 'EGP']
+    > &
+      Schema.Attribute.DefaultTo<'USD'>;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    hotspotPosition: Schema.Attribute.JSON;
+    image: Schema.Attribute.Media<'images'>;
+    isAvailable: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    isGlutenFree: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    isVegan: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    isVegetarian: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-menu-item.demo-menu-item'
+    >;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    price: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiDemoOrderDemoOrder extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_orders';
+  info: {
+    description: 'Orders for e-commerce and restaurant demos';
+    displayName: 'Demo Order';
+    pluralName: 'demo-orders';
+    singularName: 'demo-order';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currency: Schema.Attribute.Enumeration<
+      ['USD', 'EUR', 'SAR', 'AED', 'EGP']
+    > &
+      Schema.Attribute.DefaultTo<'USD'>;
+    customerEmail: Schema.Attribute.Email;
+    customerName: Schema.Attribute.String & Schema.Attribute.Required;
+    customerPhone: Schema.Attribute.String;
+    deliveryAddress: Schema.Attribute.Text;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    items: Schema.Attribute.JSON & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-order.demo-order'
+    > &
+      Schema.Attribute.Private;
+    notes: Schema.Attribute.Text;
+    orderNumber: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    subtotal: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    tax: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    total: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiDemoProductDemoProduct extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_products';
+  info: {
+    description: 'Products for e-commerce and showroom demos';
+    displayName: 'Demo Product';
+    pluralName: 'demo-products';
+    singularName: 'demo-product';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    category: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currency: Schema.Attribute.Enumeration<
+      ['USD', 'EUR', 'SAR', 'AED', 'EGP']
+    > &
+      Schema.Attribute.DefaultTo<'USD'>;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    hotspotPosition: Schema.Attribute.JSON;
+    images: Schema.Attribute.Media<'images', true>;
+    inStock: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-product.demo-product'
+    >;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    price: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    sku: Schema.Attribute.String;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    specifications: Schema.Attribute.JSON;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiDemoPropertyDemoProperty
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_properties';
+  info: {
+    description: 'Properties for real estate demos';
+    displayName: 'Demo Property';
+    pluralName: 'demo-properties';
+    singularName: 'demo-property';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    address: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    area: Schema.Attribute.Decimal;
+    areaUnit: Schema.Attribute.Enumeration<['sqft', 'sqm']> &
+      Schema.Attribute.DefaultTo<'sqm'>;
+    bathrooms: Schema.Attribute.Integer;
+    bedrooms: Schema.Attribute.Integer;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currency: Schema.Attribute.Enumeration<
+      ['USD', 'EUR', 'SAR', 'AED', 'EGP']
+    > &
+      Schema.Attribute.DefaultTo<'USD'>;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    features: Schema.Attribute.JSON;
+    hotspotPosition: Schema.Attribute.JSON;
+    images: Schema.Attribute.Media<'images', true>;
+    isAvailable: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    listingType: Schema.Attribute.Enumeration<['sale', 'rent']> &
+      Schema.Attribute.Required;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-property.demo-property'
+    >;
+    location: Schema.Attribute.JSON;
+    price: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    propertyType: Schema.Attribute.Enumeration<
+      ['apartment', 'villa', 'office', 'retail', 'land']
+    > &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiDemoReservationDemoReservation
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_reservations';
+  info: {
+    description: 'Reservations for restaurant demos';
+    displayName: 'Demo Reservation';
+    pluralName: 'demo-reservations';
+    singularName: 'demo-reservation';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    customerEmail: Schema.Attribute.Email;
+    customerName: Schema.Attribute.String & Schema.Attribute.Required;
+    customerPhone: Schema.Attribute.String & Schema.Attribute.Required;
+    date: Schema.Attribute.Date & Schema.Attribute.Required;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-reservation.demo-reservation'
+    > &
+      Schema.Attribute.Private;
+    partySize: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    publishedAt: Schema.Attribute.DateTime;
+    reservationNumber: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    specialRequests: Schema.Attribute.Text;
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'confirmed', 'seated', 'completed', 'cancelled', 'noshow']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    tablePreference: Schema.Attribute.String;
+    time: Schema.Attribute.Time & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiDemoRoomDemoRoom extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_rooms';
+  info: {
+    description: 'Rooms for hotel demos';
+    displayName: 'Demo Room';
+    pluralName: 'demo-rooms';
+    singularName: 'demo-room';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    amenities: Schema.Attribute.JSON;
+    bedType: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currency: Schema.Attribute.Enumeration<
+      ['USD', 'EUR', 'SAR', 'AED', 'EGP']
+    > &
+      Schema.Attribute.DefaultTo<'USD'>;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    hotspotPosition: Schema.Attribute.JSON;
+    images: Schema.Attribute.Media<'images', true>;
+    isAvailable: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-room.demo-room'
+    >;
+    maxGuests: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<2>;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    pricePerNight: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    roomType: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    size: Schema.Attribute.Integer;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiDemoVisitorSessionDemoVisitorSession
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_visitor_sessions';
+  info: {
+    description: 'Visitor session tracking for demo analytics';
+    displayName: 'Demo Visitor Session';
+    pluralName: 'demo-visitor-sessions';
+    singularName: 'demo-visitor-session';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    country: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currentPosition: Schema.Attribute.JSON;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    deviceInfo: Schema.Attribute.JSON;
+    duration: Schema.Attribute.Integer;
+    endTime: Schema.Attribute.DateTime;
+    interactions: Schema.Attribute.JSON;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-visitor-session.demo-visitor-session'
+    > &
+      Schema.Attribute.Private;
+    positionHistory: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    referrer: Schema.Attribute.String;
+    sessionId: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    startTime: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    visitorId: Schema.Attribute.String;
+  };
+}
+
+export interface ApiDemoVoiceOverDemoVoiceOver
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'demo_voice_overs';
+  info: {
+    description: 'Voice-over audio for demo tours';
+    displayName: 'Demo Voice Over';
+    pluralName: 'demo-voice-overs';
+    singularName: 'demo-voice-over';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    audioFile: Schema.Attribute.Media<'audios'> & Schema.Attribute.Required;
+    autoPlay: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    duration: Schema.Attribute.Integer;
+    hotspotPosition: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-voice-over.demo-voice-over'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    transcript: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    triggerType: Schema.Attribute.Enumeration<
+      ['hotspot', 'location', 'manual']
+    > &
+      Schema.Attribute.DefaultTo<'hotspot'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiDemoDemo extends Struct.CollectionTypeSchema {
   collectionName: 'demos';
   info: {
+    description: 'VTour demo configurations';
     displayName: 'Demo';
     pluralName: 'demos';
     singularName: 'demo';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   pluginOptions: {
     i18n: {
@@ -975,26 +1570,70 @@ export interface ApiDemoDemo extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    businessEmail: Schema.Attribute.Email;
+    businessName: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    businessPhone: Schema.Attribute.String;
+    businessWhatsapp: Schema.Attribute.String;
+    config: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    demoType: Schema.Attribute.String;
+    demoType: Schema.Attribute.Enumeration<
+      [
+        'ecommerce',
+        'cafe',
+        'hotel',
+        'realestate',
+        'showroom',
+        'office',
+        'tour3d',
+        'vfair',
+        'aichat',
+        'training',
+      ]
+    > &
+      Schema.Attribute.Required;
     description: Schema.Attribute.RichText &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
+    enableAiChat: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    enableLiveChat: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    enableVoiceOver: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    featuredImage: Schema.Attribute.Media<'images'>;
     icon: Schema.Attribute.String;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::demo.demo'>;
+    matterportModelId: Schema.Attribute.String & Schema.Attribute.Required;
+    menuItems: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-menu-item.demo-menu-item'
+    >;
+    ownerUser: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    products: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-product.demo-product'
+    >;
+    properties: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-property.demo-property'
+    >;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'title'> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: false;
-        };
-      }>;
+    rooms: Schema.Attribute.Relation<'oneToMany', 'api::demo-room.demo-room'>;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     summary: Schema.Attribute.Text &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1011,6 +1650,10 @@ export interface ApiDemoDemo extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    voiceOvers: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::demo-voice-over.demo-voice-over'
+    >;
   };
 }
 
@@ -3014,6 +3657,16 @@ declare module '@strapi/strapi' {
       'api::case-study.case-study': ApiCaseStudyCaseStudy;
       'api::contact-page.contact-page': ApiContactPageContactPage;
       'api::contact-submission.contact-submission': ApiContactSubmissionContactSubmission;
+      'api::demo-booking.demo-booking': ApiDemoBookingDemoBooking;
+      'api::demo-inquiry.demo-inquiry': ApiDemoInquiryDemoInquiry;
+      'api::demo-menu-item.demo-menu-item': ApiDemoMenuItemDemoMenuItem;
+      'api::demo-order.demo-order': ApiDemoOrderDemoOrder;
+      'api::demo-product.demo-product': ApiDemoProductDemoProduct;
+      'api::demo-property.demo-property': ApiDemoPropertyDemoProperty;
+      'api::demo-reservation.demo-reservation': ApiDemoReservationDemoReservation;
+      'api::demo-room.demo-room': ApiDemoRoomDemoRoom;
+      'api::demo-visitor-session.demo-visitor-session': ApiDemoVisitorSessionDemoVisitorSession;
+      'api::demo-voice-over.demo-voice-over': ApiDemoVoiceOverDemoVoiceOver;
       'api::demo.demo': ApiDemoDemo;
       'api::demos-page.demos-page': ApiDemosPageDemosPage;
       'api::faq.faq': ApiFaqFaq;

@@ -1,0 +1,68 @@
+{
+  "kind": "collectionType",
+  "collectionName": "demo_orders",
+  "info": {
+    "singularName": "demo-order",
+    "pluralName": "demo-orders",
+    "displayName": "Demo Order",
+    "description": "Orders for e-commerce and restaurant demos"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "orderNumber": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "customerName": {
+      "type": "string",
+      "required": true
+    },
+    "customerEmail": {
+      "type": "email"
+    },
+    "customerPhone": {
+      "type": "string"
+    },
+    "items": {
+      "type": "json",
+      "required": true
+    },
+    "subtotal": {
+      "type": "decimal",
+      "required": true
+    },
+    "tax": {
+      "type": "decimal",
+      "default": 0
+    },
+    "total": {
+      "type": "decimal",
+      "required": true
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": ["USD", "EUR", "SAR", "AED", "EGP"],
+      "default": "USD"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "confirmed", "preparing", "ready", "delivered", "cancelled"],
+      "default": "pending"
+    },
+    "notes": {
+      "type": "text"
+    },
+    "deliveryAddress": {
+      "type": "text"
+    },
+    "demo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::demo.demo"
+    }
+  }
+}

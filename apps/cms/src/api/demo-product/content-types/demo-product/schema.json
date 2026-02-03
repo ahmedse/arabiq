@@ -1,0 +1,76 @@
+{
+  "kind": "collectionType",
+  "collectionName": "demo_products",
+  "info": {
+    "singularName": "demo-product",
+    "pluralName": "demo-products",
+    "displayName": "Demo Product",
+    "description": "Products for e-commerce and showroom demos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "description": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "price": {
+      "type": "decimal",
+      "required": true
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": ["USD", "EUR", "SAR", "AED", "EGP"],
+      "default": "USD"
+    },
+    "category": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "sku": {
+      "type": "string"
+    },
+    "inStock": {
+      "type": "boolean",
+      "default": true
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "hotspotPosition": {
+      "type": "json"
+    },
+    "specifications": {
+      "type": "json"
+    },
+    "demo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::demo.demo",
+      "inversedBy": "products"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

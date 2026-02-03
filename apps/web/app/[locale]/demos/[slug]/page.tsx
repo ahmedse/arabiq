@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { getDemoBySlug, getSiteSettings } from "@/lib/strapi";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/serverAuth";
+import { DemoViewer } from "./DemoViewer";
+import { fetchDemoItems } from "@/lib/api/demos";
+import { fetchVoiceOvers } from "@/lib/api/voiceOvers";
+import type { DemoConfig } from "@/lib/matterport/types";
 
 type DemoDetailPageProps = {
   params: Promise<{
@@ -68,18 +72,67 @@ export default async function DemoDetailPage({ params }: DemoDetailPageProps) {
   const demo = await getDemoBySlug(locale, slug);
 
   if (!demo) {
-    return <h1>Demo not found</h1>;
+    return (
+      <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center text-white p-8">
+          <h1 className="text-2xl font-bold mb-4">{locale === 'ar' ? 'العرض غير موجود' : 'Demo not found'}</h1>
+          <p className="text-gray-400">
+            {locale === 'ar' ? 'لم نتمكن من العثور على هذا العرض.' : 'We could not find this demo.'}
+          </p>
+        </div>
+      </main>
+    );
   }
 
+  // Handle missing matterportModelId gracefully
+  if (!demo.matterportModelId) {
+    return (
+      <main className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center text-white p-8">
+          <h1 className="text-2xl font-bold mb-4">{demo.title}</h1>
+          <p className="text-gray-400">
+            {locale === 'ar' 
+              ? 'جولة 3D لم يتم تكوينها بعد. يرجى التحقق لاحقًا.'
+              : '3D Tour not yet configured. Please check back soon.'}
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  // Fetch items and voice-overs based on demo type
+  const [items, voiceOvers] = await Promise.all([
+    fetchDemoItems(demo.id, demo.demoType || 'tour3d', locale),
+    demo.enableVoiceOver ? fetchVoiceOvers(demo.id, locale) : Promise.resolve([]),
+  ]);
+
+  // Convert to DemoConfig format
+  const demoConfig: DemoConfig = {
+    id: demo.id,
+    slug: demo.slug,
+    title: demo.title,
+    summary: demo.summary,
+    matterportModelId: demo.matterportModelId,
+    demoType: (demo.demoType || 'tour3d') as DemoConfig['demoType'],
+    featuredImage: demo.image?.url,
+    businessName: demo.businessName,
+    businessPhone: demo.businessPhone,
+    businessEmail: demo.businessEmail,
+    businessWhatsapp: demo.businessWhatsapp,
+    enableVoiceOver: demo.enableVoiceOver ?? false,
+    enableLiveChat: demo.enableLiveChat ?? false,
+    enableAiChat: demo.enableAiChat ?? true,
+  };
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">{demo.title}</h1>
-        {demo.summary ? <p className="text-slate-600">{demo.summary}</p> : null}
-      </div>
-      <div className="rounded-lg border border-dashed border-slate-300 p-6 text-slate-500">
-        Demo content placeholder
-      </div>
-    </div>
+    <main className="min-h-screen bg-gray-900">
+      {/* Full-screen 3D viewer */}
+      <DemoViewer 
+        demo={demoConfig} 
+        items={items}
+        voiceOvers={voiceOvers}
+        locale={locale}
+      />
+    </main>
   );
 }

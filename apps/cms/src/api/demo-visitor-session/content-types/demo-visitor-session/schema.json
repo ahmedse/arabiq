@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "demo_visitor_sessions",
+  "info": {
+    "singularName": "demo-visitor-session",
+    "pluralName": "demo-visitor-sessions",
+    "displayName": "Demo Visitor Session",
+    "description": "Visitor session tracking for demo analytics"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sessionId": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "visitorId": {
+      "type": "string"
+    },
+    "demo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::demo.demo"
+    },
+    "startTime": {
+      "type": "datetime",
+      "required": true
+    },
+    "endTime": {
+      "type": "datetime"
+    },
+    "duration": {
+      "type": "integer"
+    },
+    "currentPosition": {
+      "type": "json"
+    },
+    "positionHistory": {
+      "type": "json"
+    },
+    "interactions": {
+      "type": "json"
+    },
+    "deviceInfo": {
+      "type": "json"
+    },
+    "referrer": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

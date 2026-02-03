@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "demo_bookings",
+  "info": {
+    "singularName": "demo-booking",
+    "pluralName": "demo-bookings",
+    "displayName": "Demo Booking",
+    "description": "Bookings for hotel demos"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "bookingNumber": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "guestName": {
+      "type": "string",
+      "required": true
+    },
+    "guestEmail": {
+      "type": "email",
+      "required": true
+    },
+    "guestPhone": {
+      "type": "string"
+    },
+    "checkIn": {
+      "type": "date",
+      "required": true
+    },
+    "checkOut": {
+      "type": "date",
+      "required": true
+    },
+    "guests": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "roomType": {
+      "type": "string"
+    },
+    "room": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::demo-room.demo-room"
+    },
+    "totalPrice": {
+      "type": "decimal",
+      "required": true
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": ["USD", "EUR", "SAR", "AED", "EGP"],
+      "default": "USD"
+    },
+    "specialRequests": {
+      "type": "text"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "confirmed", "checkedin", "checkedout", "cancelled"],
+      "default": "pending"
+    },
+    "demo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::demo.demo"
+    }
+  }
+}

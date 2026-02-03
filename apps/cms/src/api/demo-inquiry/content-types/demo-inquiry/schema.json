@@ -1,0 +1,67 @@
+{
+  "kind": "collectionType",
+  "collectionName": "demo_inquiries",
+  "info": {
+    "singularName": "demo-inquiry",
+    "pluralName": "demo-inquiries",
+    "displayName": "Demo Inquiry",
+    "description": "Inquiries for real estate demos"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "inquiryNumber": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string"
+    },
+    "property": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::demo-property.demo-property"
+    },
+    "inquiryType": {
+      "type": "enumeration",
+      "enum": ["viewing", "information", "offer", "general"],
+      "default": "information"
+    },
+    "message": {
+      "type": "text",
+      "required": true
+    },
+    "preferredContactMethod": {
+      "type": "enumeration",
+      "enum": ["email", "phone", "whatsapp"],
+      "default": "email"
+    },
+    "preferredTime": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["new", "contacted", "scheduled", "completed", "closed"],
+      "default": "new"
+    },
+    "notes": {
+      "type": "text"
+    },
+    "demo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::demo.demo"
+    }
+  }
+}
