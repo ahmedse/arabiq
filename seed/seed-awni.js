@@ -25,41 +25,44 @@ async function seedAwniDemo() {
   console.log('🚀 Seeding Awni Electronics Demo...\n');
   
   try {
-    // 0. Delete existing demo if exists
-    console.log('Checking for existing demo...');
-    await client.deleteBySlug('demos', awniData.demo.slug);
+    // 1. Upsert Demo Entry (update if exists, create if not)
+    console.log('Upserting demo entry...');
+    const { documentId, existed } = await client.upsertCollection(
+      'demos',
+      'slug',
+      {
+        title: awniData.demo.title,
+        summary: awniData.demo.summary,
+      },
+      {
+        title: awniData.demo.title_ar,
+        summary: awniData.demo.summary_ar,
+        businessName: awniData.demo.businessName_ar,
+      },
+      {
+        slug: awniData.demo.slug,
+        matterportModelId: awniData.demo.matterportModelId,
+        demoType: awniData.demo.demoType,
+        isActive: awniData.demo.isActive,
+        businessName: awniData.demo.businessName,
+        businessPhone: awniData.demo.businessPhone,
+        businessEmail: awniData.demo.businessEmail,
+        businessWhatsapp: awniData.demo.businessWhatsapp,
+        enableVoiceOver: awniData.demo.enableVoiceOver,
+        enableLiveChat: awniData.demo.enableLiveChat,
+        enableAiChat: awniData.demo.enableAiChat,
+      }
+    );
     
-    // 1. Create Demo Entry (English)
-    console.log('Creating demo entry...');
-    const demoResponse = await client.create('demos', {
-      title: awniData.demo.title,
-      slug: awniData.demo.slug,
-      summary: awniData.demo.summary,
-      matterportModelId: awniData.demo.matterportModelId,
-      demoType: awniData.demo.demoType,
-      isActive: awniData.demo.isActive,
-      businessName: awniData.demo.businessName,
-      businessPhone: awniData.demo.businessPhone,
-      businessEmail: awniData.demo.businessEmail,
-      businessWhatsapp: awniData.demo.businessWhatsapp,
-      enableVoiceOver: awniData.demo.enableVoiceOver,
-      enableLiveChat: awniData.demo.enableLiveChat,
-      enableAiChat: awniData.demo.enableAiChat,
-    });
+    console.log(`✅ Demo ${existed ? 'updated' : 'created'}: DocumentID=${documentId}`);
     
-    const demoId = demoResponse.data.id;
-    const demoDocumentId = demoResponse.data.documentId;
-    console.log(`✅ Demo created: ID=${demoId}, DocumentID=${demoDocumentId}`);
+    // Get the demo record for relations - use documentId for Strapi v5
+    const demoRecord = await client.findOne('demos', 'slug', awniData.demo.slug, 'en');
+    const demoDocumentId = demoRecord.documentId;
     
-    // 2. Create Arabic localization
-    console.log('Creating Arabic localization...');
-    await client.localize('demos', demoDocumentId, 'ar', {
-      title: awniData.demo.title_ar,
-      slug: awniData.demo.slug,
-      summary: awniData.demo.summary_ar,
-      businessName: awniData.demo.businessName_ar,
-    });
-    console.log('✅ Arabic localization created');
+    // 2. Delete existing products for this demo and re-create
+    console.log('\nCleaning up existing products...');
+    await client.deleteRelatedByDemo('demo-products', demoDocumentId);
     
     // 3. Create Products
     console.log('\nCreating products...');
@@ -77,7 +80,7 @@ async function seedAwniDemo() {
           y: product.hotspotPositionY || 0,
           z: product.hotspotPositionZ || 0,
         },
-        demo: demoId,
+        demo: demoDocumentId,
       });
       
       const productDocumentId = productResponse.data.documentId;

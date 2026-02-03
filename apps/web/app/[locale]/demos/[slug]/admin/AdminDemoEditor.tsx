@@ -1,12 +1,20 @@
 'use client';
 
 /**
- * Admin Demo Editor
+ * Admin Demo Editor - Enhanced Version
  * SDK-based position editor with click-to-place functionality
+ * 
+ * Features:
+ * - Stores full position data (anchorPosition + stemVector + nearestSweepId)
+ * - Uses new Tag API instead of deprecated Mattertag
+ * - Fixed navigation (flyTo works reliably via nearest sweep)
+ * - Reset position to zero functionality
+ * - Better visual feedback
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   ArrowLeft, 
   Check, 
@@ -15,11 +23,32 @@ import {
   MousePointer2, 
   Crosshair,
   Eye,
-  Loader2 
+  Loader2,
+  RotateCcw,
+  Navigation,
+  X,
+  ImageIcon,
+  ChevronDown,
+  ChevronUp,
+  Lock,
+  MousePointerClick,
 } from 'lucide-react';
 import { useMatterportSDK, type SDKStatus } from '@/lib/matterport/useMatterportSDK';
 import { updateProductPosition } from '@/lib/api/products';
-import type { DemoConfig, TourItem, Vector3 } from '@/lib/matterport/types';
+import type { DemoConfig, TourItem, Vector3, PointerIntersection, HotspotPositionData } from '@/lib/matterport/types';
+
+// Calculate stem vector from surface normal for natural tag appearance
+function calculateStemVector(normal: Vector3, height: number = 0.3): Vector3 {
+  const length = Math.sqrt(normal.x ** 2 + normal.y ** 2 + normal.z ** 2);
+  if (length === 0) {
+    return { x: 0, y: height, z: 0 };
+  }
+  return {
+    x: (normal.x / length) * height,
+    y: Math.max(0.1, (normal.y / length) * height + 0.1),
+    z: (normal.z / length) * height,
+  };
+}
 
 interface AdminDemoEditorProps {
   demo: DemoConfig;
@@ -64,30 +93,53 @@ function SDKStatusBadge({ status, error }: { status: SDKStatus; error: string | 
   );
 }
 
-// Click position indicator
+// Click position indicator - enhanced with full intersection data
+// Shows locked position with visual confirmation
 function ClickPositionIndicator({ 
-  position, 
+  intersection, 
   selectedProduct,
+  nearestSweepId,
   onUse,
+  onClear,
   saving 
 }: { 
-  position: Vector3 | null; 
+  intersection: PointerIntersection | null; 
   selectedProduct: TourItem | null;
+  nearestSweepId: string | null;
   onUse: () => void;
+  onClear: () => void;
   saving: boolean;
 }) {
-  if (!position) return null;
+  if (!intersection) return null;
 
-  const canUse = selectedProduct !== null && !saving;
+  const { position, normal, floorIndex } = intersection;
 
   return (
-    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-      <div className="flex items-center gap-2 mb-2">
-        <Crosshair className="w-4 h-4 text-green-600" />
-        <span className="text-sm font-medium text-green-800">Clicked Position</span>
+    <div className="p-3 bg-green-50 border-2 border-green-400 rounded-lg shadow-sm">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <Lock className="w-4 h-4 text-green-600" />
+          <span className="text-sm font-medium text-green-800">Position Locked</span>
+        </div>
+        <button onClick={onClear} className="p-1 hover:bg-green-200 rounded" title="Clear">
+          <X className="w-3 h-3 text-green-600" />
+        </button>
       </div>
-      <div className="font-mono text-xs text-green-700 mb-3">
-        X: {position.x.toFixed(3)}, Y: {position.y.toFixed(3)}, Z: {position.z.toFixed(3)}
+      
+      {/* Enhanced position data display */}
+      <div className="space-y-1 mb-3 text-xs font-mono">
+        <div className="text-green-700">
+          <span className="text-green-500">Pos:</span> {position.x.toFixed(3)}, {position.y.toFixed(3)}, {position.z.toFixed(3)}
+        </div>
+        <div className="text-blue-700">
+          <span className="text-blue-500">Normal:</span> {normal.x.toFixed(2)}, {normal.y.toFixed(2)}, {normal.z.toFixed(2)}
+        </div>
+        {nearestSweepId && (
+          <div className="text-orange-700 flex items-center gap-1">
+            <Navigation className="w-3 h-3" />
+            <span className="truncate">{nearestSweepId.slice(0, 16)}...</span>
+          </div>
+        )}
       </div>
       
       {selectedProduct ? (
@@ -112,41 +164,52 @@ function ClickPositionIndicator({
   );
 }
 
-// Product list item
+// Product list item - enhanced with reset and better UI
 function ProductItem({ 
   item, 
   isSelected,
   isSaved,
   onSelect,
   onSave,
+  onReset,
   onViewPosition,
-  clickedPosition,
+  capturedPosition,
+  nearestSweepId,
   saving,
 }: {
   item: TourItem;
   isSelected: boolean;
   isSaved: boolean;
   onSelect: () => void;
-  onSave: (position: Vector3) => Promise<void>;
+  onSave: (data: HotspotPositionData) => Promise<void>;
+  onReset: () => Promise<void>;
   onViewPosition: () => void;
-  clickedPosition: Vector3 | null;
+  capturedPosition: PointerIntersection | null;
+  nearestSweepId: string | null;
   saving: boolean;
 }) {
-  const [manualX, setManualX] = useState(item.hotspotPosition?.x?.toString() || '0');
-  const [manualY, setManualY] = useState(item.hotspotPosition?.y?.toString() || '0');
-  const [manualZ, setManualZ] = useState(item.hotspotPosition?.z?.toString() || '0');
+  const currentPos = item.hotspotData?.anchorPosition || item.hotspotPosition;
+  const [manualX, setManualX] = useState(currentPos?.x?.toString() || '0');
+  const [manualY, setManualY] = useState(currentPos?.y?.toString() || '0');
+  const [manualZ, setManualZ] = useState(currentPos?.z?.toString() || '0');
   const [error, setError] = useState<string | null>(null);
+  const [showManual, setShowManual] = useState(false);
 
-  const hasPosition = item.hotspotPosition && 
-    (item.hotspotPosition.x !== 0 || item.hotspotPosition.y !== 0 || item.hotspotPosition.z !== 0);
+  const hasPosition = useMemo(() => {
+    const pos = item.hotspotData?.anchorPosition || item.hotspotPosition;
+    return pos && (pos.x !== 0 || pos.y !== 0 || pos.z !== 0);
+  }, [item.hotspotData, item.hotspotPosition]);
 
   const handleSaveManual = async () => {
     setError(null);
     try {
       await onSave({
-        x: parseFloat(manualX) || 0,
-        y: parseFloat(manualY) || 0,
-        z: parseFloat(manualZ) || 0,
+        anchorPosition: {
+          x: parseFloat(manualX) || 0,
+          y: parseFloat(manualY) || 0,
+          z: parseFloat(manualZ) || 0,
+        },
+        stemVector: { x: 0, y: 0.3, z: 0 },
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save');
@@ -154,15 +217,33 @@ function ProductItem({
   };
 
   const handleUseClicked = async () => {
-    if (!clickedPosition) return;
+    if (!capturedPosition) return;
     setError(null);
     try {
-      await onSave(clickedPosition);
-      setManualX(clickedPosition.x.toFixed(3));
-      setManualY(clickedPosition.y.toFixed(3));
-      setManualZ(clickedPosition.z.toFixed(3));
+      const stemVector = calculateStemVector(capturedPosition.normal);
+      await onSave({
+        anchorPosition: capturedPosition.position,
+        stemVector,
+        floorIndex: capturedPosition.floorIndex,
+        nearestSweepId: nearestSweepId || undefined,
+      });
+      setManualX(capturedPosition.position.x.toFixed(3));
+      setManualY(capturedPosition.position.y.toFixed(3));
+      setManualZ(capturedPosition.position.z.toFixed(3));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save');
+    }
+  };
+
+  const handleReset = async () => {
+    setError(null);
+    try {
+      await onReset();
+      setManualX('0');
+      setManualY('0');
+      setManualZ('0');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to reset');
     }
   };
 
@@ -206,33 +287,61 @@ function ProductItem({
       </div>
 
       {/* Current position */}
-      {hasPosition && item.hotspotPosition && !isSelected && (
+      {hasPosition && currentPos && !isSelected && (
         <div className="mt-2 text-xs font-mono text-gray-500">
-          X: {item.hotspotPosition.x.toFixed(2)}, 
-          Y: {item.hotspotPosition.y.toFixed(2)}, 
-          Z: {item.hotspotPosition.z.toFixed(2)}
+          X: {currentPos.x.toFixed(2)}, 
+          Y: {currentPos.y.toFixed(2)}, 
+          Z: {currentPos.z.toFixed(2)}
         </div>
       )}
 
       {/* Edit form (when selected) */}
       {isSelected && (
         <div className="mt-3 space-y-3">
-          {/* Use clicked position */}
-          {clickedPosition && (
+          {/* Use captured position */}
+          {capturedPosition && (
             <button
               onClick={handleUseClicked}
               disabled={saving}
               className="w-full py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              <Crosshair className="w-4 h-4" />
-              Use Clicked Position
+              <Lock className="w-4 h-4" />
+              Use Captured Position
               <span className="font-mono text-xs opacity-75">
-                ({clickedPosition.x.toFixed(1)}, {clickedPosition.y.toFixed(1)}, {clickedPosition.z.toFixed(1)})
+                ({capturedPosition.position.x.toFixed(1)}, {capturedPosition.position.y.toFixed(1)}, {capturedPosition.position.z.toFixed(1)})
               </span>
             </button>
           )}
 
+          {/* Reset to zero button */}
+          {hasPosition && (
+            <div className="flex items-center justify-between p-2 bg-gray-50 rounded border">
+              <span className="text-xs text-gray-600">
+                Current: <span className="font-mono">{currentPos?.x.toFixed(2)}, {currentPos?.y.toFixed(2)}, {currentPos?.z.toFixed(2)}</span>
+              </span>
+              <button
+                onClick={handleReset}
+                disabled={saving}
+                className="px-2 py-1 text-xs text-red-600 hover:bg-red-100 rounded flex items-center gap-1"
+                title="Reset to zero (remove position)"
+              >
+                <RotateCcw className="w-3 h-3" />
+                Reset
+              </button>
+            </div>
+          )}
+
+          {/* Manual input toggle */}
+          <button
+            onClick={() => setShowManual(!showManual)}
+            className="w-full flex items-center justify-between p-2 text-sm text-gray-600 hover:bg-gray-50 rounded border"
+          >
+            <span>Manual Position Entry</span>
+            {showManual ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+
           {/* Manual input */}
+          {showManual && (
           <div className="p-3 bg-gray-50 rounded-lg border">
             <span className="text-xs font-medium text-gray-700 mb-2 block">Manual Position</span>
             <div className="grid grid-cols-3 gap-2 mb-3">
@@ -279,6 +388,9 @@ function ProductItem({
               {saving ? 'Saving...' : 'Save Position'}
             </button>
           </div>
+          )}
+          
+          {error && !showManual && <p className="text-xs text-red-600">{error}</p>}
         </div>
       )}
     </div>
@@ -289,22 +401,43 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
   const [selectedProduct, setSelectedProduct] = useState<TourItem | null>(null);
   const [savedProducts, setSavedProducts] = useState<Set<number>>(new Set());
   const [localItems, setLocalItems] = useState<TourItem[]>(items);
-  const [clickedPosition, setClickedPosition] = useState<Vector3 | null>(null);
+  
+  // Last known position from SDK - updates continuously as mouse moves in tour
+  const lastIntersectionRef = useRef<PointerIntersection | null>(null);
+  
+  // Live position display - updates on mouse move (for UI feedback)
+  const [livePosition, setLivePosition] = useState<{ x: number; y: number; z: number } | null>(null);
+  
+  // Captured/locked position - set when user clicks CAPTURE button
+  const [capturedPosition, setCapturedPosition] = useState<PointerIntersection | null>(null);
+  // Camera rotation at time of capture - for accurate flyTo
+  const [capturedRotation, setCapturedRotation] = useState<{ x: number; y: number } | null>(null);
+  const [nearestSweepId, setNearestSweepId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   const tourUrl = buildTourUrl(demo.matterportModelId);
 
-  // Stable click handler
-  const handleTourClick = useCallback((position: Vector3, normal: Vector3) => {
-    console.log('[AdminEditor] Click:', position, 'Normal:', normal);
-    setClickedPosition({
-      x: Math.round(position.x * 1000) / 1000,
-      y: Math.round(position.y * 1000) / 1000,
-      z: Math.round(position.z * 1000) / 1000,
-    });
+  // Update last known position continuously
+  const handlePointerUpdate = useCallback((intersection: PointerIntersection) => {
+    const pos = {
+      x: Math.round(intersection.position.x * 1000) / 1000,
+      y: Math.round(intersection.position.y * 1000) / 1000,
+      z: Math.round(intersection.position.z * 1000) / 1000,
+    };
+    
+    lastIntersectionRef.current = {
+      position: pos,
+      normal: intersection.normal,
+      floorIndex: intersection.floorIndex,
+      floorId: intersection.floorId,
+      object: intersection.object,
+    };
+    
+    // Update live position for UI (throttled slightly by React batching)
+    setLivePosition(pos);
   }, []);
 
-  // SDK connection with click handler
+  // SDK connection
   const {
     iframeRef,
     controller,
@@ -312,71 +445,185 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
     currentPose,
     lastError,
     moveTo,
+    findNearestSweep,
   } = useMatterportSDK({
     tourUrl,
-    onClick: handleTourClick,
+    onClick: handlePointerUpdate,
   });
 
-  // Add markers for products with positions (only on status change)
+  // Capture position function - takes the last known intersection OR camera position
+  // Also captures camera rotation for accurate fly-to direction
+  const capturePosition = useCallback(() => {
+    // Always capture current camera rotation
+    if (currentPose?.rotation) {
+      setCapturedRotation({ ...currentPose.rotation });
+    }
+    
+    if (lastIntersectionRef.current) {
+      setCapturedPosition({ ...lastIntersectionRef.current });
+      console.log('[Admin] Position captured from pointer:', lastIntersectionRef.current.position, 'rotation:', currentPose?.rotation);
+    } else if (currentPose) {
+      // Fallback to camera position if no pointer intersection
+      const fallbackPosition: PointerIntersection = {
+        position: currentPose.position,
+        normal: { x: 0, y: 1, z: 0 },
+        object: 'model',
+      };
+      setCapturedPosition(fallbackPosition);
+      console.log('[Admin] Position captured from camera:', currentPose.position, 'rotation:', currentPose.rotation);
+    }
+  }, [currentPose]);
+
+  // Clear captured position
+  const clearCapturedPosition = useCallback(() => {
+    setCapturedPosition(null);
+    setCapturedRotation(null);
+    setNearestSweepId(null);
+  }, []);
+
+  // Global right-click handler - captures position from anywhere on the page
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      // Only capture if we have a position and SDK is ready
+      if (lastIntersectionRef.current && status === 'ready') {
+        e.preventDefault();
+        capturePosition();
+      }
+    };
+
+    // Global keyboard handler
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
+      
+      if (e.code === 'Space' && lastIntersectionRef.current) {
+        e.preventDefault();
+        capturePosition();
+      }
+      if (e.code === 'Escape') {
+        clearCapturedPosition();
+      }
+    };
+
+    window.addEventListener('contextmenu', handleContextMenu);
+    window.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      window.removeEventListener('contextmenu', handleContextMenu);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [status, capturePosition, clearCapturedPosition]);
+
+  // Find nearest sweep when position is captured
+  useEffect(() => {
+    if (capturedPosition && status === 'ready') {
+      findNearestSweep(capturedPosition.position).then((result) => {
+        if (result) {
+          setNearestSweepId(result.sweepId);
+        }
+      });
+    }
+  }, [capturedPosition, status, findNearestSweep]);
+
+  // Add tags for products with positions (using new Tag API)
   useEffect(() => {
     if (status !== 'ready') return;
 
-    // Add markers for items with positions
-    const addMarkers = async () => {
+    const addTags = async () => {
       for (const item of localItems) {
-        if (item.hotspotPosition && 
-            (item.hotspotPosition.x !== 0 || item.hotspotPosition.y !== 0 || item.hotspotPosition.z !== 0)) {
-          await controller.addMarker(`product-${item.id}`, item.hotspotPosition, {
+        const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
+        if (position && (position.x !== 0 || position.y !== 0 || position.z !== 0)) {
+          const stemVector = item.hotspotData?.stemVector || { x: 0, y: 0.3, z: 0 };
+          await controller.addTag(`product-${item.id}`, {
             label: item.name,
+            description: item.description || '',
+            anchorPosition: position,
+            stemVector,
             color: { r: 0.2, g: 0.6, b: 1.0 },
           });
         }
       }
     };
-    addMarkers();
+    addTags();
 
     return () => {
-      controller.clearMarkers();
+      controller.clearTags();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  // Save position handler
-  const handlePositionSave = useCallback(async (productId: number, position: Vector3) => {
+  // Save position handler - saves full position data
+  const handlePositionSave = useCallback(async (documentId: string, productId: number, data: HotspotPositionData) => {
     setSaving(true);
     try {
-      await updateProductPosition(productId, position);
+      await updateProductPosition(documentId, data.anchorPosition, data);
       setSavedProducts(prev => new Set([...prev, productId]));
       
-      // Update local state
+      // Update local state and add tag
       setLocalItems(prev => {
         const item = prev.find(i => i.id === productId);
         if (item && status === 'ready') {
-          // Add marker in the tour
-          controller.addMarker(`product-${productId}`, position, {
+          controller.addTag(`product-${productId}`, {
             label: item.name,
+            anchorPosition: data.anchorPosition,
+            stemVector: data.stemVector,
             color: { r: 0.2, g: 0.8, b: 0.4 },
           });
         }
         return prev.map(i => 
           i.id === productId 
-            ? { ...i, hotspotPosition: position }
+            ? { ...i, hotspotData: data, hotspotPosition: data.anchorPosition }
             : i
         );
       });
 
       setSelectedProduct(null);
-      setClickedPosition(null);
+      setCapturedPosition(null);
+      setNearestSweepId(null);
     } finally {
       setSaving(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  // Navigate to product position
+  // Reset position handler
+  const handlePositionReset = useCallback(async (documentId: string, productId: number) => {
+    setSaving(true);
+    try {
+      const zeroPosition = { x: 0, y: 0, z: 0 };
+      await updateProductPosition(documentId, zeroPosition);
+      
+      // Remove tag from tour
+      await controller.removeTag(`product-${productId}`);
+      
+      // Update local state
+      setLocalItems(prev => 
+        prev.map(i => 
+          i.id === productId 
+            ? { ...i, hotspotData: undefined, hotspotPosition: zeroPosition }
+            : i
+        )
+      );
+      
+      setSavedProducts(prev => {
+        const next = new Set(prev);
+        next.delete(productId);
+        return next;
+      });
+    } finally {
+      setSaving(false);
+    }
+  }, [controller]);
+
+  // Navigate to product position with correct facing direction
   const handleViewPosition = useCallback(async (item: TourItem) => {
-    if (!item.hotspotPosition) return;
-    await moveTo(item.hotspotPosition);
+    const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
+    if (!position) return;
+    const sweepId = item.hotspotData?.nearestSweepId;
+    const rotation = item.hotspotData?.cameraRotation;
+    await moveTo(position, rotation, sweepId);
   }, [moveTo]);
 
   return (
@@ -404,28 +651,36 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
         <div className="p-4 bg-blue-50 border-b">
           <div className="text-sm text-blue-800">
             <p className="font-medium mb-2 flex items-center gap-2">
-              <MousePointer2 className="w-4 h-4" />
+              <MousePointerClick className="w-4 h-4" />
               Click-to-Place Mode
             </p>
             <ol className="list-decimal list-inside space-y-1 text-xs text-blue-700">
-              <li>Click on a <strong>product</strong> in the list below</li>
-              <li>Navigate to where it should appear in the tour</li>
-              <li>Click on the surface to capture position</li>
-              <li>Click the green button to assign</li>
+              <li>Navigate to the spot in the 3D tour</li>
+              <li>Click the <strong className="text-amber-600">📍 CAPTURE</strong> button</li>
+              <li>Select a product and click <strong className="text-green-600">Assign</strong></li>
             </ol>
           </div>
         </div>
 
-        {/* Clicked Position */}
-        {clickedPosition && (
+        {/* Captured Position */}
+        {capturedPosition && (
           <div className="p-4 border-b">
             <ClickPositionIndicator 
-              position={clickedPosition}
+              intersection={capturedPosition}
               selectedProduct={selectedProduct}
+              nearestSweepId={nearestSweepId}
               saving={saving}
+              onClear={clearCapturedPosition}
               onUse={() => {
-                if (selectedProduct && clickedPosition) {
-                  handlePositionSave(selectedProduct.id, clickedPosition);
+                if (selectedProduct && capturedPosition) {
+                  const stemVector = calculateStemVector(capturedPosition.normal);
+                  handlePositionSave(selectedProduct.documentId, selectedProduct.id, {
+                    anchorPosition: capturedPosition.position,
+                    stemVector,
+                    floorIndex: capturedPosition.floorIndex,
+                    nearestSweepId: nearestSweepId || undefined,
+                    cameraRotation: capturedRotation || undefined,
+                  });
                 }
               }}
             />
@@ -435,14 +690,25 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
         {/* Current Camera Pose (debug) */}
         {currentPose && (
           <div className="px-4 py-2 bg-gray-50 border-b text-xs font-mono text-gray-500">
-            Camera: {currentPose.position.x.toFixed(1)}, {currentPose.position.y.toFixed(1)}, {currentPose.position.z.toFixed(1)}
-            {currentPose.sweep && <span className="ml-2">Sweep: {currentPose.sweep.slice(0, 8)}...</span>}
+            <div className="flex items-center gap-1">
+              <Navigation className="w-3 h-3" />
+              Camera: {currentPose.position.x.toFixed(1)}, {currentPose.position.y.toFixed(1)}, {currentPose.position.z.toFixed(1)}
+            </div>
+            {currentPose.sweep && <div className="text-gray-400 mt-1">Sweep: {currentPose.sweep.slice(0, 12)}...</div>}
           </div>
         )}
 
         {/* Product List */}
         <div className="flex-1 overflow-y-auto p-4">
-          <h2 className="font-medium text-gray-700 mb-3">Products ({localItems.length})</h2>
+          <h2 className="font-medium text-gray-700 mb-3 flex items-center justify-between">
+            <span>Products ({localItems.length})</span>
+            <span className="text-xs text-gray-400">
+              {localItems.filter(i => {
+                const pos = i.hotspotData?.anchorPosition || i.hotspotPosition;
+                return pos && (pos.x !== 0 || pos.y !== 0 || pos.z !== 0);
+              }).length} placed
+            </span>
+          </h2>
           
           {localItems.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
@@ -461,9 +727,11 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
                   onSelect={() => setSelectedProduct(
                     selectedProduct?.id === item.id ? null : item
                   )}
-                  onSave={(pos) => handlePositionSave(item.id, pos)}
+                  onSave={(data) => handlePositionSave(item.documentId, item.id, data)}
+                  onReset={() => handlePositionReset(item.documentId, item.id)}
                   onViewPosition={() => handleViewPosition(item)}
-                  clickedPosition={clickedPosition}
+                  capturedPosition={capturedPosition}
+                  nearestSweepId={nearestSweepId}
                   saving={saving}
                 />
               ))}
@@ -476,11 +744,15 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
           <div className="flex items-center gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span>Has position</span>
+              <span>Placed</span>
             </div>
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded-full bg-gray-300" />
-              <span>No position</span>
+              <span>Not placed</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Check className="w-4 h-4 text-green-500" />
+              <span>Just saved</span>
             </div>
           </div>
         </div>
@@ -495,6 +767,56 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
           allowFullScreen
           className="w-full h-full border-0"
         />
+        
+        {/* CAPTURE BUTTON - Large, visible, clickable */}
+        {status === 'ready' && !capturedPosition && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
+            {/* Live position indicator */}
+            {livePosition ? (
+              <div className="px-4 py-2 bg-gray-900/80 text-green-400 text-sm font-mono rounded-lg flex items-center gap-2">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                Pointer: {livePosition.x.toFixed(2)}, {livePosition.y.toFixed(2)}, {livePosition.z.toFixed(2)}
+              </div>
+            ) : currentPose ? (
+              <div className="px-4 py-2 bg-gray-900/80 text-amber-400 text-sm font-mono rounded-lg flex items-center gap-2">
+                <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
+                Camera: {currentPose.position.x.toFixed(2)}, {currentPose.position.y.toFixed(2)}, {currentPose.position.z.toFixed(2)}
+              </div>
+            ) : null}
+            <button
+              onClick={capturePosition}
+              disabled={!livePosition && !currentPose}
+              className={`px-8 py-4 font-bold text-lg rounded-full shadow-2xl flex items-center gap-3 transition-all border-4 ${
+                livePosition || currentPose
+                  ? 'bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white border-amber-300 hover:scale-105 active:scale-95 cursor-pointer'
+                  : 'bg-gray-500 text-gray-300 border-gray-400 cursor-not-allowed'
+              }`}
+            >
+              <Crosshair className="w-6 h-6" />
+              📍 CAPTURE THIS POSITION
+            </button>
+          </div>
+        )}
+        
+        {/* Captured indicator */}
+        {status === 'ready' && capturedPosition && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
+            <div className="px-6 py-4 bg-green-600 text-white font-bold rounded-full shadow-2xl flex items-center gap-3 border-4 border-green-300">
+              <Lock className="w-6 h-6" />
+              ✓ POSITION CAPTURED
+              <span className="font-mono text-sm bg-green-700 px-2 py-1 rounded">
+                ({capturedPosition.position.x.toFixed(2)}, {capturedPosition.position.y.toFixed(2)}, {capturedPosition.position.z.toFixed(2)})
+              </span>
+              <button
+                onClick={clearCapturedPosition}
+                className="ml-2 p-2 hover:bg-green-700 rounded-full bg-green-500"
+                title="Clear and capture again"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
         
         {/* Loading overlay */}
         {(status === 'connecting' || status === 'retrying') && (

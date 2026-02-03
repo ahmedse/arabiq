@@ -12,6 +12,7 @@ import type { TourItem, MattertagDescriptor } from '@/lib/matterport/types';
 interface HotspotManagerProps {
   items: TourItem[];
   onItemClick: (item: TourItem) => void;
+  highlightedItemId?: number | null;
 }
 
 // Colors for different categories
@@ -96,22 +97,26 @@ const CATEGORY_COLORS: Record<string, { r: number; g: number; b: number }> = {
   'default': { r: 0.3, g: 0.6, b: 0.9 },       // Default blue
 };
 
-export function HotspotManager({ items, onItemClick }: HotspotManagerProps) {
+export function HotspotManager({ items, onItemClick, highlightedItemId }: HotspotManagerProps) {
   const { sdk, isReady } = useMatterport();
   const { addTag } = useMattertags(sdk);
   const tagMapRef = useRef<Map<string, TourItem>>(new Map());
-  const injectedItemsRef = useRef<Set<number>>(new Set());
+  const tagIdByItemRef = useRef<Map<number, string>>(new Map()); // Reverse lookup: item id -> tag id
+  const isInjectingRef = useRef(false); // Prevent concurrent injections
   
   // Inject hotspots when SDK is ready
   useEffect(() => {
     if (!sdk || !isReady) return;
     if (items.length === 0) return;
+    if (isInjectingRef.current) {
+      console.log('[HotspotManager] Injection already in progress, skipping...');
+      return;
+    }
     
-    // Only inject items that have valid positions and haven't been injected yet
+    // Only inject items that have valid positions
     const validItems = items.filter(item => 
       item.hotspotPosition && 
-      (item.hotspotPosition.x !== 0 || item.hotspotPosition.y !== 0 || item.hotspotPosition.z !== 0) &&
-      !injectedItemsRef.current.has(item.id)
+      (item.hotspotPosition.x !== 0 || item.hotspotPosition.y !== 0 || item.hotspotPosition.z !== 0)
     );
     
     if (validItems.length === 0) {
@@ -119,7 +124,27 @@ export function HotspotManager({ items, onItemClick }: HotspotManagerProps) {
     }
     
     const injectHotspots = async () => {
-      console.log(`[HotspotManager] Injecting ${validItems.length} new hotspots...`);
+      isInjectingRef.current = true;
+      
+      try {
+        // Get ALL tags from the SDK and remove them to ensure clean slate
+        const allTags = await sdk.Mattertag.getData();
+        const allTagIds = allTags.map((tag: { sid: string }) => tag.sid);
+        
+        if (allTagIds.length > 0) {
+          console.log(`[HotspotManager] Clearing ${allTagIds.length} existing tags from SDK...`);
+          try {
+            await sdk.Mattertag.remove(allTagIds);
+          } catch (error) {
+            console.error('[HotspotManager] Failed to clear existing tags:', error);
+          }
+        }
+        
+        // Clear tracking references
+        tagMapRef.current.clear();
+        tagIdByItemRef.current.clear();
+        
+        console.log(`[HotspotManager] Injecting ${validItems.length} hotspots...`);
       
       for (const item of validItems) {
         const color = CATEGORY_COLORS[item.category || 'default'] || CATEGORY_COLORS.default;
@@ -144,7 +169,7 @@ export function HotspotManager({ items, onItemClick }: HotspotManagerProps) {
           const tagId = await addTag(descriptor);
           if (tagId) {
             tagMapRef.current.set(tagId, item);
-            injectedItemsRef.current.add(item.id);
+            tagIdByItemRef.current.set(item.id, tagId); // Store reverse lookup
             console.log(`  ✅ Injected: ${item.name}`);
           }
         } catch (error) {
@@ -153,10 +178,52 @@ export function HotspotManager({ items, onItemClick }: HotspotManagerProps) {
       }
       
       console.log('[HotspotManager] Hotspot injection complete');
+      } finally {
+        isInjectingRef.current = false;
+      }
     };
     
     injectHotspots();
-  }, [sdk, isReady, items, addTag]);
+    
+    // Cleanup: remove all injected tags when component unmounts
+    return () => {
+      const removeAllTags = async () => {
+        const tagIds = Array.from(tagMapRef.current.keys());
+        if (tagIds.length > 0 && sdk) {
+          console.log(`[HotspotManager] Cleaning up ${tagIds.length} tags...`);
+          try {
+            await sdk.Mattertag.remove(tagIds);
+            tagMapRef.current.clear();
+            tagIdByItemRef.current.clear();
+          } catch (error) {
+            console.error('[HotspotManager] Failed to cleanup tags:', error);
+          }
+        }
+      };
+      removeAllTags();
+    };
+  }, [sdk, isReady, items]);
+  
+  // Handle highlighting when highlightedItemId changes
+  useEffect(() => {
+    if (!sdk || !isReady) return;
+    
+    // For now, we'll navigate to the highlighted tag and open it
+    if (highlightedItemId) {
+      const tagId = tagIdByItemRef.current.get(highlightedItemId);
+      if (tagId) {
+        console.log('[HotspotManager] Highlighting tag for item:', highlightedItemId);
+        // Navigate to the tag's position - this focuses the camera on it
+        sdk.Mattertag.navigateToTag(tagId, sdk.Mattertag.Transition.FLY)
+          .then(() => {
+            console.log('[HotspotManager] Navigated to highlighted tag');
+          })
+          .catch((err: Error) => {
+            console.error('[HotspotManager] Failed to navigate to tag:', err);
+          });
+      }
+    }
+  }, [sdk, isReady, highlightedItemId]);
   
   // Handle tag clicks
   useEffect(() => {

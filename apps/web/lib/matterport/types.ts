@@ -215,14 +215,52 @@ export interface DemoConfig {
   config?: Record<string, unknown>;
 }
 
+// Enhanced position data for accurate tag placement
+export interface HotspotPositionData {
+  anchorPosition: Vector3;        // Where the tag connects to the surface
+  stemVector: Vector3;            // Direction the tag points (from surface normal)
+  roomId?: string;                // Associated room for visibility
+  nearestSweepId?: string;        // Nearest panorama for navigation
+  floorIndex?: number;            // Floor for multi-floor spaces
+  cameraRotation?: Rotation;      // Camera facing direction when captured
+}
+
 // Product/Item displayed in tour
 export interface TourItem {
   id: number;
+  documentId: string;
   name: string;
   description?: string;
   price?: number;
   currency?: string;
   imageUrl?: string;
-  hotspotPosition: Vector3;
+  /** @deprecated Use hotspotData for accurate positioning */
+  hotspotPosition?: Vector3;
+  /** Enhanced position data with normal and sweep info */
+  hotspotData?: HotspotPositionData;
   category?: string;
+}
+
+// Pointer intersection data from Matterport
+export interface PointerIntersection {
+  position: Vector3;
+  normal: Vector3;
+  floorIndex?: number;
+  floorId?: string;
+  object: 'model' | 'tag' | 'sweep' | 'none';
+}
+
+// Tag descriptor for new Tag API
+export interface TagDescriptor {
+  id?: string;
+  label: string;
+  description?: string;
+  anchorPosition: Vector3;
+  stemVector: Vector3;
+  color?: { r: number; g: number; b: number };
+  iconId?: string;
+  enabled?: boolean;
+  stemVisible?: boolean;
+  opacity?: number;
+  attachments?: string[];
 }

@@ -573,7 +573,8 @@ type DemoAttributes = {
 export async function getDemoBySlug(locale: string, slug: string) {
   const query = new URLSearchParams({ 
     "filters[slug][$eq]": slug,
-    "populate": "*"
+    "populate[0]": "featuredImage",
+    "populate[1]": "ownerUser"
   });
   const data = (await fetchStrapi(`/api/demos?${query.toString()}`, { locale, revalidate: 30 })) as StrapiListResponse<DemoAttributes> | null;
 

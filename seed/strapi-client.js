@@ -309,19 +309,25 @@ class StrapiClient {
     if (existing?.documentId) {
       console.log(`   🗑️  Deleting existing ${apiId}/${slug} (${existing.documentId})`);
       await this.request(`/api/${apiId}/${existing.documentId}?locale=all`, { method: 'DELETE' });
-      // Wait for delete to propagate
-      await this.sleep(500);
+      // Wait for delete to propagate - increased delay
+      await this.sleep(2000);
       return true;
     }
     return false;
   }
 
   /**
-   * Delete all related items by demo ID
+   * Delete all related items by demo ID or documentId
    */
-  async deleteRelatedByDemo(apiId, demoId) {
+  async deleteRelatedByDemo(apiId, demoIdOrDocumentId) {
     try {
-      const res = await this.request(`/api/${apiId}?filters[demo][id][$eq]=${demoId}&pagination[pageSize]=100&locale=all`);
+      // Try filtering by documentId first (Strapi v5), then by id
+      let res;
+      if (typeof demoIdOrDocumentId === 'string') {
+        res = await this.request(`/api/${apiId}?filters[demo][documentId][$eq]=${demoIdOrDocumentId}&pagination[pageSize]=100&locale=all`);
+      } else {
+        res = await this.request(`/api/${apiId}?filters[demo][id][$eq]=${demoIdOrDocumentId}&pagination[pageSize]=100&locale=all`);
+      }
       const items = res?.data || [];
       console.log(`   🗑️  Deleting ${items.length} related ${apiId} items`);
       for (const item of items) {

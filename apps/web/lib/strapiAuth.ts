@@ -193,7 +193,7 @@ export async function checkDemoAccess(token: string, demoId: number): Promise<bo
  */
 export async function getUserDemos(token: string): Promise<any[]> {
   try {
-    const res = await fetch(`${STRAPI_URL}/api/demos?populate=*`, {
+    const res = await fetch(`${STRAPI_URL}/api/demos?populate[0]=featuredImage&populate[1]=ownerUser`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

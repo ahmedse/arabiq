@@ -15,6 +15,7 @@ interface StrapiResponse<T> {
 
 interface StrapiProduct {
   id: number;
+  documentId: string;
   name: string;
   title?: string; // Properties use 'title' instead of 'name'
   description?: string;
@@ -25,7 +26,16 @@ interface StrapiProduct {
   inStock: boolean;
   images?: Array<{ url: string }>;
   image?: { url: string };
-  hotspotPosition?: { x: number; y: number; z: number };
+  hotspotPosition?: { 
+    x: number; 
+    y: number; 
+    z: number;
+    stemVector?: { x: number; y: number; z: number };
+    nearestSweepId?: string;
+    floorIndex?: number;
+    roomId?: string;
+    cameraRotation?: { x: number; y: number };
+  };
   // Menu item fields
   hotspotPositionX?: number;
   hotspotPositionY?: number;
@@ -103,44 +113,73 @@ export async function fetchDemoItems(
       return [];
     }
     
-    return response.data.map((item: StrapiProduct) => ({
-      id: item.id,
-      name: item.name || item.title || '', // Properties use 'title' instead of 'name'
-      description: item.description,
-      price: item.price,
-      currency: item.currency,
-      imageUrl: item.images?.[0]?.url 
-        ? `${STRAPI_URL}${item.images[0].url}` 
-        : item.image?.url 
-          ? `${STRAPI_URL}${item.image.url}`
-          : undefined,
-      hotspotPosition: item.hotspotPosition || {
+    return response.data.map((item: StrapiProduct) => {
+      // Extract enhanced hotspot data from stored JSON
+      const storedPosition = item.hotspotPosition;
+      const hasEnhancedData = storedPosition && storedPosition.stemVector;
+      
+      // Build hotspotData if enhanced data exists
+      const hotspotData = hasEnhancedData ? {
+        anchorPosition: {
+          x: storedPosition.x || 0,
+          y: storedPosition.y || 0,
+          z: storedPosition.z || 0,
+        },
+        stemVector: storedPosition.stemVector || { x: 0, y: 0.3, z: 0 },
+        nearestSweepId: storedPosition.nearestSweepId || undefined,
+        floorIndex: storedPosition.floorIndex ?? undefined,
+        roomId: storedPosition.roomId || undefined,
+        cameraRotation: storedPosition.cameraRotation || undefined,
+      } : undefined;
+      
+      // Legacy position for backwards compatibility
+      const hotspotPosition = storedPosition ? {
+        x: storedPosition.x || 0,
+        y: storedPosition.y || 0,
+        z: storedPosition.z || 0,
+      } : {
         x: item.hotspotPositionX || 0,
         y: item.hotspotPositionY || 0,
         z: item.hotspotPositionZ || 0,
-      },
-      category: item.category || item.propertyType,
-      // Menu item specific fields
-      isVegetarian: item.isVegetarian,
-      spicyLevel: item.spicyLevel,
-      prepTime: item.prepTime,
-      // Hotel room specific fields
-      roomType: item.roomType,
-      pricePerNight: item.pricePerNight,
-      capacity: item.capacity,
-      bedType: item.bedType,
-      size: item.size,
-      amenities: item.amenities,
-      // Property specific fields
-      propertyType: item.propertyType,
-      transactionType: item.transactionType,
-      sizeUnit: item.sizeUnit,
-      bedrooms: item.bedrooms,
-      bathrooms: item.bathrooms,
-      yearBuilt: item.yearBuilt,
-      address: item.address,
-      features: item.features,
-    }));
+      };
+      
+      return {
+        id: item.id,
+        documentId: item.documentId,
+        name: item.name || item.title || '', // Properties use 'title' instead of 'name'
+        description: item.description,
+        price: item.price,
+        currency: item.currency,
+        imageUrl: item.images?.[0]?.url 
+          ? `${STRAPI_URL}${item.images[0].url}` 
+          : item.image?.url 
+            ? `${STRAPI_URL}${item.image.url}`
+            : undefined,
+        hotspotPosition,
+        hotspotData,
+        category: item.category || item.propertyType,
+        // Menu item specific fields
+        isVegetarian: item.isVegetarian,
+        spicyLevel: item.spicyLevel,
+        prepTime: item.prepTime,
+        // Hotel room specific fields
+        roomType: item.roomType,
+        pricePerNight: item.pricePerNight,
+        capacity: item.capacity,
+        bedType: item.bedType,
+        size: item.size,
+        amenities: item.amenities,
+        // Property specific fields
+        propertyType: item.propertyType,
+        transactionType: item.transactionType,
+        sizeUnit: item.sizeUnit,
+        bedrooms: item.bedrooms,
+        bathrooms: item.bathrooms,
+        yearBuilt: item.yearBuilt,
+        address: item.address,
+        features: item.features,
+      };
+    });
   } catch (error) {
     console.error('[API] Failed to fetch demo items:', error);
     return [];

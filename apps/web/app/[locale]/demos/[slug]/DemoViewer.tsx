@@ -2,10 +2,10 @@
 
 /**
  * Demo Viewer Client Component
- * Wraps Matterport viewer with demo-specific features
+ * Full e-commerce experience with resizable panels, tracking, and tag interaction
  */
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { 
   MatterportProvider, 
   MatterportViewer, 
@@ -15,27 +15,44 @@ import {
 import { HotspotManager } from '@/components/matterport/HotspotManager';
 import type { DemoConfig, TourItem } from '@/lib/matterport/types';
 import { DemoToolbar } from './DemoToolbar';
-// E-commerce components
-import { ProductPopup } from './ProductPopup';
+
+// E-commerce components (enhanced)
+import { ProductSidebar } from './ProductSidebar';
+import { ProductDrawer } from './ProductDrawer';
 import { CartDrawer } from './CartDrawer';
 import { CheckoutModal } from './CheckoutModal';
+
 // Café components
 import { MenuItemPopup } from './MenuItemPopup';
 import { ReservationDrawer } from './ReservationDrawer';
+
 // Hotel components
 import { RoomPopup } from './RoomPopup';
 import { BookingDrawer } from './BookingDrawer';
+
 // Real estate components
 import { PropertyPopup } from './PropertyPopup';
 import { InquiryDrawer } from './InquiryDrawer';
+
 // AI Chat component
 import { AIChatDrawer } from './AIChatDrawer';
+
 // Presence & Live Chat components
 import { PresenceTracker, generateSessionId } from './PresenceTracker';
 import { LiveChatWidget } from './LiveChatWidget';
+
 // Voice-over components
 import { VoiceOverPlayer } from '@/components/voiceover';
 import type { AudioClip } from '@/lib/voiceover';
+
+// Tracking
+import { 
+  trackPageView, 
+  trackProductClick, 
+  trackTagClick, 
+  trackNavigation,
+  trackTimeSpent 
+} from '@/lib/analytics/tracking';
 
 interface DemoViewerProps {
   demo: DemoConfig;
@@ -53,12 +70,25 @@ export function DemoViewer({ demo, items, voiceOvers = [], locale }: DemoViewerP
 }
 
 function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps) {
-  const { setItems, setDemo, isReady } = useMatterport();
+  const { setItems, setDemo, isReady, sdk } = useMatterport();
+  
+  // Session tracking
+  const [sessionId] = useState(() => generateSessionId());
+  const sessionStartRef = useRef(Date.now());
+  
+  // Demo type checks
+  const isEcommerce = demo.demoType === 'ecommerce' || demo.demoType === 'showroom';
+  const isCafe = demo.demoType === 'cafe';
+  const isHotel = demo.demoType === 'hotel';
+  const isRealEstate = demo.demoType === 'realestate' || demo.demoType === 'training';
   
   // Shared state
   const [selectedItem, setSelectedItem] = useState<TourItem | null>(null);
+  const [highlightedProductId, setHighlightedProductId] = useState<number | null>(null);
   
   // E-commerce state
+  const [isProductSidebarOpen, setIsProductSidebarOpen] = useState(isEcommerce);
+  const [isProductDrawerOpen, setIsProductDrawerOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   
@@ -75,8 +105,16 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
   // AI Chat state
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   
-  // Presence tracking - generate session ID on mount
-  const [sessionId] = useState(() => generateSessionId());
+  // Track page view on mount
+  useEffect(() => {
+    trackPageView(demo.id, sessionId);
+    
+    // Track time spent on unmount
+    return () => {
+      const duration = Math.floor((Date.now() - sessionStartRef.current) / 1000);
+      trackTimeSpent(demo.id, sessionId, duration);
+    };
+  }, [demo.id, sessionId]);
   
   // Set demo data
   useEffect(() => {
@@ -84,9 +122,56 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
     setItems(items);
   }, [demo, items, setDemo, setItems]);
   
-  // Handle hotspot click
+  // Handle hotspot/tag click from tour
   const handleItemClick = useCallback((item: TourItem) => {
     setSelectedItem(item);
+    setHighlightedProductId(item.id);
+    
+    // Track the click
+    if (item.hotspotPosition) {
+      trackTagClick(demo.id, sessionId, item.id, item.hotspotPosition);
+    }
+    trackProductClick(demo.id, sessionId, item.id, item.name, 'tag');
+    
+    // For e-commerce, open sidebar and drawer
+    if (demo.demoType === 'ecommerce' || demo.demoType === 'showroom') {
+      setIsProductSidebarOpen(true);
+      setIsProductDrawerOpen(true);
+    }
+  }, [demo.id, demo.demoType, sessionId]);
+  
+  // Handle product click from sidebar
+  const handleSidebarProductClick = useCallback((item: TourItem) => {
+    setSelectedItem(item);
+    setHighlightedProductId(item.id);
+    setIsProductDrawerOpen(true);
+    
+    trackProductClick(demo.id, sessionId, item.id, item.name, 'sidebar');
+  }, [demo.id, sessionId]);
+  
+  // Navigate to product in tour
+  const handleViewInTour = useCallback(async (item: TourItem) => {
+    if (!sdk) return;
+    
+    const sweepId = item.hotspotData?.nearestSweepId;
+    
+    try {
+      if (sweepId) {
+        await sdk.Camera.moveToSweep(sweepId, { transition: 'fly' });
+        setHighlightedProductId(item.id);
+        
+        const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
+        trackNavigation(demo.id, sessionId, sweepId, position || { x: 0, y: 0, z: 0 });
+      }
+    } catch (err) {
+      console.error('[DemoViewer] Navigation failed:', err);
+    }
+  }, [sdk, demo.id, sessionId]);
+  
+  // Close product drawer
+  const handleCloseDrawer = useCallback(() => {
+    setIsProductDrawerOpen(false);
+    setSelectedItem(null);
   }, []);
   
   // Handle checkout (e-commerce)
@@ -116,10 +201,10 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
     setIsInquiryOpen(true);
   }, []);
   
-  const isEcommerce = demo.demoType === 'ecommerce' || demo.demoType === 'showroom';
-  const isCafe = demo.demoType === 'cafe';
-  const isHotel = demo.demoType === 'hotel';
-  const isRealEstate = demo.demoType === 'realestate' || demo.demoType === 'training';
+  // Toggle sidebar
+  const toggleProductSidebar = useCallback(() => {
+    setIsProductSidebarOpen((prev) => !prev);
+  }, []);
   
   // Get main property for real estate
   const mainProperty = items.find(item => 
@@ -128,44 +213,62 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
   );
   
   return (
-    <div className="relative w-full h-screen">
-      {/* Main 3D Viewer - SDK mode for hotspots */}
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Main 3D Viewer */}
       <MatterportViewer className="w-full h-full" useIframeMode={false} />
       
       {/* Overlay UI */}
       {isReady && (
         <>
-          <HotspotManager items={items} onItemClick={handleItemClick} />
+          <HotspotManager 
+            items={items} 
+            onItemClick={handleItemClick}
+            highlightedItemId={highlightedProductId}
+          />
           
           <DemoToolbar 
             demo={demo}
             onCartClick={isEcommerce ? () => setIsCartOpen(true) : undefined}
+            onProductsClick={isEcommerce ? toggleProductSidebar : undefined}
             onReserveClick={isCafe ? () => setIsReservationOpen(true) : undefined}
             onBookClick={isHotel ? () => setIsBookingOpen(true) : undefined}
             onInquireClick={isRealEstate ? () => setIsInquiryOpen(true) : undefined}
             onAIChatClick={demo.enableAiChat ? () => setIsAIChatOpen(true) : undefined}
+            productCount={items.length}
           />
           
           <MiniMap className="absolute bottom-4 left-4" />
         </>
       )}
       
-      {/* E-commerce Popups */}
+      {/* E-commerce Components */}
       {isEcommerce && (
         <>
-          {selectedItem && (
-            <ProductPopup
-              product={selectedItem}
-              onClose={() => setSelectedItem(null)}
-              locale={locale}
-            />
-          )}
+          <ProductSidebar
+            products={items}
+            selectedProductId={highlightedProductId}
+            onSelectProduct={handleSidebarProductClick}
+            onViewInTour={handleViewInTour}
+            isOpen={isProductSidebarOpen}
+            onClose={() => setIsProductSidebarOpen(false)}
+            locale={locale}
+          />
+          
+          <ProductDrawer
+            product={selectedItem}
+            isOpen={isProductDrawerOpen}
+            onClose={handleCloseDrawer}
+            onGoToProduct={handleViewInTour}
+            locale={locale}
+          />
+          
           <CartDrawer
             isOpen={isCartOpen}
             onClose={() => setIsCartOpen(false)}
             onCheckout={handleCheckout}
             locale={locale}
           />
+          
           <CheckoutModal
             isOpen={isCheckoutOpen}
             onClose={() => setIsCheckoutOpen(false)}
@@ -175,7 +278,7 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
         </>
       )}
       
-      {/* Café Popups */}
+      {/* Café Components */}
       {isCafe && (
         <>
           {selectedItem && (
@@ -196,7 +299,7 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
         </>
       )}
       
-      {/* Hotel Popups */}
+      {/* Hotel Components */}
       {isHotel && (
         <>
           {selectedItem && (
@@ -218,7 +321,7 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
         </>
       )}
       
-      {/* Real Estate Popups */}
+      {/* Real Estate Components */}
       {isRealEstate && (
         <>
           {selectedItem && (
@@ -241,7 +344,7 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
         </>
       )}
       
-      {/* AI Chat Drawer (available for all demo types when enabled) */}
+      {/* AI Chat Drawer */}
       {demo.enableAiChat && (
         <AIChatDrawer
           isOpen={isAIChatOpen}
@@ -251,7 +354,7 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
         />
       )}
       
-      {/* Presence Tracking (tracks visitor position in 3D space) */}
+      {/* Presence Tracking */}
       {demo.enableLiveChat && (
         <PresenceTracker
           demoSlug={demo.slug}
@@ -262,7 +365,7 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
         />
       )}
       
-      {/* Live Chat Widget (for visitors to chat with owner) */}
+      {/* Live Chat Widget */}
       {demo.enableLiveChat && (
         <LiveChatWidget
           demoSlug={demo.slug}
@@ -272,7 +375,7 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
         />
       )}
       
-      {/* Voice-Over Player (audio tour guide) */}
+      {/* Voice-Over Player */}
       {demo.enableVoiceOver && voiceOvers && voiceOvers.length > 0 && (
         <VoiceOverPlayer
           clips={voiceOvers}

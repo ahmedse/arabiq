@@ -7,20 +7,31 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ShoppingCart, MessageCircle, Volume2, VolumeX, Users, Settings, Calendar, Bed, Send } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, MessageCircle, Volume2, VolumeX, Users, Settings, Calendar, Bed, Send, Package } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import type { DemoConfig } from '@/lib/matterport/types';
 
 interface DemoToolbarProps {
   demo: DemoConfig;
   onCartClick?: () => void;
+  onProductsClick?: () => void;
   onReserveClick?: () => void;
   onBookClick?: () => void;
   onInquireClick?: () => void;
   onAIChatClick?: () => void;
+  productCount?: number;
 }
 
-export function DemoToolbar({ demo, onCartClick, onReserveClick, onBookClick, onInquireClick, onAIChatClick }: DemoToolbarProps) {
+export function DemoToolbar({ 
+  demo, 
+  onCartClick, 
+  onProductsClick,
+  onReserveClick, 
+  onBookClick, 
+  onInquireClick, 
+  onAIChatClick,
+  productCount = 0,
+}: DemoToolbarProps) {
   const { itemCount } = useCart();
   const [isMuted, setIsMuted] = React.useState(false);
   
@@ -95,6 +106,22 @@ export function DemoToolbar({ demo, onCartClick, onReserveClick, onBookClick, on
             title="AI Assistant"
           >
             <MessageCircle className="w-5 h-5" />
+          </button>
+        )}
+        
+        {/* Products Catalog (for e-commerce demos) */}
+        {(demo.demoType === 'ecommerce' || demo.demoType === 'showroom') && onProductsClick && (
+          <button
+            onClick={onProductsClick}
+            className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm relative"
+            title="Products Catalog"
+          >
+            <Package className="w-5 h-5" />
+            {productCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
+                {productCount}
+              </span>
+            )}
           </button>
         )}
         
