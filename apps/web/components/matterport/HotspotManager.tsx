@@ -127,11 +127,17 @@ export function HotspotManager({ items, onItemClick }: HotspotManagerProps) {
         const descriptor: MattertagDescriptor = {
           label: item.name,
           description: item.price 
-            ? `${item.currency || 'EGP'} ${item.price.toLocaleString()}`
-            : '',
+            ? `${item.currency || 'EGP'} ${item.price.toLocaleString()}\n${item.description || 'Click to view details'}`
+            : (item.description || 'Click to view details'),
           anchorPosition: item.hotspotPosition,
-          stemVector: { x: 0, y: 0.3, z: 0 },
+          stemVector: { x: 0, y: 0.5, z: 0 }, // Taller stem for visibility
           color,
+          stemHeight: 0.5, // Make stem taller
+          // Add product image as media for visual appeal
+          media: item.imageUrl ? {
+            type: 'photo' as const,
+            src: item.imageUrl,
+          } : undefined,
         };
         
         try {
