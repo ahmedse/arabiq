@@ -1,6 +1,7 @@
 /**
  * Demo Product Position API Route
  * Updates product hotspot position
+ * Note: Strapi v5 requires documentId for updates, not id
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -23,9 +24,38 @@ export async function PUT(
         { status: 400 }
       );
     }
+
+    // First, find the product by numeric id to get documentId
+    // Strapi v5 requires documentId for updates, not numeric id
+    const lookupRes = await fetch(
+      `${STRAPI_URL}/api/demo-products?filters[id][$eq]=${id}`, 
+      {
+        headers: {
+          ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
+        },
+      }
+    );
+
+    if (!lookupRes.ok) {
+      return NextResponse.json(
+        { error: { message: 'Failed to lookup product' } },
+        { status: 500 }
+      );
+    }
+
+    const lookupData = await lookupRes.json();
+    const product = lookupData.data?.[0];
+    const documentId = product?.documentId;
+
+    if (!documentId) {
+      return NextResponse.json(
+        { error: { message: 'Product not found' } },
+        { status: 404 }
+      );
+    }
     
-    // Update in Strapi - hotspotPosition is a JSON field
-    const response = await fetch(`${STRAPI_URL}/api/demo-products/${id}`, {
+    // Update in Strapi using documentId - hotspotPosition is a JSON field
+    const response = await fetch(`${STRAPI_URL}/api/demo-products/${documentId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

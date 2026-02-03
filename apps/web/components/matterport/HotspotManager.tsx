@@ -100,26 +100,26 @@ export function HotspotManager({ items, onItemClick }: HotspotManagerProps) {
   const { sdk, isReady } = useMatterport();
   const { addTag } = useMattertags(sdk);
   const tagMapRef = useRef<Map<string, TourItem>>(new Map());
-  const injectedRef = useRef(false);
+  const injectedItemsRef = useRef<Set<number>>(new Set());
   
   // Inject hotspots when SDK is ready
   useEffect(() => {
-    if (!sdk || !isReady || injectedRef.current) return;
+    if (!sdk || !isReady) return;
     if (items.length === 0) return;
     
-    // Only inject items that have valid positions
+    // Only inject items that have valid positions and haven't been injected yet
     const validItems = items.filter(item => 
       item.hotspotPosition && 
-      (item.hotspotPosition.x !== 0 || item.hotspotPosition.y !== 0 || item.hotspotPosition.z !== 0)
+      (item.hotspotPosition.x !== 0 || item.hotspotPosition.y !== 0 || item.hotspotPosition.z !== 0) &&
+      !injectedItemsRef.current.has(item.id)
     );
     
     if (validItems.length === 0) {
-      console.log('[HotspotManager] No items with valid positions to inject');
       return;
     }
     
     const injectHotspots = async () => {
-      console.log(`[HotspotManager] Injecting ${validItems.length} hotspots...`);
+      console.log(`[HotspotManager] Injecting ${validItems.length} new hotspots...`);
       
       for (const item of validItems) {
         const color = CATEGORY_COLORS[item.category || 'default'] || CATEGORY_COLORS.default;
@@ -138,6 +138,7 @@ export function HotspotManager({ items, onItemClick }: HotspotManagerProps) {
           const tagId = await addTag(descriptor);
           if (tagId) {
             tagMapRef.current.set(tagId, item);
+            injectedItemsRef.current.add(item.id);
             console.log(`  ✅ Injected: ${item.name}`);
           }
         } catch (error) {
@@ -145,7 +146,6 @@ export function HotspotManager({ items, onItemClick }: HotspotManagerProps) {
         }
       }
       
-      injectedRef.current = true;
       console.log('[HotspotManager] Hotspot injection complete');
     };
     
@@ -160,6 +160,7 @@ export function HotspotManager({ items, onItemClick }: HotspotManagerProps) {
       const tagEvent = event as { sid: string };
       const item = tagMapRef.current.get(tagEvent.sid);
       if (item) {
+        console.log('[HotspotManager] Tag clicked:', item.name);
         onItemClick(item);
       }
     };

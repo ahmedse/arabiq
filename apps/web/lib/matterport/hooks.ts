@@ -3,8 +3,8 @@
 /**
  * React Hooks for Matterport SDK
  * 
- * Uses the setupSdk approach which handles iframe creation/connection.
- * The SDK connects to an existing iframe via the iframe option.
+ * Uses iframe + MP_SDK.connect() approach for reliability
+ * (setupSdk approach has loading issues)
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -28,8 +28,69 @@ interface SdkState {
 }
 
 /**
+ * Build Matterport showcase URL with SDK bundle enabled
+ */
+function buildShowcaseUrl(modelId: string): string {
+  const params = new URLSearchParams({
+    m: modelId,
+    play: '1',
+    qs: '1',
+    title: '0',
+    brand: '0',
+    help: '0',
+    applicationKey: MATTERPORT_SDK_KEY,
+  });
+  return `https://my.matterport.com/show?${params.toString()}`;
+}
+
+/**
+ * Load MP_SDK script into the main window
+ * Returns a promise that resolves when MP_SDK is available on window
+ */
+function loadMPSDK(): Promise<typeof window.MP_SDK> {
+  return new Promise((resolve, reject) => {
+    // Check if already loaded
+    if ((window as any).MP_SDK) {
+      resolve((window as any).MP_SDK);
+      return;
+    }
+    
+    // Check if script is already loading
+    const existing = document.querySelector('script[src*="matterport.com/sdk"]');
+    if (existing) {
+      // Wait for it to load
+      const checkInterval = setInterval(() => {
+        if ((window as any).MP_SDK) {
+          clearInterval(checkInterval);
+          resolve((window as any).MP_SDK);
+        }
+      }, 100);
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        reject(new Error('MP_SDK script load timeout'));
+      }, 15000);
+      return;
+    }
+    
+    // Load the script
+    const script = document.createElement('script');
+    script.src = `https://static.matterport.com/showcase-sdk/latest.js?m=latest&applicationKey=${MATTERPORT_SDK_KEY}`;
+    script.async = true;
+    script.onload = () => {
+      if ((window as any).MP_SDK) {
+        resolve((window as any).MP_SDK);
+      } else {
+        reject(new Error('MP_SDK not found after script load'));
+      }
+    };
+    script.onerror = () => reject(new Error('Failed to load MP_SDK script'));
+    document.head.appendChild(script);
+  });
+}
+
+/**
  * Hook to manage Matterport SDK instance
- * Uses setupSdk from @matterport/sdk
+ * Uses iframe + MP_SDK.connect() approach (more reliable than setupSdk)
  */
 export function useMatterportSdk(
   modelId: string | undefined,
@@ -44,6 +105,7 @@ export function useMatterportSdk(
   });
   
   const sdkRef = useRef<MatterportSDK | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   
   useEffect(() => {
     if (!modelId || !containerRef.current) {
@@ -57,8 +119,10 @@ export function useMatterportSdk(
     }
     
     let mounted = true;
+    let attemptCount = 0;
+    const maxAttempts = 3;
     
-    // Clean up previous iframe if exists (for retry)
+    // Clean up previous iframe if exists
     if (containerRef.current) {
       const existingIframe = containerRef.current.querySelector('iframe');
       if (existingIframe) {
@@ -70,27 +134,46 @@ export function useMatterportSdk(
       try {
         setState(prev => ({ ...prev, isLoading: true, error: null }));
         
-        // Import and connect SDK
-        const { setupSdk } = await import('@matterport/sdk');
+        // Step 1: Load MP_SDK script into main window
+        console.log('[Matterport SDK] Loading MP_SDK script...');
+        const MP_SDK = await loadMPSDK();
+        if (!mounted) return;
         
-        const sdk = await setupSdk(MATTERPORT_SDK_KEY, {
-          space: modelId,
-          container: containerRef.current!,
-          iframeAttributes: {
-            style: 'width: 100%; height: 100%; border: none;',
-          },
-          iframeQueryParams: {
-            qs: 1,
-            play: 1,
-            title: 0,
-            brand: 0,
-            mls: 2,
-            mt: 0,
-          },
+        console.log('[Matterport SDK] MP_SDK loaded, creating iframe...');
+        
+        // Step 2: Create iframe
+        const iframe = document.createElement('iframe');
+        iframe.src = buildShowcaseUrl(modelId);
+        iframe.style.cssText = 'width: 100%; height: 100%; border: none;';
+        iframe.allow = 'fullscreen; xr-spatial-tracking';
+        iframe.allowFullscreen = true;
+        
+        containerRef.current!.appendChild(iframe);
+        iframeRef.current = iframe;
+        
+        // Step 3: Wait for iframe to load
+        await new Promise<void>((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error('Iframe load timeout')), 30000);
+          iframe.onload = () => {
+            clearTimeout(timeout);
+            resolve();
+          };
+          iframe.onerror = () => {
+            clearTimeout(timeout);
+            reject(new Error('Iframe failed to load'));
+          };
         });
+        
+        if (!mounted) return;
+        
+        console.log('[Matterport SDK] Iframe loaded, connecting SDK...');
+        
+        // Step 4: Connect SDK to iframe (pass iframe element, not contentWindow)
+        const sdk = await MP_SDK.connect(iframe, MATTERPORT_SDK_KEY, '');
         
         if (mounted) {
           sdkRef.current = sdk as unknown as MatterportSDK;
+          console.log('[Matterport SDK] Connected successfully');
           setState({
             sdk: sdk as unknown as MatterportSDK,
             isLoading: false,
@@ -100,6 +183,24 @@ export function useMatterportSdk(
         }
       } catch (err) {
         console.error('[Matterport SDK] Connection error:', err);
+        
+        // Retry logic
+        attemptCount++;
+        if (attemptCount < maxAttempts && mounted) {
+          console.log(`[Matterport SDK] Retrying... (${attemptCount}/${maxAttempts})`);
+          const delay = 1000 * Math.pow(2, attemptCount - 1);
+          await new Promise(r => setTimeout(r, delay));
+          if (mounted) {
+            // Clean up and retry
+            if (iframeRef.current) {
+              iframeRef.current.remove();
+              iframeRef.current = null;
+            }
+            connectSdk();
+          }
+          return;
+        }
+        
         if (mounted) {
           setState({
             sdk: null,
@@ -115,12 +216,10 @@ export function useMatterportSdk(
     
     return () => {
       mounted = false;
-      // Clean up iframe if SDK created one
-      if (containerRef.current) {
-        const iframe = containerRef.current.querySelector('iframe');
-        if (iframe) {
-          iframe.remove();
-        }
+      // Clean up iframe
+      if (iframeRef.current) {
+        iframeRef.current.remove();
+        iframeRef.current = null;
       }
     };
   }, [modelId, containerRef, retryTrigger]);
@@ -174,13 +273,15 @@ export function useMattertags(sdk: MatterportSDK | null) {
   useEffect(() => {
     if (!sdk) return;
     
-    // Get existing tags
-    sdk.Mattertag.getData().then(setTags);
+    // Get existing tags using Mattertag API
+    sdk.Mattertag.getData().then(setTags).catch(err => {
+      console.error('[useMattertags] Failed to get tags:', err);
+      setTags([]);
+    });
     
     // Subscribe to tag clicks
     const handleClick = (event: unknown) => {
       const tagEvent = event as { sid: string };
-      // Can emit custom event here
       console.log('[Matterport] Tag clicked:', tagEvent.sid);
     };
     
@@ -193,15 +294,20 @@ export function useMattertags(sdk: MatterportSDK | null) {
   
   const addTag = useCallback(async (descriptor: MattertagDescriptor): Promise<string | null> => {
     if (!sdk) return null;
-    const [sid] = await sdk.Mattertag.add([descriptor]);
-    setTags(prev => [...prev, { 
-      sid, 
-      ...descriptor,
-      floorIndex: descriptor.floorIndex ?? 0,
-      stemVector: descriptor.stemVector ?? { x: 0, y: 0.3, z: 0 },
-      enabled: true,
-    } as MattertagData]);
-    return sid;
+    try {
+      const [sid] = await sdk.Mattertag.add([descriptor]);
+      setTags(prev => [...prev, { 
+        sid, 
+        ...descriptor,
+        floorIndex: descriptor.floorIndex ?? 0,
+        stemVector: descriptor.stemVector ?? { x: 0, y: 0.3, z: 0 },
+        enabled: true,
+      } as MattertagData]);
+      return sid;
+    } catch (error) {
+      console.error('[useMattertags] Failed to add tag:', error);
+      return null;
+    }
   }, [sdk]);
   
   const removeTag = useCallback(async (sid: string) => {
@@ -261,13 +367,34 @@ export function useFloors(sdk: MatterportSDK | null) {
   const [currentFloor, setCurrentFloor] = useState<string | null>(null);
   
   useEffect(() => {
-    if (!sdk) return;
+    if (!sdk) {
+      setFloors([]);
+      setCurrentFloor(null);
+      return;
+    }
     
-    setFloors(sdk.Floor.data || []);
-    setCurrentFloor(sdk.Floor.current?.id || null);
+    // Access Floor data directly (it's a property, not a method)
+    try {
+      if (sdk.Floor && sdk.Floor.data) {
+        const floorData = sdk.Floor.data;
+        setFloors(Array.isArray(floorData) ? floorData : []);
+      } else {
+        setFloors([]);
+      }
+      
+      // Access current floor directly
+      if (sdk.Floor && sdk.Floor.current) {
+        setCurrentFloor(sdk.Floor.current.id || null);
+      }
+    } catch (err) {
+      console.warn('[useFloors] Floor API error:', err);
+      setFloors([]);
+    }
     
     const handleChange = () => {
-      setCurrentFloor(sdk.Floor.current?.id || null);
+      if (sdk.Floor?.current) {
+        setCurrentFloor(sdk.Floor.current.id || null);
+      }
     };
     
     sdk.on('floor.change', handleChange as (event: unknown) => void);
@@ -278,7 +405,7 @@ export function useFloors(sdk: MatterportSDK | null) {
   }, [sdk]);
   
   const moveTo = useCallback(async (floorId: string) => {
-    if (!sdk) return;
+    if (!sdk || !sdk.Floor) return;
     await sdk.Floor.moveTo(floorId);
   }, [sdk]);
   

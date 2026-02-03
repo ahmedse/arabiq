@@ -129,8 +129,8 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
   
   return (
     <div className="relative w-full h-screen">
-      {/* Main 3D Viewer */}
-      <MatterportViewer className="w-full h-full" />
+      {/* Main 3D Viewer - SDK mode for hotspots */}
+      <MatterportViewer className="w-full h-full" useIframeMode={false} />
       
       {/* Overlay UI */}
       {isReady && (

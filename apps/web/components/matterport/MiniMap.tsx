@@ -18,7 +18,8 @@ export function MiniMap({ className = '' }: MiniMapProps) {
   const { sdk } = useMatterport();
   const { floors, currentFloor, moveTo } = useFloors(sdk);
   
-  if (floors.length <= 1) return null;
+  // Safety check: ensure floors is an array
+  if (!Array.isArray(floors) || floors.length <= 1) return null;
   
   const currentIndex = floors.findIndex(f => f.id === currentFloor);
   const canGoUp = currentIndex < floors.length - 1;
