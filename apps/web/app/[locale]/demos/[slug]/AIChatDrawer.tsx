@@ -3,17 +3,27 @@
 /**
  * AI Chat Drawer
  * Sliding panel with AI-powered chat interface for virtual tours
+ * Features:
+ * - Product-aware AI responses
+ * - Navigation commands to fly to products in the tour
+ * - Bilingual support (English/Arabic)
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Send, Bot, User, Loader2, Sparkles, Trash2 } from 'lucide-react';
-import type { DemoConfig } from '@/lib/matterport/types';
+import { X, Send, Bot, User, Loader2, Sparkles, Trash2, Navigation } from 'lucide-react';
+import type { DemoConfig, TourItem } from '@/lib/matterport/types';
 
 interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  // Navigation command from AI
+  navigation?: {
+    action: 'flyTo';
+    itemId: number;
+    itemName: string;
+  };
 }
 
 interface AIChatDrawerProps {
@@ -22,9 +32,13 @@ interface AIChatDrawerProps {
   demo: DemoConfig;
   currentLocation?: string;
   locale: string;
+  // NEW: Items in the tour for AI context
+  items?: TourItem[];
+  // NEW: Callback to navigate to an item
+  onNavigateToItem?: (item: TourItem) => void;
 }
 
-export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale }: AIChatDrawerProps) {
+export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, items = [], onNavigateToItem }: AIChatDrawerProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +66,7 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale }:
   // Add welcome message when drawer first opens
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      const welcomeMessage = getWelcomeMessage(demo.demoType, demo.title, locale);
+      const welcomeMessage = getWelcomeMessage(demo.demoType, demo.title, locale, items.length);
       setMessages([{
         id: 'welcome',
         role: 'assistant',
@@ -60,7 +74,17 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale }:
         timestamp: new Date(),
       }]);
     }
-  }, [isOpen, messages.length, demo.demoType, demo.title, locale]);
+  }, [isOpen, messages.length, demo.demoType, demo.title, locale, items.length]);
+  
+  // Handle navigation command from AI
+  const handleNavigation = useCallback((navigation: ChatMessage['navigation']) => {
+    if (!navigation || !onNavigateToItem) return;
+    
+    const item = items.find(i => i.id === navigation.itemId);
+    if (item) {
+      onNavigateToItem(item);
+    }
+  }, [items, onNavigateToItem]);
   
   const sendMessage = async () => {
     const trimmedInput = input.trim();
@@ -87,6 +111,16 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale }:
           content: m.content,
         }));
       
+      // Prepare items for AI context
+      const itemsContext = items.map(item => ({
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        currency: item.currency,
+        category: item.category,
+      }));
+      
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,6 +133,7 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale }:
           currentLocation,
           history,
           locale,
+          items: itemsContext, // Pass items for AI context
         }),
       });
       
@@ -108,15 +143,21 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale }:
       
       const data = await response.json();
       
-      // Add assistant message
+      // Add assistant message (with navigation if present)
       const assistantMessage: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
         content: data.message,
         timestamp: new Date(),
+        navigation: data.navigation, // Navigation command from AI
       };
       
       setMessages(prev => [...prev, assistantMessage]);
+      
+      // Auto-trigger navigation if AI suggested it
+      if (data.navigation) {
+        handleNavigation(data.navigation);
+      }
     } catch (error) {
       console.error('Chat error:', error);
       
@@ -232,6 +273,21 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale }:
                     : 'bg-gray-800 text-gray-100'
                 }`}>
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  
+                  {/* Navigation button if AI suggested to fly to a product */}
+                  {message.navigation && onNavigateToItem && (
+                    <button
+                      onClick={() => handleNavigation(message.navigation)}
+                      className="mt-2 flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-full text-xs text-white transition-colors"
+                    >
+                      <Navigation className="w-3 h-3" />
+                      {locale === 'ar' 
+                        ? `الذهاب إلى ${message.navigation.itemName}`
+                        : `Go to ${message.navigation.itemName}`
+                      }
+                    </button>
+                  )}
+                  
                   <p className="text-xs opacity-50 mt-1">
                     {message.timestamp.toLocaleTimeString(locale, { 
                       hour: '2-digit', 
@@ -290,29 +346,36 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale }:
 }
 
 // Welcome message based on demo type
-function getWelcomeMessage(demoType: string, title: string, locale: string): string {
+function getWelcomeMessage(demoType: string, title: string, locale: string, itemCount: number = 0): string {
   const isArabic = locale === 'ar';
+  
+  // Item count suffix
+  const itemSuffix = itemCount > 0
+    ? isArabic 
+      ? ` لدينا ${itemCount} عنصر متاح. اسألني عن أي شيء أو قل "أرني شيئاً" وسآخذك إليه في الجولة!`
+      : ` We have ${itemCount} items available. Ask me about anything or say "show me something" and I'll take you there in the tour!`
+    : '';
   
   const messages: Record<string, { en: string; ar: string }> = {
     ecommerce: {
-      en: `👋 Welcome to ${title}! I'm your shopping assistant. How can I help you find the perfect product today?`,
-      ar: `👋 مرحباً بك في ${title}! أنا مساعدك للتسوق. كيف يمكنني مساعدتك في العثور على المنتج المثالي اليوم؟`,
+      en: `👋 Welcome to ${title}! I'm your smart shopping assistant.${itemSuffix || ' How can I help you find the perfect product today?'}`,
+      ar: `👋 مرحباً بك في ${title}! أنا مساعدك الذكي للتسوق.${itemSuffix || ' كيف يمكنني مساعدتك في العثور على المنتج المثالي اليوم؟'}`,
     },
     showroom: {
-      en: `✨ Welcome to ${title}! I'm your interior design consultant. Looking for something specific, or shall I show you our featured collections?`,
-      ar: `✨ مرحباً بك في ${title}! أنا مستشارك للتصميم الداخلي. هل تبحث عن شيء محدد، أم أعرض عليك مجموعاتنا المميزة؟`,
+      en: `✨ Welcome to ${title}! I'm your interior design consultant.${itemSuffix || ' Looking for something specific, or shall I show you our featured collections?'}`,
+      ar: `✨ مرحباً بك في ${title}! أنا مستشارك للتصميم الداخلي.${itemSuffix || ' هل تبحث عن شيء محدد، أم أعرض عليك مجموعاتنا المميزة؟'}`,
     },
     cafe: {
-      en: `☕ Welcome to ${title}! I'm your friendly host. Would you like to hear about today's specials, or can I help you find something on our menu?`,
-      ar: `☕ مرحباً بك في ${title}! أنا مضيفك الودود. هل تريد معرفة عروض اليوم، أم يمكنني مساعدتك في اختيار شيء من قائمتنا؟`,
+      en: `☕ Welcome to ${title}! I'm your friendly host.${itemSuffix || ' Would you like to hear about today\'s specials, or can I help you find something on our menu?'}`,
+      ar: `☕ مرحباً بك في ${title}! أنا مضيفك الودود.${itemSuffix || ' هل تريد معرفة عروض اليوم، أم يمكنني مساعدتك في اختيار شيء من قائمتنا؟'}`,
     },
     hotel: {
-      en: `🏨 Welcome to ${title}! I'm your concierge. How may I assist you today? Looking for room information or ready to make a booking?`,
-      ar: `🏨 مرحباً بك في ${title}! أنا الكونسيرج الخاص بك. كيف يمكنني مساعدتك اليوم؟ هل تبحث عن معلومات الغرف أو جاهز للحجز؟`,
+      en: `🏨 Welcome to ${title}! I'm your concierge.${itemSuffix || ' How may I assist you today? Looking for room information or ready to make a booking?'}`,
+      ar: `🏨 مرحباً بك في ${title}! أنا الكونسيرج الخاص بك.${itemSuffix || ' كيف يمكنني مساعدتك اليوم؟ هل تبحث عن معلومات الغرف أو جاهز للحجز؟'}`,
     },
     realestate: {
-      en: `🏠 Welcome to ${title}! I'm your property specialist. I'm here to answer any questions about this property. What would you like to know?`,
-      ar: `🏠 مرحباً بك في ${title}! أنا متخصص العقارات الخاص بك. أنا هنا للإجابة على أي أسئلة حول هذا العقار. ماذا تريد أن تعرف؟`,
+      en: `🏠 Welcome to ${title}! I'm your property specialist.${itemSuffix || ' I\'m here to answer any questions about this property. What would you like to know?'}`,
+      ar: `🏠 مرحباً بك في ${title}! أنا متخصص العقارات الخاص بك.${itemSuffix || ' أنا هنا للإجابة على أي أسئلة حول هذا العقار. ماذا تريد أن تعرف؟'}`,
     },
   };
   

@@ -37,7 +37,7 @@ const securityHeaders = [
       // Styles: self + inline (Tailwind) + Google Fonts
       "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
       // Images: self + data URIs + blob + external services
-      "img-src 'self' blob: data: *.matterport.com *.strapi.io localhost:1337 127.0.0.1:1337",
+      "img-src 'self' blob: data: *.matterport.com *.strapi.io images.unsplash.com plus.unsplash.com localhost:1337 127.0.0.1:1337",
       // Fonts: self + Google Fonts
       "font-src 'self' fonts.gstatic.com data:",
       // API/fetch connections
@@ -90,6 +90,16 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.matterport.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'plus.unsplash.com',
         pathname: '/**',
       },
     ],

@@ -57,7 +57,7 @@ export default async function OwnerPage({ params }: OwnerPageProps) {
   
   if (!isAdmin && !isOwner) {
     // User is not authorized - redirect to demo page
-    redirect(`/${locale}/demos/${slug}?error=unauthorized`);
+    redirect(`/${locale}/demos/${slug}`);
   }
   
   return (

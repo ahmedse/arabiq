@@ -47,7 +47,7 @@ export default async function VisitorsPage({ params }: VisitorsPageProps) {
   const isOwner = demoData.ownerId && String(demoData.ownerId) === String(userId);
   
   if (!isAdmin && !isOwner) {
-    redirect(`/${locale}/demos/${slug}?error=unauthorized`);
+    redirect(`/${locale}/demos/${slug}`);
   }
   
   // Convert to DemoConfig format

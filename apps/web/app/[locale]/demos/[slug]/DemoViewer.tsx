@@ -5,7 +5,7 @@
  * Full e-commerce experience with resizable panels, tracking, and tag interaction
  */
 
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { 
   MatterportProvider, 
   MatterportViewer, 
@@ -74,7 +74,6 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
   
   // Session tracking
   const [sessionId] = useState(() => generateSessionId());
-  const sessionStartRef = useRef(Date.now());
   
   // Demo type checks
   const isEcommerce = demo.demoType === 'ecommerce' || demo.demoType === 'showroom';
@@ -107,11 +106,12 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
   
   // Track page view on mount
   useEffect(() => {
+    const sessionStart = Date.now();
     trackPageView(demo.id, sessionId);
     
     // Track time spent on unmount
     return () => {
-      const duration = Math.floor((Date.now() - sessionStartRef.current) / 1000);
+      const duration = Math.floor((Date.now() - sessionStart) / 1000);
       trackTimeSpent(demo.id, sessionId, duration);
     };
   }, [demo.id, sessionId]);
@@ -157,7 +157,43 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
     
     try {
       if (sweepId) {
-        await sdk.Camera.moveToSweep(sweepId, { transition: 'fly' });
+        type MoveToFn = (id: string, options?: unknown) => Promise<unknown> | unknown;
+        type CameraMoveToFn = (position: unknown, options?: unknown) => Promise<unknown> | unknown;
+
+        const sdkObj = sdk as unknown as Record<string, unknown>;
+        const sweepObj = sdkObj['Sweep'];
+        const cameraObj = sdkObj['Camera'];
+
+        // Matterport SDK versions differ: prefer Sweep.moveTo, fallback to Camera.moveTo.
+        const sweepMoveTo =
+          sweepObj && typeof sweepObj === 'object'
+            ? (sweepObj as Record<string, unknown>)['moveTo']
+            : undefined;
+
+        if (typeof sweepMoveTo === 'function') {
+          await (sweepMoveTo as MoveToFn)(sweepId, {
+            rotation: item.hotspotData?.cameraRotation,
+            transition: 'fly',
+            transitionTime: 1500,
+          });
+        } else {
+          const cameraMoveTo =
+            cameraObj && typeof cameraObj === 'object'
+              ? (cameraObj as Record<string, unknown>)['moveTo']
+              : undefined;
+
+          if (typeof cameraMoveTo === 'function') {
+            const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
+            if (position) {
+              await (cameraMoveTo as CameraMoveToFn)(position, {
+                transitionType: 'fly',
+              });
+            }
+          } else {
+            console.warn('[DemoViewer] No supported navigation method available');
+          }
+        }
+
         setHighlightedProductId(item.id);
         
         const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
@@ -351,6 +387,8 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
           onClose={() => setIsAIChatOpen(false)}
           demo={demo}
           locale={locale}
+          items={items}
+          onNavigateToItem={handleViewInTour}
         />
       )}
       

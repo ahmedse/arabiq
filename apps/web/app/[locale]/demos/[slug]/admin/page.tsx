@@ -49,7 +49,7 @@ export default async function AdminPage({ params }: AdminPageProps) {
   
   if (!isAdmin && !isOwner) {
     // User is not authorized - redirect to demo page
-    redirect(`/${locale}/demos/${slug}?error=unauthorized`);
+    redirect(`/${locale}/demos/${slug}`);
   }
   
   // Convert to DemoConfig format

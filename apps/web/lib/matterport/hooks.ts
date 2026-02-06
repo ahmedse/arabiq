@@ -253,7 +253,25 @@ export function useCamera(sdk: MatterportSDK | null) {
   
   const moveTo = useCallback(async (sweepId: string) => {
     if (!sdk) return;
-    await sdk.Camera.moveToSweep(sweepId, { transition: 'fly' });
+
+    type MoveToFn = (id: string, options?: unknown) => Promise<unknown> | unknown;
+    const sdkObj = sdk as unknown as Record<string, unknown>;
+    const sweepObj = sdkObj['Sweep'];
+    const sweepMoveTo =
+      sweepObj && typeof sweepObj === 'object'
+        ? (sweepObj as Record<string, unknown>)['moveTo']
+        : undefined;
+
+    if (typeof sweepMoveTo === 'function') {
+      await (sweepMoveTo as MoveToFn)(sweepId, {
+        transition: 'fly',
+        transitionTime: 1500,
+      });
+      return;
+    }
+
+    // Fallback: if the SDK doesn't support sweep navigation, do nothing.
+    console.warn('[useCamera] Sweep.moveTo not available on this SDK instance');
   }, [sdk]);
   
   const rotate = useCallback(async (rotation: { x: number; y: number }) => {
