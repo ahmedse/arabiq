@@ -26,6 +26,7 @@ services:
         STRAPI_URL: http://127.0.0.1:1337
         STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
         NEXT_PUBLIC_MATTERPORT_SDK_KEY: ${NEXT_PUBLIC_MATTERPORT_SDK_KEY}
+        NEXT_PUBLIC_STRAPI_URL: https://cms.arabiq.tech
     restart: unless-stopped
     env_file:
       - ./deploy/web.env

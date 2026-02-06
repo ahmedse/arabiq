@@ -37,11 +37,11 @@ const securityHeaders = [
       // Styles: self + inline (Tailwind) + Google Fonts
       "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
       // Images: self + data URIs + blob + external services
-      "img-src 'self' blob: data: *.matterport.com *.strapi.io images.unsplash.com plus.unsplash.com localhost:1337 127.0.0.1:1337",
+      "img-src 'self' blob: data: *.matterport.com *.strapi.io images.unsplash.com plus.unsplash.com localhost:1337 127.0.0.1:1337 cms.arabiq.tech",
       // Fonts: self + Google Fonts
       "font-src 'self' fonts.gstatic.com data:",
       // API/fetch connections
-      "connect-src 'self' *.matterport.com localhost:1337 127.0.0.1:1337 ws://localhost:* wss://localhost:*",
+      "connect-src 'self' *.matterport.com localhost:1337 127.0.0.1:1337 cms.arabiq.tech ws://localhost:* wss://localhost:*",
       // Frames: self + Matterport embeds
       "frame-src 'self' *.matterport.com",
       // No plugins/objects
