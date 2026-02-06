@@ -59,6 +59,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Standalone output for Docker deployment
+  output: 'standalone',
+  
   // Image optimization configuration
   images: {
     // Enable optimization (requires 'sharp' package in production)

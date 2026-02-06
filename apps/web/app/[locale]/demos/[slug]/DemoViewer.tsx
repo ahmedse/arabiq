@@ -150,59 +150,22 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
   }, [demo.id, sessionId]);
   
   // Navigate to product in tour
+  // Uses setHighlightedProductId which triggers HotspotManager's
+  // sdk.Mattertag.navigateToTag(tagId, sdk.Mattertag.Transition.FLY)
   const handleViewInTour = useCallback(async (item: TourItem) => {
-    if (!sdk) return;
+    console.log('[DemoViewer] Navigating to item:', item.name, 'id:', item.id);
     
+    // Setting highlightedProductId triggers HotspotManager to navigate
+    // via sdk.Mattertag.navigateToTag which handles fly transitions correctly
+    setHighlightedProductId(item.id);
+    
+    // Track the navigation
     const sweepId = item.hotspotData?.nearestSweepId;
-    
-    try {
-      if (sweepId) {
-        type MoveToFn = (id: string, options?: unknown) => Promise<unknown> | unknown;
-        type CameraMoveToFn = (position: unknown, options?: unknown) => Promise<unknown> | unknown;
-
-        const sdkObj = sdk as unknown as Record<string, unknown>;
-        const sweepObj = sdkObj['Sweep'];
-        const cameraObj = sdkObj['Camera'];
-
-        // Matterport SDK versions differ: prefer Sweep.moveTo, fallback to Camera.moveTo.
-        const sweepMoveTo =
-          sweepObj && typeof sweepObj === 'object'
-            ? (sweepObj as Record<string, unknown>)['moveTo']
-            : undefined;
-
-        if (typeof sweepMoveTo === 'function') {
-          await (sweepMoveTo as MoveToFn)(sweepId, {
-            rotation: item.hotspotData?.cameraRotation,
-            transition: 'fly',
-            transitionTime: 1500,
-          });
-        } else {
-          const cameraMoveTo =
-            cameraObj && typeof cameraObj === 'object'
-              ? (cameraObj as Record<string, unknown>)['moveTo']
-              : undefined;
-
-          if (typeof cameraMoveTo === 'function') {
-            const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
-            if (position) {
-              await (cameraMoveTo as CameraMoveToFn)(position, {
-                transitionType: 'fly',
-              });
-            }
-          } else {
-            console.warn('[DemoViewer] No supported navigation method available');
-          }
-        }
-
-        setHighlightedProductId(item.id);
-        
-        const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
-        trackNavigation(demo.id, sessionId, sweepId, position || { x: 0, y: 0, z: 0 });
-      }
-    } catch (err) {
-      console.error('[DemoViewer] Navigation failed:', err);
+    const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
+    if (sweepId) {
+      trackNavigation(demo.id, sessionId, sweepId, position || { x: 0, y: 0, z: 0 });
     }
-  }, [sdk, demo.id, sessionId]);
+  }, [demo.id, sessionId]);
   
   // Close product drawer
   const handleCloseDrawer = useCallback(() => {

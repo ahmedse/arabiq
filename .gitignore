@@ -50,3 +50,6 @@ coverage/
 .run/web.pid
 .run/cms.pid
 .run/cms.pid
+
+# Deploy secrets
+deploy/*.env

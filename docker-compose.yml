@@ -1,0 +1,56 @@
+version: "3.8"
+
+networks:
+  arabiq:
+    driver: bridge
+
+services:
+  cms:
+    container_name: cms.arabiq.tech
+    build:
+      context: ./apps/cms
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./deploy/cms.env
+    ports:
+      - "127.0.0.1:1337:1337"
+    volumes:
+      - cms-uploads:/app/public/uploads
+    networks:
+      - arabiq
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:1337/admin/init"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  web:
+    container_name: beta.arabiq.tech
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+      args:
+        # At build time, Next.js can't reach the CMS container yet.
+        # We use the public URL so getStaticProps/generateStaticParams work.
+        STRAPI_URL: https://cms.arabiq.tech
+        STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
+        NEXT_PUBLIC_MATTERPORT_SDK_KEY: ${NEXT_PUBLIC_MATTERPORT_SDK_KEY}
+    restart: unless-stopped
+    env_file:
+      - ./deploy/web.env
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - arabiq
+    depends_on:
+      cms:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  cms-uploads:

@@ -357,12 +357,16 @@ function generateSmartFallback(messages: Array<{ role: string; content: string }
     return null;
   }).filter(Boolean) as Array<{ id: string; name: string; category: string; price: string }>;
   
-  // Helper to find products by query
+  // Helper to find products by query - only uses meaningful terms (3+ chars)
   const findProducts = (query: string): typeof products => {
-    const terms = query.toLowerCase().split(/\s+/);
+    const terms = query.toLowerCase().split(/[\s,،.!?]+/).filter(t => t.length >= 3);
+    // Filter out common stop words
+    const stopWords = ['the', 'and', 'for', 'can', 'you', 'need', 'want', 'have', 'only', 'just', 'please', 'show', 'take', 'see'];
+    const meaningfulTerms = terms.filter(t => !stopWords.includes(t));
+    if (meaningfulTerms.length === 0) return [];
     return products.filter(p => {
       const searchText = `${p.name} ${p.category}`.toLowerCase();
-      return terms.some(term => searchText.includes(term));
+      return meaningfulTerms.some(term => searchText.includes(term));
     });
   };
   
@@ -392,31 +396,7 @@ function generateSmartFallback(messages: Array<{ role: string; content: string }
       : `Absolutely! Let me take you to the ${lastMentionedProduct.name} now. [[FLY_TO:${lastMentionedProduct.id}]]`;
   }
   
-  // Check for specific product queries
-  const matchedProducts = findProducts(lastUserMessage);
-  if (matchedProducts.length === 1) {
-    const product = matchedProducts[0];
-    const priceInfo = product.price ? (isArabic ? ` بسعر ${product.price} جنيه` : ` priced at EGP ${product.price}`) : '';
-    
-    if (wantsNavigation) {
-      return isArabic
-        ? `ممتاز! ${product.name}${priceInfo}. دعني آخذك إليه مباشرة! [[FLY_TO:${product.id}]]`
-        : `Excellent! ${product.name}${priceInfo}. Let me take you right to it! [[FLY_TO:${product.id}]]`;
-    }
-    
-    return isArabic
-      ? `نعم، لدينا ${product.name}${priceInfo}. هل تريدني أن آخذك إليه في الجولة لتراه عن قرب؟`
-      : `Yes, we have the ${product.name}${priceInfo}. Would you like me to take you there in the tour to see it up close?`;
-  }
-  
-  if (matchedProducts.length > 1) {
-    const productList = matchedProducts.slice(0, 4).map(p => p.name).join(isArabic ? '، ' : ', ');
-    return isArabic
-      ? `لدينا عدة خيارات: ${productList}. أي منها يثير اهتمامك أكثر؟`
-      : `We have several options: ${productList}. Which one interests you most?`;
-  }
-  
-  // Category queries
+  // Category queries - check FIRST before generic product matching
   const categoryKeywords: Record<string, string[]> = {
     'refrigerator': ['ثلاجة', 'ثلاجات', 'refrigerator', 'fridge', 'fridges'],
     'washing': ['غسالة', 'غسالات', 'washing', 'washer'],
@@ -450,6 +430,30 @@ function generateSmartFallback(messages: Array<{ role: string; content: string }
           : `We have ${categoryProducts.length} option${categoryProducts.length > 1 ? 's' : ''}! Featured: ${firstProduct.name}${priceInfo}${otherCount > 0 ? ` and ${otherCount} more` : ''}. Want me to show you?`;
       }
     }
+  }
+  
+  // Check for specific product queries by name
+  const matchedProducts = findProducts(lastUserMessage);
+  if (matchedProducts.length === 1) {
+    const product = matchedProducts[0];
+    const priceInfo = product.price ? (isArabic ? ` بسعر ${product.price} جنيه` : ` priced at EGP ${product.price}`) : '';
+    
+    if (wantsNavigation) {
+      return isArabic
+        ? `ممتاز! ${product.name}${priceInfo}. دعني آخذك إليه مباشرة! [[FLY_TO:${product.id}]]`
+        : `Excellent! ${product.name}${priceInfo}. Let me take you right to it! [[FLY_TO:${product.id}]]`;
+    }
+    
+    return isArabic
+      ? `نعم، لدينا ${product.name}${priceInfo}. هل تريدني أن آخذك إليه في الجولة لتراه عن قرب؟`
+      : `Yes, we have the ${product.name}${priceInfo}. Would you like me to take you there in the tour to see it up close?`;
+  }
+  
+  if (matchedProducts.length > 1) {
+    const productList = matchedProducts.slice(0, 4).map(p => p.name).join(isArabic ? '، ' : ', ');
+    return isArabic
+      ? `لدينا عدة خيارات: ${productList}. أي منها يثير اهتمامك أكثر؟`
+      : `We have several options: ${productList}. Which one interests you most?`;
   }
   
   // Price queries
