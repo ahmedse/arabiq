@@ -43,6 +43,13 @@ function buildShowcaseUrl(modelId: string): string {
   return `https://my.matterport.com/show?${params.toString()}`;
 }
 
+// Extend Window interface for Matterport SDK
+declare global {
+  interface Window {
+    MP_SDK: any;
+  }
+}
+
 /**
  * Load MP_SDK script into the main window
  * Returns a promise that resolves when MP_SDK is available on window

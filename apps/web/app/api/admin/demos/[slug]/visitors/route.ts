@@ -18,23 +18,31 @@ export async function GET(
     const visitors = getVisitors(slug);
     
     // Calculate stats
-    const liveVisitors = visitors.filter(v => v.isActive).length;
+    const now = new Date();
+    const ACTIVE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
+    const liveVisitors = visitors.filter(v => 
+      (now.getTime() - new Date(v.lastSeenAt).getTime()) < ACTIVE_THRESHOLD_MS
+    ).length;
     const totalToday = visitors.length;
-    const cartsAbandoned = visitors.filter(v => v.cartItems > 0 && !v.isActive).length;
-    const cartsTotal = visitors.filter(v => v.cartItems > 0).length;
-    const cartAbandonment = cartsTotal > 0 ? Math.round((cartsAbandoned / cartsTotal) * 100) : 0;
     
-    // Avg session duration (mock)
-    const avgSessionDuration = 180 + Math.floor(Math.random() * 120);
+    // Cart stats (mock - presence system doesn't track carts)
+    const cartAbandonment = 0;
     
-    // Top products (mock)
-    const productViews = new Map<string, number>();
+    // Avg session duration based on actual connected/lastSeen times
+    const avgSessionDuration = visitors.length > 0
+      ? Math.round(visitors.reduce((sum, v) => 
+          sum + (new Date(v.lastSeenAt).getTime() - new Date(v.connectedAt).getTime()) / 1000, 0
+        ) / visitors.length)
+      : 0;
+    
+    // Top locations visitors are viewing
+    const locationViews = new Map<string, number>();
     visitors.forEach(v => {
-      v.viewedProducts.forEach(p => {
-        productViews.set(p, (productViews.get(p) || 0) + 1);
-      });
+      if (v.currentLocation) {
+        locationViews.set(v.currentLocation, (locationViews.get(v.currentLocation) || 0) + 1);
+      }
     });
-    const topProducts = Array.from(productViews.entries())
+    const topProducts = Array.from(locationViews.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
       .map(([name, views]) => ({ name, views }));

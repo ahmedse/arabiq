@@ -154,7 +154,7 @@ export function HotspotManager({ items, onItemClick, highlightedItemId }: Hotspo
           description: item.price 
             ? `${item.currency || 'EGP'} ${item.price.toLocaleString()}\n${item.description || 'Click to view details'}`
             : (item.description || 'Click to view details'),
-          anchorPosition: item.hotspotPosition,
+          anchorPosition: item.hotspotPosition!,
           stemVector: { x: 0, y: 0.5, z: 0 }, // Taller stem for visibility
           color,
           stemHeight: 0.5, // Make stem taller
@@ -208,13 +208,14 @@ export function HotspotManager({ items, onItemClick, highlightedItemId }: Hotspo
   useEffect(() => {
     if (!sdk || !isReady) return;
     
-    // For now, we'll navigate to the highlighted tag and open it
+    // Navigate to the highlighted tag
     if (highlightedItemId) {
       const tagId = tagIdByItemRef.current.get(highlightedItemId);
       if (tagId) {
         console.log('[HotspotManager] Highlighting tag for item:', highlightedItemId);
-        // Navigate to the tag's position - this focuses the camera on it
-        sdk.Mattertag.navigateToTag(tagId, sdk.Mattertag.Transition.FLY)
+        // navigateToTag with no transition argument defaults to fly
+        // The second arg must be a Transition enum value, NOT an object
+        sdk.Mattertag.navigateToTag(tagId)
           .then(() => {
             console.log('[HotspotManager] Navigated to highlighted tag');
           })
