@@ -333,80 +333,219 @@ async function callAI(messages: Array<{ role: string; content: string }>): Promi
   return generateSmartFallback(messages);
 }
 
-// Smart fallback response using product knowledge
+// Smart fallback response using product knowledge - highly intelligent local AI
 function generateSmartFallback(messages: Array<{ role: string; content: string }>): string {
   const lastUserMessage = messages[messages.length - 1]?.content?.toLowerCase() || '';
+  const originalMessage = messages[messages.length - 1]?.content || '';
   const systemPrompt = messages[0]?.content || '';
   
   // Detect Arabic
   const isArabic = /[\u0600-\u06FF]/.test(lastUserMessage);
   
-  // Extract products from system prompt
-  const productMatches = systemPrompt.match(/\[ID:(\d+)\]\s+([^\n-]+)/g) || [];
+  // Extract products from system prompt with full details
+  const productMatches = systemPrompt.match(/\[ID:(\d+)\]\s+([^\n]+)/g) || [];
   const products = productMatches.map(m => {
-    const match = m.match(/\[ID:(\d+)\]\s+([^-\n]+)/);
-    return match ? { id: match[1], name: match[2].trim() } : null;
-  }).filter(Boolean);
-  
-  // Check if user is asking about a specific product
-  for (const product of products) {
-    if (product && lastUserMessage.includes(product.name.toLowerCase().split(' ')[0])) {
-      const response = isArabic
-        ? `نعم! لدينا ${product.name}. هل تريدني أن آخذك إليه في الجولة؟`
-        : `Yes! We have ${product.name}. Would you like me to take you there in the tour?`;
-      return response + ` [[FLY_TO:${product.id}]]`;
+    const match = m.match(/\[ID:(\d+)\]\s+([^(]+)(?:\(([^)]+)\))?(?:\s*-\s*(?:EGP|USD|EUR)?\s*([\d,]+))?/);
+    if (match) {
+      return { 
+        id: match[1], 
+        name: match[2].trim(),
+        category: match[3]?.trim() || '',
+        price: match[4]?.replace(',', '') || ''
+      };
     }
+    return null;
+  }).filter(Boolean) as Array<{ id: string; name: string; category: string; price: string }>;
+  
+  // Helper to find products by query
+  const findProducts = (query: string): typeof products => {
+    const terms = query.toLowerCase().split(/\s+/);
+    return products.filter(p => {
+      const searchText = `${p.name} ${p.category}`.toLowerCase();
+      return terms.some(term => searchText.includes(term));
+    });
+  };
+  
+  // Check for "see it" / "show me" / navigation requests
+  const wantsNavigation = /\b(see|show|take|go|navigate|fly|view|عرض|أرني|خذني|اذهب|انتقل)\b/i.test(lastUserMessage);
+  const asksAboutSpecific = /\b(this|it|that|هذا|هذه|ذلك)\b/i.test(lastUserMessage);
+  
+  // Get conversation context - find last mentioned product
+  const conversationHistory = messages.slice(1, -1); // Exclude system and current
+  let lastMentionedProduct: typeof products[0] | null = null;
+  
+  for (let i = conversationHistory.length - 1; i >= 0; i--) {
+    const msg = conversationHistory[i];
+    for (const product of products) {
+      if (msg.content.toLowerCase().includes(product.name.toLowerCase().split(' ')[0])) {
+        lastMentionedProduct = product;
+        break;
+      }
+    }
+    if (lastMentionedProduct) break;
   }
   
-  // Check for common queries
-  if (lastUserMessage.includes('show') || lastUserMessage.includes('أرني') || lastUserMessage.includes('عرض')) {
-    if (products.length > 0) {
-      const randomProduct = products[Math.floor(Math.random() * products.length)];
-      if (randomProduct) {
-        const response = isArabic
-          ? `دعني أريك ${randomProduct.name}!`
-          : `Let me show you ${randomProduct.name}!`;
-        return response + ` [[FLY_TO:${randomProduct.id}]]`;
+  // If user wants to see "it" - navigate to last mentioned product
+  if (wantsNavigation && asksAboutSpecific && lastMentionedProduct) {
+    return isArabic
+      ? `بالتأكيد! دعني آخذك إلى ${lastMentionedProduct.name} الآن. [[FLY_TO:${lastMentionedProduct.id}]]`
+      : `Absolutely! Let me take you to the ${lastMentionedProduct.name} now. [[FLY_TO:${lastMentionedProduct.id}]]`;
+  }
+  
+  // Check for specific product queries
+  const matchedProducts = findProducts(lastUserMessage);
+  if (matchedProducts.length === 1) {
+    const product = matchedProducts[0];
+    const priceInfo = product.price ? (isArabic ? ` بسعر ${product.price} جنيه` : ` priced at EGP ${product.price}`) : '';
+    
+    if (wantsNavigation) {
+      return isArabic
+        ? `ممتاز! ${product.name}${priceInfo}. دعني آخذك إليه مباشرة! [[FLY_TO:${product.id}]]`
+        : `Excellent! ${product.name}${priceInfo}. Let me take you right to it! [[FLY_TO:${product.id}]]`;
+    }
+    
+    return isArabic
+      ? `نعم، لدينا ${product.name}${priceInfo}. هل تريدني أن آخذك إليه في الجولة لتراه عن قرب؟`
+      : `Yes, we have the ${product.name}${priceInfo}. Would you like me to take you there in the tour to see it up close?`;
+  }
+  
+  if (matchedProducts.length > 1) {
+    const productList = matchedProducts.slice(0, 4).map(p => p.name).join(isArabic ? '، ' : ', ');
+    return isArabic
+      ? `لدينا عدة خيارات: ${productList}. أي منها يثير اهتمامك أكثر؟`
+      : `We have several options: ${productList}. Which one interests you most?`;
+  }
+  
+  // Category queries
+  const categoryKeywords: Record<string, string[]> = {
+    'refrigerator': ['ثلاجة', 'ثلاجات', 'refrigerator', 'fridge', 'fridges'],
+    'washing': ['غسالة', 'غسالات', 'washing', 'washer'],
+    'oven': ['فرن', 'أفران', 'oven', 'ovens'],
+    'microwave': ['ميكروويف', 'microwave'],
+    'heater': ['سخان', 'سخانات', 'heater', 'water heater'],
+    'tv': ['تلفزيون', 'تلفاز', 'شاشة', 'tv', 'television', 'screen'],
+    'ac': ['تكييف', 'مكيف', 'air conditioner', 'ac', 'cooling'],
+  };
+  
+  for (const [category, keywords] of Object.entries(categoryKeywords)) {
+    if (keywords.some(k => lastUserMessage.includes(k))) {
+      const categoryProducts = products.filter(p => 
+        p.category.toLowerCase().includes(category) || 
+        p.name.toLowerCase().includes(category)
+      );
+      
+      if (categoryProducts.length > 0) {
+        const firstProduct = categoryProducts[0];
+        const otherCount = categoryProducts.length - 1;
+        
+        if (wantsNavigation) {
+          return isArabic
+            ? `لدينا ${categoryProducts.length} خيار! دعني أريك ${firstProduct.name} أولاً. [[FLY_TO:${firstProduct.id}]]`
+            : `We have ${categoryProducts.length} option${categoryProducts.length > 1 ? 's' : ''}! Let me show you the ${firstProduct.name} first. [[FLY_TO:${firstProduct.id}]]`;
+        }
+        
+        const priceInfo = firstProduct.price ? (isArabic ? ` يبدأ من ${firstProduct.price} جنيه` : ` starting at EGP ${firstProduct.price}`) : '';
+        return isArabic
+          ? `لدينا ${categoryProducts.length} خيارات! أبرزها ${firstProduct.name}${priceInfo}${otherCount > 0 ? ` و${otherCount} آخرين` : ''}. هل تريد أن أريك؟`
+          : `We have ${categoryProducts.length} option${categoryProducts.length > 1 ? 's' : ''}! Featured: ${firstProduct.name}${priceInfo}${otherCount > 0 ? ` and ${otherCount} more` : ''}. Want me to show you?`;
       }
     }
   }
   
-  if (lastUserMessage.includes('what') || lastUserMessage.includes('ماذا') || lastUserMessage.includes('ما هي')) {
+  // Price queries
+  if (/price|cost|how much|كم|سعر|تكلفة|بكم/i.test(lastUserMessage)) {
+    if (lastMentionedProduct && lastMentionedProduct.price) {
+      return isArabic 
+        ? `${lastMentionedProduct.name} بسعر ${lastMentionedProduct.price} جنيه مصري. هل تريد رؤيته في الجولة؟`
+        : `The ${lastMentionedProduct.name} is priced at EGP ${lastMentionedProduct.price}. Would you like to see it in the tour?`;
+    }
+    
     if (products.length > 0) {
-      const productNames = products.slice(0, 3).map(p => p?.name).join(', ');
+      const withPrices = products.filter(p => p.price).slice(0, 3);
+      if (withPrices.length > 0) {
+        const priceList = withPrices.map(p => `${p.name}: ${p.price} EGP`).join(', ');
+        return isArabic
+          ? `إليك بعض الأسعار: ${priceList}. اسألني عن أي منتج محدد!`
+          : `Here are some prices: ${priceList}. Ask me about any specific product!`;
+      }
+    }
+    
+    return isArabic 
+      ? 'يمكنني مساعدتك في معرفة الأسعار! أي منتج تريد الاستفسار عنه؟ اضغط على أي منتج في الجولة لرؤية السعر مباشرة.'
+      : 'I can help with pricing! Which product would you like to know about? Click on any product in the tour to see its price directly.';
+  }
+  
+  // What products / inventory queries  
+  if (/what.*have|what.*sell|inventory|products|stock|ماذا|ما هي|منتجات|عندكم/i.test(lastUserMessage)) {
+    if (products.length > 0) {
+      // Group by category
+      const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
+      if (categories.length > 0) {
+        const categoryList = categories.slice(0, 5).join(isArabic ? '، ' : ', ');
+        return isArabic
+          ? `لدينا مجموعة رائعة تشمل ${categoryList}! لدينا ${products.length} منتج في المتجر. ما الذي تبحث عنه؟`
+          : `We have a great selection including ${categoryList}! That's ${products.length} products in store. What are you looking for?`;
+      }
+      const productNames = products.slice(0, 4).map(p => p.name).join(', ');
       return isArabic
         ? `لدينا مجموعة رائعة بما في ذلك ${productNames}. ما الذي يثير اهتمامك؟`
         : `We have a great selection including ${productNames}. What interests you?`;
     }
   }
   
-  if (lastUserMessage.includes('price') || lastUserMessage.includes('سعر') || lastUserMessage.includes('كم')) {
-    return isArabic 
-      ? 'يمكنني مساعدتك في معرفة الأسعار! أي منتج تريد الاستفسار عنه؟ يمكنك أيضاً الضغط على أي منتج في الجولة لرؤية تفاصيله.'
-      : 'I can help you with pricing! Which product would you like to know about? You can also click on any product in the tour to see its details.';
-  }
-  
-  if (lastUserMessage.includes('help') || lastUserMessage.includes('مساعدة')) {
+  // Navigation without specific product
+  if (wantsNavigation && products.length > 0) {
+    const randomProduct = products[Math.floor(Math.random() * Math.min(products.length, 5))];
     return isArabic
-      ? 'بالطبع! يمكنني مساعدتك في: 🔹 العثور على منتجات معينة 🔹 معرفة الأسعار 🔹 التنقل في الجولة 🔹 الإجابة على استفساراتك. ماذا تريد أن تعرف؟'
-      : 'Of course! I can help you with: 🔹 Finding specific products 🔹 Checking prices 🔹 Navigating the tour 🔹 Answering your questions. What would you like to know?';
+      ? `بالتأكيد! دعني أريك ${randomProduct.name} - واحد من أفضل منتجاتنا! [[FLY_TO:${randomProduct.id}]]`
+      : `Sure! Let me show you the ${randomProduct.name} - one of our best items! [[FLY_TO:${randomProduct.id}]]`;
   }
   
-  if (lastUserMessage.includes('hello') || lastUserMessage.includes('hi') || lastUserMessage.includes('مرحبا') || lastUserMessage.includes('أهلا')) {
+  // Help queries
+  if (/help|assist|مساعدة|ساعد/i.test(lastUserMessage)) {
+    return isArabic
+      ? `بالطبع! يمكنني:\n🔹 البحث عن منتجات (قل "أرني الثلاجات")\n🔹 معرفة الأسعار\n🔹 التنقل في الجولة (قل "خذني إلى...")\n🔹 الإجابة على أي استفسار\nماذا تريد؟`
+      : `Of course! I can:\n🔹 Find products (say "show me refrigerators")\n🔹 Check prices\n🔹 Navigate the tour (say "take me to...")\n🔹 Answer questions\nWhat would you like?`;
+  }
+  
+  // Greetings
+  if (/^(hello|hi|hey|مرحبا|أهلا|السلام)/i.test(lastUserMessage)) {
     if (products.length > 0) {
+      const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
+      const categoryHint = categories.length > 0 ? categories.slice(0, 3).join(', ') : '';
       return isArabic
-        ? `مرحباً! 👋 أنا مساعدك الذكي. لدينا ${products.length} منتج متاح. اسألني عن أي شيء أو قل "أرني شيئاً" وسآخذك إليه!`
-        : `Hello! 👋 I'm your smart assistant. We have ${products.length} products available. Ask me about anything or say "show me something" and I'll take you there!`;
+        ? `مرحباً! 👋 أنا مساعدك الذكي. لدينا ${products.length} منتج${categoryHint ? ` في فئات مثل ${categoryHint}` : ''}. اسألني عن أي شيء أو قل "أرني شيئاً"!`
+        : `Hello! 👋 I'm your smart assistant. We have ${products.length} products${categoryHint ? ` in categories like ${categoryHint}` : ''}. Ask me anything or say "show me something"!`;
     }
     return isArabic
       ? 'مرحباً! 👋 كيف يمكنني مساعدتك في جولتك الافتراضية اليوم؟'
       : 'Hello! 👋 How can I help you with your virtual tour today?';
   }
   
-  // Default helpful response
+  // Thank you responses
+  if (/thank|thanks|شكر/i.test(lastUserMessage)) {
+    return isArabic
+      ? 'العفو! 😊 هل هناك شيء آخر يمكنني مساعدتك به؟'
+      : 'You\'re welcome! 😊 Is there anything else I can help you with?';
+  }
+  
+  // Yes/confirmation - continue with last context
+  if (/^(yes|yeah|sure|ok|نعم|أيوه|طيب|تمام)/i.test(lastUserMessage) && lastMentionedProduct) {
+    return isArabic
+      ? `ممتاز! دعني آخذك إلى ${lastMentionedProduct.name} الآن. [[FLY_TO:${lastMentionedProduct.id}]]`
+      : `Perfect! Let me take you to the ${lastMentionedProduct.name} now. [[FLY_TO:${lastMentionedProduct.id}]]`;
+  }
+  
+  // Default helpful response with product awareness
+  if (products.length > 0) {
+    return isArabic
+      ? `أنا هنا لمساعدتك! لدينا ${products.length} منتج في المتجر. يمكنك سؤالي عن أي منتج أو قل "أرني" وسآخذك في جولة!`
+      : `I'm here to help! We have ${products.length} products in store. Ask me about any product or say "show me" and I'll give you a tour!`;
+  }
+  
   return isArabic
-    ? 'أنا هنا لمساعدتك! يمكنني إرشادك حول المنتجات والأسعار والتنقل في الجولة. ماذا تريد أن تعرف؟'
-    : 'I\'m here to help! I can guide you about products, prices, and navigate the tour. What would you like to know?';
+    ? 'أنا هنا لمساعدتك! يمكنني إرشادك في الجولة والإجابة على أي استفسار. ماذا تريد أن تعرف؟'
+    : 'I\'m here to help! I can guide you through the tour and answer any questions. What would you like to know?';
 }
 
 export async function POST(request: NextRequest) {
