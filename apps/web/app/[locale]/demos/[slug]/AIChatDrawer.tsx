@@ -37,7 +37,7 @@ interface AgentResponse {
 }
 
 interface AgentAction {
-  type: 'flyTo' | 'showComparison' | 'openWhatsApp' | 'showContactForm' | 'showLeadForm';
+  type: 'flyTo' | 'showComparison' | 'openWhatsApp' | 'showContactForm' | 'showLeadForm' | 'addToCart';
   payload: Record<string, any>;
 }
 
@@ -60,6 +60,8 @@ interface AIChatDrawerProps {
   items?: TourItem[];
   // Callback to navigate to an item
   onNavigateToItem?: (item: TourItem) => void;
+  // Callback to add item to cart
+  onAddToCart?: (itemId: string, title: string, price: number, quantity: number, imageUrl?: string) => void;
 }
 
 /**
@@ -197,20 +199,30 @@ export function AIChatDrawer({
   currentLocation, 
   locale, 
   items = [], 
-  onNavigateToItem 
+  onNavigateToItem,
+  onAddToCart,
 }: AIChatDrawerProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  // Generate session ID (persists across renders, reset on clear)
-  const generateSessionId = useCallback(() => {
-    if (typeof window !== 'undefined' && typeof crypto !== 'undefined') {
-      return crypto.randomUUID();
-    }
-    return `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }, []);
-  const [sessionId, setSessionId] = useState(generateSessionId);
+  
+  // Persistent session ID — stored in localStorage keyed by demo slug
+  // So returning visitors get their conversation back (even across tabs)
+  const getOrCreateSessionId = useCallback(() => {
+    if (typeof window === 'undefined') return `session-${Date.now()}`;
+    const key = `arabiq_chat_session_${demo.slug}`;
+    const stored = localStorage.getItem(key);
+    if (stored) return stored;
+    const newId = typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem(key, newId);
+    return newId;
+  }, [demo.slug]);
+  
+  const [sessionId, setSessionId] = useState(getOrCreateSessionId);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -233,21 +245,56 @@ export function AIChatDrawer({
     }
   }, [isOpen]);
   
-  // Add welcome message when drawer first opens
+  // Load chat history from server when drawer opens
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
-      const welcomeMessage = getWelcomeMessage(demo.demoType, demo.title, locale, items.length);
-      setMessages([{
-        id: 'welcome',
-        role: 'assistant',
-        content: welcomeMessage,
-        timestamp: new Date(),
-      }]);
-      
-      // Set initial suggestions
-      setSuggestions(getInitialSuggestions(demo.demoType, locale));
-    }
-  }, [isOpen, messages.length, demo.demoType, demo.title, locale, items.length]);
+    if (!isOpen || historyLoaded) return;
+    
+    const loadHistory = async () => {
+      try {
+        const res = await fetch(`/api/ai-agent/history?sessionId=${sessionId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        if (data.valid && data.messages && data.messages.length > 0) {
+          // Restore previous conversation
+          const restored: ChatMessage[] = data.messages
+            .filter((m: any) => m.role !== 'system')
+            .map((m: any, i: number) => ({
+              id: `restored-${i}`,
+              role: m.role as 'user' | 'assistant',
+              content: m.content,
+              timestamp: new Date(m.timestamp),
+              actions: m.actions,
+            }));
+          setMessages(restored);
+          setSuggestions(getInitialSuggestions(demo.demoType, locale));
+        } else {
+          // No history — show welcome message
+          const welcomeMessage = getWelcomeMessage(demo.demoType, demo.title, locale, items.length);
+          setMessages([{
+            id: 'welcome',
+            role: 'assistant',
+            content: welcomeMessage,
+            timestamp: new Date(),
+          }]);
+          setSuggestions(getInitialSuggestions(demo.demoType, locale));
+        }
+      } catch {
+        // Network error — show welcome
+        const welcomeMessage = getWelcomeMessage(demo.demoType, demo.title, locale, items.length);
+        setMessages([{
+          id: 'welcome',
+          role: 'assistant',
+          content: welcomeMessage,
+          timestamp: new Date(),
+        }]);
+        setSuggestions(getInitialSuggestions(demo.demoType, locale));
+      }
+      setHistoryLoaded(true);
+    };
+    
+    loadHistory();
+  }, [isOpen, historyLoaded, sessionId, demo.demoType, demo.title, locale, items.length]);
   
   // Handle action button click
   const handleAction = useCallback((action: AgentAction) => {
@@ -286,8 +333,15 @@ export function AIChatDrawer({
         // Future: open comparison view
         console.log('Comparison requested:', action);
         break;
+      
+      case 'addToCart':
+        if (onAddToCart) {
+          const { itemId, title, price, quantity: qty, imageUrl } = action.payload;
+          onAddToCart(String(itemId), title || '', price || 0, qty || 1, imageUrl);
+        }
+        break;
     }
-  }, [items, onNavigateToItem]);
+  }, [items, onNavigateToItem, onAddToCart]);
   
   const sendMessage = async (messageText?: string) => {
     const text = (messageText || input).trim();
@@ -385,7 +439,14 @@ export function AIChatDrawer({
   const clearChat = () => {
     setMessages([]);
     setSuggestions([]);
-    setSessionId(generateSessionId()); // Reset session so server starts fresh
+    setHistoryLoaded(false);
+    // Generate new session so server starts fresh
+    const key = `arabiq_chat_session_${demo.slug}`;
+    const newId = typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem(key, newId);
+    setSessionId(newId);
   };
   
   const labels = {
@@ -646,6 +707,16 @@ function ActionButton({
         >
           <BarChart3 className="w-3 h-3" />
           {labels.compare}
+        </button>
+      );
+    
+    case 'addToCart':
+      return (
+        <button
+          onClick={onClick}
+          className="flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-full px-3 py-1.5 text-xs transition-colors w-full justify-center"
+        >
+          🛒 {action.payload.title || (labels.addToCart || 'Add to Cart')}
         </button>
       );
       

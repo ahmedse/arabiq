@@ -36,7 +36,9 @@ ACTION MARKERS (use these in your response — they become interactive buttons):
 - To show a "Go to item" button: [[FLY_TO:itemId:Item Title]]
 - To show a WhatsApp button: [[WHATSAPP:{whatsapp}:Your message here]]
 - To show a lead/contact form: [[LEAD:inquiry]] or [[LEAD:booking]]
+- To add an item to cart: [[ADD_TO_CART:itemId:quantity]]
 - When listing items, put [[FLY_TO:id:title]] after EACH item.
+- When user says "add to cart" or "I want to buy", use [[ADD_TO_CART:id:1]]
 
 CONVERSATION AWARENESS:
 - If user says "the first one", "the second", "that one", "it" — look at what items you showed previously in this conversation and resolve the reference.
@@ -70,7 +72,9 @@ const SYSTEM_PROMPT_AR = `أنت {agentName}، مساعد ذكي لـ {businessN
 - لعرض زر "اذهب للعنصر": [[FLY_TO:معرف_العنصر:عنوان العنصر]]
 - لعرض زر واتساب: [[WHATSAPP:{whatsapp}:رسالتك هنا]]
 - لعرض نموذج تواصل: [[LEAD:inquiry]] أو [[LEAD:booking]]
+- لإضافة عنصر للسلة: [[ADD_TO_CART:معرف_العنصر:الكمية]]
 - عند سرد العناصر، ضع [[FLY_TO:id:title]] بعد كل عنصر.
+- عندما يقول المستخدم \"أضف للسلة\" أو \"أريد شراء\"، استخدم [[ADD_TO_CART:id:1]]
 
 الوعي بالمحادثة:
 - إذا قال المستخدم "الأول"، "الثاني"، "هذا"، "ذلك" — ابحث في العناصر التي عرضتها سابقاً.

@@ -72,8 +72,8 @@ export interface MatterportController {
   
   // Position & Camera
   getCameraPose(): Promise<CameraState>;
-  moveTo(position: Vector3, rotation?: Rotation, sweepId?: string): Promise<void>;
-  moveToSweep(sweepId: string, rotation?: Rotation): Promise<void>;
+  moveTo(position: Vector3, rotation?: Rotation, sweepId?: string): Promise<boolean>;
+  moveToSweep(sweepId: string, rotation?: Rotation): Promise<boolean>;
   
   // Click handling - returns full intersection data
   onClick(callback: (intersection: PointerIntersection) => void): () => void;
@@ -245,22 +245,40 @@ export function createMatterportController(): MatterportController {
     };
   }
 
+  /**
+   * Move camera to position with multiple fallback strategies
+   * @returns true if navigation succeeded, false otherwise
+   */
   async function moveTo(
     position: Vector3,
     rotation?: Rotation,
     sweepId?: string
-  ): Promise<void> {
-    if (!sdk) throw new Error('SDK not connected');
+  ): Promise<boolean> {
+    // Defensive check: SDK must be connected
+    if (!sdk) {
+      console.error('[MatterportController] moveTo failed: SDK not connected');
+      return false;
+    }
+
+    // Validate position
+    if (!position || typeof position.x !== 'number' || typeof position.y !== 'number' || typeof position.z !== 'number') {
+      console.error('[MatterportController] moveTo failed: Invalid position', position);
+      return false;
+    }
 
     const rot = rotation ?? { x: 0, y: 0 };
 
     // If no sweep ID provided, find the nearest one
     let targetSweepId = sweepId;
     if (!targetSweepId) {
-      const nearestSweep = await findNearestSweep(position);
-      if (nearestSweep) {
-        targetSweepId = nearestSweep.sid;
-        console.log(`[MatterportController] Found nearest sweep: ${targetSweepId}`);
+      try {
+        const nearestSweep = await findNearestSweep(position);
+        if (nearestSweep) {
+          targetSweepId = nearestSweep.sid;
+          console.log(`[MatterportController] Found nearest sweep: ${targetSweepId}`);
+        }
+      } catch (e) {
+        console.warn('[MatterportController] Failed to find nearest sweep:', e);
       }
     }
 
@@ -272,8 +290,8 @@ export function createMatterportController(): MatterportController {
           transition: sdk.Sweep?.Transition?.FLY ?? sdk.Camera?.TransitionType?.FLY ?? 1,
           transitionTime: 1500,
         });
-        console.log('[MatterportController] Sweep.moveTo succeeded');
-        return;
+        console.log('[MatterportController] ✅ Sweep.moveTo succeeded');
+        return true;
       } catch (e) {
         console.warn('[MatterportController] Sweep.moveTo failed, trying fallback:', e);
       }
@@ -282,15 +300,15 @@ export function createMatterportController(): MatterportController {
     // Strategy 2: Use Mode.moveTo
     if (sdk.Mode?.moveTo) {
       try {
-        await sdk.Mode.moveTo(sdk.Mode.Mode.INSIDE, {
+        await sdk.Mode.moveTo(sdk.Mode.Mode?.INSIDE ?? 'mode.inside', {
           position,
           rotation: rot,
           transition: sdk.Mode.TransitionType?.FLY ?? 1,
         });
-        console.log('[MatterportController] Mode.moveTo succeeded');
-        return;
+        console.log('[MatterportController] ✅ Mode.moveTo succeeded');
+        return true;
       } catch (e) {
-        console.warn('[MatterportController] Mode.moveTo failed');
+        console.warn('[MatterportController] Mode.moveTo failed, trying fallback:', e);
       }
     }
 
@@ -302,30 +320,81 @@ export function createMatterportController(): MatterportController {
           await new Promise(r => setTimeout(r, 300));
           await sdk.Camera.rotateTo(rot);
         }
-        console.log('[MatterportController] Camera.moveTo succeeded');
-        return;
+        console.log('[MatterportController] ✅ Camera.moveTo succeeded');
+        return true;
       } catch (e) {
-        console.warn('[MatterportController] Camera.moveTo failed');
+        console.warn('[MatterportController] Camera.moveTo failed:', e);
+      }
+    }
+
+    // Strategy 4: Last resort - try to at least change the sweep if we have one
+    if (targetSweepId && sdk.Sweep?.data) {
+      try {
+        // Try simple sweep change without rotation
+        const sweepData = sdk.Sweep.data;
+        const sweep = Array.isArray(sweepData) 
+          ? sweepData.find((s: any) => s.sid === targetSweepId)
+          : null;
+        
+        if (sweep && sdk.Sweep.moveTo) {
+          await sdk.Sweep.moveTo(targetSweepId);
+          console.log('[MatterportController] ⚠️ Basic sweep navigation succeeded (no rotation)');
+          return true;
+        }
+      } catch (e) {
+        console.warn('[MatterportController] Last resort sweep navigation failed:', e);
       }
     }
     
-    throw new Error('No navigation method available');
+    console.error('[MatterportController] ❌ All navigation methods failed');
+    return false;
   }
   
-  async function moveToSweep(sweepId: string, rotation?: Rotation): Promise<void> {
-    if (!sdk) throw new Error('SDK not connected');
+  /**
+   * Move to a specific sweep (panorama position)
+   * @returns true if navigation succeeded, false otherwise
+   */
+  async function moveToSweep(sweepId: string, rotation?: Rotation): Promise<boolean> {
+    // Defensive check: SDK must be connected
+    if (!sdk) {
+      console.error('[MatterportController] moveToSweep failed: SDK not connected');
+      return false;
+    }
+
+    // Validate sweep ID
+    if (!sweepId || typeof sweepId !== 'string') {
+      console.error('[MatterportController] moveToSweep failed: Invalid sweepId', sweepId);
+      return false;
+    }
     
     const rot = rotation ?? { x: 0, y: 0 };
     
+    // Try Sweep.moveTo with rotation
     if (sdk.Sweep?.moveTo) {
-      await sdk.Sweep.moveTo(sweepId, {
-        rotation: rot,
-        transition: sdk.Sweep?.Transition?.FLY ?? 1,
-        transitionTime: 1500,
-      });
-    } else {
-      throw new Error('Sweep.moveTo not available');
+      try {
+        await sdk.Sweep.moveTo(sweepId, {
+          rotation: rot,
+          transition: sdk.Sweep?.Transition?.FLY ?? 1,
+          transitionTime: 1500,
+        });
+        console.log('[MatterportController] ✅ moveToSweep succeeded');
+        return true;
+      } catch (e) {
+        console.warn('[MatterportController] moveToSweep with rotation failed, trying without:', e);
+        
+        // Fallback: Try without rotation options
+        try {
+          await sdk.Sweep.moveTo(sweepId);
+          console.log('[MatterportController] ⚠️ moveToSweep succeeded (no rotation)');
+          return true;
+        } catch (e2) {
+          console.error('[MatterportController] moveToSweep fallback failed:', e2);
+        }
+      }
     }
+    
+    console.error('[MatterportController] ❌ Sweep.moveTo not available');
+    return false;
   }
 
   function onClick(
@@ -555,28 +624,60 @@ export function createMatterportController(): MatterportController {
     }
   }
   
+  /**
+   * Find the nearest sweep (panorama position) to a given 3D position
+   * @returns SweepData if found, null otherwise
+   */
   async function findNearestSweep(position: Vector3): Promise<SweepData | null> {
-    let sweeps = cachedSweeps;
-    if (sweeps.length === 0) {
-      sweeps = await getSweepData();
-      cachedSweeps = sweeps;
+    // Validate position
+    if (!position || typeof position.x !== 'number' || typeof position.y !== 'number' || typeof position.z !== 'number') {
+      console.error('[MatterportController] findNearestSweep: Invalid position', position);
+      return null;
     }
     
-    if (sweeps.length === 0) return null;
-    
-    let nearest: SweepData | null = null;
-    let minDist = Infinity;
-    
-    for (const sweep of sweeps) {
-      if (!sweep.enabled) continue;
-      const dist = distance3D(position, sweep.position);
-      if (dist < minDist) {
-        minDist = dist;
-        nearest = sweep;
+    try {
+      let sweeps = cachedSweeps;
+      if (sweeps.length === 0) {
+        sweeps = await getSweepData();
+        cachedSweeps = sweeps;
       }
+      
+      if (!sweeps || sweeps.length === 0) {
+        console.warn('[MatterportController] findNearestSweep: No sweeps available');
+        return null;
+      }
+      
+      let nearest: SweepData | null = null;
+      let minDist = Infinity;
+      
+      for (const sweep of sweeps) {
+        // Skip disabled sweeps or sweeps with invalid positions
+        if (!sweep || !sweep.enabled || !sweep.position) continue;
+        
+        try {
+          const dist = distance3D(position, sweep.position);
+          if (dist < minDist) {
+            minDist = dist;
+            nearest = sweep;
+          }
+        } catch (err) {
+          // Skip this sweep if distance calculation fails
+          console.warn('[MatterportController] Failed to calculate distance for sweep:', sweep.sid, err);
+          continue;
+        }
+      }
+      
+      if (nearest) {
+        console.log(`[MatterportController] Found nearest sweep: ${nearest.sid} at distance ${minDist.toFixed(2)}m`);
+      } else {
+        console.warn('[MatterportController] No enabled sweep found near position');
+      }
+      
+      return nearest;
+    } catch (err) {
+      console.error('[MatterportController] findNearestSweep failed:', err);
+      return null;
     }
-    
-    return nearest;
   }
   
   // NEW TAG API (replaces deprecated Mattertag)

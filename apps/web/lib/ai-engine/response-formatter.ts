@@ -33,6 +33,9 @@ const WHATSAPP_PATTERN = /\[\[WHATSAPP(?::([^:\]]+)(?::([^\]]+))?)?\]\]/g;
 // Comparison command: [[COMPARE:id1,id2]]
 const COMPARE_PATTERN = /\[\[COMPARE:([^,]+),([^\]]+)\]\]/g;
 
+// Add to cart command: [[ADD_TO_CART:itemId:quantity]]
+const ADD_TO_CART_PATTERN = /\[\[ADD_TO_CART:([^:\]]+)(?::([^\]]*))?\]\]/g;
+
 // ========================================
 // Response Formatting
 // ========================================
@@ -131,6 +134,29 @@ export function formatResponse(
         captureType,
       },
     });
+    
+    cleanedText = cleanedText.replace(match[0], '');
+  }
+  
+  // Extract add-to-cart commands
+  const cartMatches = [...rawResponse.matchAll(ADD_TO_CART_PATTERN)];
+  for (const match of cartMatches) {
+    const itemId = match[1];
+    const quantity = parseInt(match[2] || '1', 10) || 1;
+    const item = items.find(i => i.id === itemId);
+    
+    if (item) {
+      actions.push({
+        type: 'addToCart',
+        payload: {
+          itemId,
+          title: locale === 'ar' && item.titleAr ? item.titleAr : item.title,
+          price: item.price,
+          quantity,
+          imageUrl: item.imageUrl,
+        },
+      });
+    }
     
     cleanedText = cleanedText.replace(match[0], '');
   }

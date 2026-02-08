@@ -205,25 +205,35 @@ export function HotspotManager({ items, onItemClick, highlightedItemId }: Hotspo
     };
   }, [sdk, isReady, items]);
   
-  // Handle highlighting when highlightedItemId changes
+  // Handle highlighting when highlightedItemId changes (robust)
   useEffect(() => {
     if (!sdk || !isReady) return;
     
     // Navigate to the highlighted tag
     if (highlightedItemId) {
       const tagId = tagIdByItemRef.current.get(highlightedItemId);
-      if (tagId) {
-        console.log('[HotspotManager] Highlighting tag for item:', highlightedItemId);
-        // navigateToTag with no transition argument defaults to fly
-        // The second arg must be a Transition enum value, NOT an object
-        sdk.Mattertag.navigateToTag(tagId)
-          .then(() => {
-            console.log('[HotspotManager] Navigated to highlighted tag');
-          })
-          .catch((err: Error) => {
-            console.error('[HotspotManager] Failed to navigate to tag:', err);
-          });
+      if (!tagId) {
+        console.warn('[HotspotManager] No tag ID found for highlighted item:', highlightedItemId);
+        return;
       }
+      
+      if (!sdk.Mattertag?.navigateToTag) {
+        console.warn('[HotspotManager] navigateToTag not available in SDK');
+        return;
+      }
+      
+      console.log('[HotspotManager] Highlighting tag for item:', highlightedItemId);
+      
+      // navigateToTag with no transition argument defaults to fly
+      // The second arg must be a Transition enum value, NOT an object
+      sdk.Mattertag.navigateToTag(tagId)
+        .then(() => {
+          console.log('[HotspotManager] ✅ Navigated to highlighted tag');
+        })
+        .catch((err: Error) => {
+          console.error('[HotspotManager] ❌ Failed to navigate to tag:', err);
+          // Don't throw - just log the error and continue
+        });
     }
   }, [sdk, isReady, highlightedItemId]);
   

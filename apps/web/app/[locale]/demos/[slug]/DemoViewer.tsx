@@ -21,6 +21,7 @@ import { ProductSidebar } from './ProductSidebar';
 import { ProductDrawer } from './ProductDrawer';
 import { CartDrawer } from './CartDrawer';
 import { CheckoutModal } from './CheckoutModal';
+import { useCart } from '@/contexts/CartContext';
 
 // Café components
 import { MenuItemPopup } from './MenuItemPopup';
@@ -71,6 +72,7 @@ export function DemoViewer({ demo, items, voiceOvers = [], locale }: DemoViewerP
 
 function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps) {
   const { setItems, setDemo, isReady, sdk } = useMatterport();
+  const { addItem: addCartItem } = useCart();
   
   // Session tracking
   const [sessionId] = useState(() => generateSessionId());
@@ -133,10 +135,10 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
     }
     trackProductClick(demo.id, sessionId, item.id, item.name, 'tag');
     
-    // For e-commerce, open sidebar and drawer
+    // For e-commerce, only open sidebar (not drawer)
+    // User can click product to see details
     if (demo.demoType === 'ecommerce' || demo.demoType === 'showroom') {
       setIsProductSidebarOpen(true);
-      setIsProductDrawerOpen(true);
     }
   }, [demo.id, demo.demoType, sessionId]);
   
@@ -149,9 +151,10 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
     trackProductClick(demo.id, sessionId, item.id, item.name, 'sidebar');
   }, [demo.id, sessionId]);
   
-  // Navigate to product in tour
+  // Navigate to product in tour (from AI chat or sidebar "View in Tour" button)
   // Uses setHighlightedProductId which triggers HotspotManager's
   // sdk.Mattertag.navigateToTag(tagId, sdk.Mattertag.Transition.FLY)
+  // Does NOT open drawer - just flies to the location
   const handleViewInTour = useCallback(async (item: TourItem) => {
     console.log('[DemoViewer] Navigating to item:', item.name, 'id:', item.id);
     
@@ -159,13 +162,18 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
     // via sdk.Mattertag.navigateToTag which handles fly transitions correctly
     setHighlightedProductId(item.id);
     
+    // Open sidebar but NOT drawer - let user decide if they want details
+    if (demo.demoType === 'ecommerce' || demo.demoType === 'showroom') {
+      setIsProductSidebarOpen(true);
+    }
+    
     // Track the navigation
     const sweepId = item.hotspotData?.nearestSweepId;
     const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
     if (sweepId) {
       trackNavigation(demo.id, sessionId, sweepId, position || { x: 0, y: 0, z: 0 });
     }
-  }, [demo.id, sessionId]);
+  }, [demo.id, demo.demoType, sessionId]);
   
   // Close product drawer
   const handleCloseDrawer = useCallback(() => {
@@ -204,6 +212,17 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
   const toggleProductSidebar = useCallback(() => {
     setIsProductSidebarOpen((prev) => !prev);
   }, []);
+  
+  // Handle AI chat adding to cart
+  const handleAIAddToCart = useCallback((itemId: string, title: string, price: number, quantity: number, imageUrl?: string) => {
+    addCartItem({
+      id: itemId,
+      name: title,
+      price,
+      quantity,
+      image: imageUrl,
+    });
+  }, [addCartItem]);
   
   // Get main property for real estate
   const mainProperty = items.find(item => 
@@ -352,10 +371,11 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
           locale={locale}
           items={items}
           onNavigateToItem={handleViewInTour}
+          onAddToCart={isEcommerce ? handleAIAddToCart : undefined}
         />
       )}
       
-      {/* Presence Tracking */}
+      {/* Presence Tracking (no floating UI) */}
       {demo.enableLiveChat && (
         <PresenceTracker
           demoSlug={demo.slug}
@@ -366,15 +386,15 @@ function DemoViewerContent({ demo, items, voiceOvers, locale }: DemoViewerProps)
         />
       )}
       
-      {/* Live Chat Widget */}
-      {demo.enableLiveChat && (
+      {/* Live Chat Widget - hidden: redundant with AI chat, clutters mobile UI */}
+      {/* {demo.enableLiveChat && (
         <LiveChatWidget
           demoSlug={demo.slug}
           sessionId={sessionId}
           visitorName={`Visitor ${sessionId.slice(-4)}`}
           locale={locale}
         />
-      )}
+      )} */}
       
       {/* Voice-Over Player */}
       {demo.enableVoiceOver && voiceOvers && voiceOvers.length > 0 && (

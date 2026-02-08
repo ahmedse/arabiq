@@ -45,18 +45,14 @@ const mockReviews = [
   { id: 3, name: 'Omar H.', rating: 5, comment: 'Best purchase I made this year!', date: '2024-01-05' },
 ];
 
-// Product images placeholder (will be replaced with real images)
+// Product images from CMS
 const getProductImages = (product: TourItem): string[] => {
+  // ONLY use actual product image from CMS - no fallback mismatches
   if (product.imageUrl) {
     return [product.imageUrl];
   }
-  // Fallback placeholder images based on category
-  const category = product.category?.toLowerCase() || 'electronics';
-  return [
-    `https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800`, // MacBook
-    `https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800`, // Phone
-    `https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=800`, // TV
-  ].slice(0, 1);
+  // Return empty array if no image - will show placeholder icon instead
+  return [];
 };
 
 export function ProductDrawer({ product, isOpen, onClose, locale, onGoToProduct }: ProductDrawerProps) {
@@ -99,6 +95,7 @@ export function ProductDrawer({ product, isOpen, onClose, locale, onGoToProduct 
   };
   
   const images = product ? getProductImages(product) : [];
+  const hasImage = images.length > 0;
   const inCart = product && cartItems.find(item => item.id === product.id.toString());
   
   if (!isOpen || !product) return null;
@@ -149,7 +146,7 @@ export function ProductDrawer({ product, isOpen, onClose, locale, onGoToProduct 
           </div>
           
           {/* Image Gallery */}
-          <div className="relative bg-gradient-to-b from-gray-50 to-white p-6">
+          <div className="relative bg-gradient-to-b from-gray-50 to-white p-4">
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-lg">
               {images.length > 0 ? (
                 <Image
@@ -201,7 +198,7 @@ export function ProductDrawer({ product, isOpen, onClose, locale, onGoToProduct 
           </div>
           
           {/* Content */}
-          <div className="p-6 space-y-6">
+          <div className="p-4 space-y-4">
             {/* Category & Rating */}
             <div className="flex items-center justify-between">
               {product.category && (
@@ -217,17 +214,17 @@ export function ProductDrawer({ product, isOpen, onClose, locale, onGoToProduct 
             </div>
             
             {/* Name */}
-            <h1 className="text-2xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-xl font-bold text-gray-900 leading-tight">
               {product.name}
             </h1>
             
             {/* Price */}
-            <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-bold text-gray-900">
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-gray-900">
                 {formatPrice(product.price || 0, product.currency)}
               </span>
               {/* Fake original price for discount effect */}
-              <span className="text-lg text-gray-400 line-through">
+              <span className="text-sm text-gray-400 line-through">
                 {formatPrice((product.price || 0) * 1.2, product.currency)}
               </span>
               <span className="px-2 py-0.5 text-xs font-bold text-green-700 bg-green-100 rounded">
@@ -236,7 +233,7 @@ export function ProductDrawer({ product, isOpen, onClose, locale, onGoToProduct 
             </div>
             
             {/* Trust Badges */}
-            <div className="grid grid-cols-3 gap-3 py-4 border-y border-gray-100">
+            <div className="grid grid-cols-3 gap-2 py-3 border-y border-gray-100">
               <div className="flex flex-col items-center text-center gap-1">
                 <Truck className="w-5 h-5 text-primary-600" />
                 <span className="text-xs text-gray-600">

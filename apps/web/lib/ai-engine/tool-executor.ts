@@ -552,6 +552,115 @@ function executeCaptureLead(
 }
 
 // ========================================
+// Tool 7: Manage Shopping Cart
+// ========================================
+
+const MANAGE_CART_TOOL: AgentTool = {
+  name: 'manage_cart',
+  description: 'Add items to shopping cart, view cart contents, or clear cart. Use when user says "add to cart", "buy this", "I want to order", etc.',
+  parameters: {
+    type: 'object',
+    properties: {
+      action: {
+        type: 'string',
+        enum: ['add', 'view', 'clear'],
+        description: 'Cart action: add item, view cart, or clear cart',
+      },
+      itemName: {
+        type: 'string',
+        description: 'Name or partial name of item to add',
+      },
+      quantity: {
+        type: 'number',
+        description: 'Quantity to add (default 1)',
+      },
+    },
+    required: ['action'],
+  },
+  applicableDemoTypes: ['ecommerce', 'showroom'],
+};
+
+function executeManageCart(
+  params: Record<string, any>,
+  context: AgentContext
+): ToolResult {
+  const { action, itemName, quantity = 1 } = params;
+  const isArabic = context.locale === 'ar';
+  const items = context.items || [];
+  
+  switch (action) {
+    case 'add': {
+      if (!itemName) {
+        return {
+          success: false,
+          displayText: isArabic
+            ? 'يرجى تحديد المنتج الذي تريد إضافته للسلة.'
+            : 'Please specify which product you want to add to cart.',
+        };
+      }
+      
+      // Find the item
+      const q = itemName.toLowerCase();
+      const item = items.find(i =>
+        i.title.toLowerCase().includes(q) ||
+        (i.titleAr && i.titleAr.includes(itemName))
+      );
+      
+      if (!item) {
+        return {
+          success: false,
+          displayText: isArabic
+            ? `لم أجد منتجاً باسم "${itemName}". هل تريد رؤية المنتجات المتوفرة؟`
+            : `I couldn't find a product named "${itemName}". Would you like to see available products?`,
+        };
+      }
+      
+      const priceStr = item.price
+        ? `${item.price} ${item.currency || 'EGP'}`
+        : (isArabic ? 'السعر عند الطلب' : 'Price on request');
+      
+      return {
+        success: true,
+        displayText: isArabic
+          ? `تمت إضافة **${item.titleAr || item.title}** (${quantity}x) للسلة! السعر: ${priceStr}\n\n[[ADD_TO_CART:${item.id}:${quantity}]]`
+          : `Added **${item.title}** (${quantity}x) to your cart! Price: ${priceStr}\n\n[[ADD_TO_CART:${item.id}:${quantity}]]`,
+        data: { item, quantity },
+        action: {
+          type: 'addToCart' as const,
+          payload: { itemId: item.id, title: item.title, price: item.price, quantity, imageUrl: item.imageUrl },
+        },
+      };
+    }
+    
+    case 'view': {
+      return {
+        success: true,
+        displayText: isArabic
+          ? 'يمكنك رؤية سلة التسوق بالنقر على أيقونة السلة في شريط الأدوات أعلاه. 🛒'
+          : 'You can view your cart by clicking the cart icon in the toolbar above. 🛒',
+        data: {},
+      };
+    }
+    
+    case 'clear': {
+      return {
+        success: true,
+        displayText: isArabic
+          ? 'تم تفريغ سلة التسوق.'
+          : 'Your cart has been cleared.',
+        data: {},
+      };
+    }
+    
+    default:
+      return {
+        success: false,
+        displayText: isArabic ? 'عملية غير معروفة.' : 'Unknown cart action.',
+      };
+  }
+}
+
+// ========================================
 // Tool Registry
 // ========================================
 
@@ -562,6 +671,7 @@ const TOOLS: Record<string, AgentTool> = {
   compare_items: COMPARE_ITEMS_TOOL,
   get_contact_info: GET_CONTACT_INFO_TOOL,
   capture_lead: CAPTURE_LEAD_TOOL,
+  manage_cart: MANAGE_CART_TOOL,
 };
 
 const TOOL_EXECUTORS: Record<string, (params: Record<string, any>, context: AgentContext) => ToolResult> = {
@@ -571,6 +681,7 @@ const TOOL_EXECUTORS: Record<string, (params: Record<string, any>, context: Agen
   compare_items: executeCompareItems,
   get_contact_info: executeGetContactInfo,
   capture_lead: executeCaptureLead,
+  manage_cart: executeManageCart,
 };
 
 // ========================================

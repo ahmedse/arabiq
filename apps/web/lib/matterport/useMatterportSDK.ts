@@ -43,10 +43,10 @@ interface UseMatterportSDKResult {
   totalSweeps: number;
   /** Last error message */
   lastError: string | null;
-  /** Move camera to position (finds nearest sweep automatically) */
-  moveTo: (position: Vector3, rotation?: { x: number; y: number }, sweepId?: string) => Promise<void>;
-  /** Move to a specific sweep */
-  moveToSweep: (sweepId: string, rotation?: { x: number; y: number }) => Promise<void>;
+  /** Move camera to position (finds nearest sweep automatically) - returns true if successful */
+  moveTo: (position: Vector3, rotation?: { x: number; y: number }, sweepId?: string) => Promise<boolean>;
+  /** Move to a specific sweep - returns true if successful */
+  moveToSweep: (sweepId: string, rotation?: { x: number; y: number }) => Promise<boolean>;
   /** Manually trigger connection */
   connect: () => Promise<void>;
   /** Find nearest sweep to a position */
@@ -218,38 +218,58 @@ export function useMatterportSDK({
     };
   }, [controller]);
 
-  // Move camera helper
+  // Move camera helper with robust error handling
   const moveTo = useCallback(async (
     position: Vector3,
     rotation?: { x: number; y: number },
     sweepId?: string
-  ) => {
+  ): Promise<boolean> => {
     if (status !== 'ready') {
-      console.warn('[useMatterportSDK] Cannot moveTo - not ready');
-      return;
+      console.warn('[useMatterportSDK] Cannot moveTo - SDK not ready (status:', status, ')');
+      return false;
+    }
+
+    if (!controller.moveTo) {
+      console.error('[useMatterportSDK] moveTo function not available in controller');
+      return false;
     }
 
     try {
-      await controller.moveTo(position, rotation, sweepId);
+      const success = await controller.moveTo(position, rotation, sweepId);
+      if (!success) {
+        console.warn('[useMatterportSDK] moveTo returned false - navigation failed');
+      }
+      return success;
     } catch (err) {
-      console.error('[useMatterportSDK] moveTo failed:', err);
+      console.error('[useMatterportSDK] moveTo threw error:', err);
+      return false;
     }
   }, [status, controller]);
   
-  // Move to specific sweep
+  // Move to specific sweep with robust error handling
   const moveToSweep = useCallback(async (
     sweepId: string,
     rotation?: { x: number; y: number }
-  ) => {
+  ): Promise<boolean> => {
     if (status !== 'ready') {
-      console.warn('[useMatterportSDK] Cannot moveToSweep - not ready');
-      return;
+      console.warn('[useMatterportSDK] Cannot moveToSweep - SDK not ready (status:', status, ')');
+      return false;
+    }
+
+    if (!controller.moveToSweep) {
+      console.error('[useMatterportSDK] moveToSweep function not available in controller');
+      return false;
     }
 
     try {
-      await controller.moveToSweep(sweepId, rotation);
+      const success = await controller.moveToSweep(sweepId, rotation);
+      if (!success) {
+        console.warn('[useMatterportSDK] moveToSweep returned false - navigation failed');
+      }
+      return success;
     } catch (err) {
-      console.error('[useMatterportSDK] moveToSweep failed:', err);
+      console.error('[useMatterportSDK] moveToSweep threw error:', err);
+      return false;
     }
   }, [status, controller]);
   

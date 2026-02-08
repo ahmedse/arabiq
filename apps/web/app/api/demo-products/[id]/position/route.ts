@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
 const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
@@ -93,6 +94,10 @@ export async function PUT(
         { status: response.status }
       );
     }
+    
+    // Invalidate Next.js fetch cache so user tour sees updated positions immediately
+    // Revalidate all demo pages (both EN and AR)
+    revalidatePath('/[locale]/demos/[slug]', 'page');
     
     return NextResponse.json({ success: true, hotspotPosition });
     

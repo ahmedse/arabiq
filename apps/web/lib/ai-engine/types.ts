@@ -61,7 +61,7 @@ export interface AgentResponse {
  */
 export interface AgentAction {
   /** Type of action */
-  type: 'flyTo' | 'showComparison' | 'openWhatsApp' | 'showContactForm' | 'showLeadForm';
+  type: 'flyTo' | 'showComparison' | 'openWhatsApp' | 'showContactForm' | 'showLeadForm' | 'addToCart';
   /** Action-specific data */
   payload: Record<string, any>;
 }

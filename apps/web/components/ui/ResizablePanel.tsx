@@ -29,9 +29,18 @@ export function ResizablePanel({
 }: ResizablePanelProps) {
   const [width, setWidth] = useState(defaultWidth);
   const [isDragging, setIsDragging] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const startXRef = useRef(0);
   const startWidthRef = useRef(0);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -79,28 +88,30 @@ export function ResizablePanel({
     <div
       ref={panelRef}
       className={`relative flex ${className}`}
-      style={{ width: `${width}px` }}
+      style={{ width: isMobile ? '100vw' : `${width}px`, maxWidth: '100vw' }}
     >
-      {/* Resize Handle */}
-      <div
-        className={`
-          absolute top-0 bottom-0 w-4 cursor-col-resize z-10
-          flex items-center justify-center
-          ${side === 'right' ? 'left-0 -ml-2' : 'right-0 -mr-2'}
-          group
-        `}
-        onMouseDown={handleMouseDown}
-      >
-        <div className={`
-          w-1 h-16 rounded-full transition-colors
-          ${isDragging ? 'bg-primary-500' : 'bg-gray-300 group-hover:bg-primary-400'}
-        `}>
-          <GripVertical className={`
-            w-4 h-4 -ml-1.5 mt-5 text-gray-400 
-            ${isDragging ? 'text-primary-600' : 'group-hover:text-primary-500'}
-          `} />
+      {/* Resize Handle - hidden on mobile */}
+      {!isMobile && (
+        <div
+          className={`
+            absolute top-0 bottom-0 w-4 cursor-col-resize z-10
+            flex items-center justify-center
+            ${side === 'right' ? 'left-0 -ml-2' : 'right-0 -mr-2'}
+            group
+          `}
+          onMouseDown={handleMouseDown}
+        >
+          <div className={`
+            w-1 h-16 rounded-full transition-colors
+            ${isDragging ? 'bg-primary-500' : 'bg-gray-300 group-hover:bg-primary-400'}
+          `}>
+            <GripVertical className={`
+              w-4 h-4 -ml-1.5 mt-5 text-gray-400 
+              ${isDragging ? 'text-primary-600' : 'group-hover:text-primary-500'}
+            `} />
+          </div>
         </div>
-      </div>
+      )}
       
       {/* Panel Content */}
       <div className="flex-1 overflow-hidden">

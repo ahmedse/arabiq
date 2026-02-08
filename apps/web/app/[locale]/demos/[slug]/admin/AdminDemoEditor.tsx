@@ -250,7 +250,7 @@ function ProductItem({
   return (
     <div
       className={`
-        p-3 rounded-lg border transition-colors
+        p-2 rounded-lg border transition-colors
         ${isSelected 
           ? 'border-primary-500 bg-primary-50' 
           : 'border-gray-200 hover:bg-gray-50'
@@ -263,8 +263,8 @@ function ProductItem({
         onClick={onSelect}
       >
         <div className="min-w-0 flex-1">
-          <p className="font-medium text-gray-900 truncate">{item.name}</p>
-          <p className="text-sm text-gray-500">{item.category}</p>
+          <p className="font-medium text-gray-900 text-sm truncate">{item.name}</p>
+          <p className="text-xs text-gray-500">{item.category}</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0 ml-2">
           {hasPosition && (
@@ -617,54 +617,69 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
     }
   }, [controller]);
 
-  // Navigate to product position with correct facing direction
+  // Navigate to product position with correct facing direction (robust)
   const handleViewPosition = useCallback(async (item: TourItem) => {
     const position = item.hotspotData?.anchorPosition || item.hotspotPosition;
-    if (!position) return;
+    if (!position) {
+      console.warn('[AdminEditor] Cannot view position: No position data for item', item.name);
+      return;
+    }
+    
     const sweepId = item.hotspotData?.nearestSweepId;
     const rotation = item.hotspotData?.cameraRotation;
-    await moveTo(position, rotation, sweepId);
+    
+    try {
+      const success = await moveTo(position, rotation, sweepId);
+      if (!success) {
+        console.warn('[AdminEditor] Navigation failed for item:', item.name);
+        // Could show a toast notification here
+      } else {
+        console.log('[AdminEditor] Successfully navigated to:', item.name);
+      }
+    } catch (err) {
+      console.error('[AdminEditor] Navigation error for item:', item.name, err);
+    }
   }, [moveTo]);
 
   return (
     <div className="relative w-full h-screen flex">
       {/* Sidebar */}
-      <div className="w-96 bg-white shadow-xl z-50 flex flex-col">
+      <div className="w-72 bg-white shadow-xl z-50 flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="px-3 py-2 border-b">
+          <div className="flex items-center gap-2 mb-1">
             <Link
               href={`/demos/${demo.slug}`}
-              className="p-2 hover:bg-gray-100 rounded-full"
+              className="p-1.5 hover:bg-gray-100 rounded-full"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-4 h-4" />
             </Link>
-            <h1 className="font-bold text-lg">Admin Editor</h1>
+            <h1 className="font-bold text-sm">Admin Editor</h1>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-600">{demo.title}</p>
+            <p className="text-xs text-gray-600">{demo.title}</p>
             <SDKStatusBadge status={status} error={lastError} />
           </div>
         </div>
 
         {/* Instructions */}
-        <div className="p-4 bg-blue-50 border-b">
-          <div className="text-sm text-blue-800">
-            <p className="font-medium mb-2 flex items-center gap-2">
-              <MousePointerClick className="w-4 h-4" />
+        <div className="px-3 py-2 bg-blue-50 border-b">
+          <div className="text-xs text-blue-800">
+            <p className="font-medium mb-1 flex items-center gap-1">
+              <MousePointerClick className="w-3 h-3" />
               Click-to-Place Mode
             </p>
-            <ol className="list-decimal list-inside space-y-1 text-xs text-blue-700">
+            <ol className="list-decimal list-inside space-y-0.5 text-[11px] text-blue-700">
               <li>Navigate to the spot in the 3D tour</li>
-              <li>Click the <strong className="text-amber-600">📍 CAPTURE</strong> button</li>
-              <li>Select a product and click <strong className="text-green-600">Assign</strong></li>
+              <li>Click <strong className="text-amber-600">CAPTURE</strong></li>
+              <li>Select a product → <strong className="text-green-600">Assign</strong></li>
             </ol>
           </div>
         </div>
 
         {/* Captured Position */}
         {capturedPosition && (
-          <div className="p-4 border-b">
+          <div className="px-3 py-2 border-b">
             <ClickPositionIndicator 
               intersection={capturedPosition}
               selectedProduct={selectedProduct}
@@ -689,18 +704,18 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
 
         {/* Current Camera Pose (debug) */}
         {currentPose && (
-          <div className="px-4 py-2 bg-gray-50 border-b text-xs font-mono text-gray-500">
+          <div className="px-3 py-1 bg-gray-50 border-b text-[10px] font-mono text-gray-500">
             <div className="flex items-center gap-1">
-              <Navigation className="w-3 h-3" />
-              Camera: {currentPose.position.x.toFixed(1)}, {currentPose.position.y.toFixed(1)}, {currentPose.position.z.toFixed(1)}
+              <Navigation className="w-2.5 h-2.5" />
+              {currentPose.position.x.toFixed(1)}, {currentPose.position.y.toFixed(1)}, {currentPose.position.z.toFixed(1)}
             </div>
-            {currentPose.sweep && <div className="text-gray-400 mt-1">Sweep: {currentPose.sweep.slice(0, 12)}...</div>}
+            {currentPose.sweep && <div className="text-gray-400">Sweep: {currentPose.sweep.slice(0, 12)}...</div>}
           </div>
         )}
 
         {/* Product List */}
-        <div className="flex-1 overflow-y-auto p-4">
-          <h2 className="font-medium text-gray-700 mb-3 flex items-center justify-between">
+        <div className="flex-1 overflow-y-auto px-3 py-2">
+          <h2 className="font-medium text-gray-700 text-sm mb-2 flex items-center justify-between">
             <span>Products ({localItems.length})</span>
             <span className="text-xs text-gray-400">
               {localItems.filter(i => {
@@ -740,8 +755,8 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t bg-gray-50">
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+        <div className="px-3 py-2 border-t bg-gray-50">
+          <div className="flex items-center gap-3 text-xs text-gray-600">
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 rounded-full bg-green-500" />
               <span>Placed</span>
@@ -768,51 +783,66 @@ export function AdminDemoEditor({ demo, items, locale }: AdminDemoEditorProps) {
           className="w-full h-full border-0"
         />
         
-        {/* CAPTURE BUTTON - Large, visible, clickable */}
+        {/* Center crosshair for precision aiming */}
         {status === 'ready' && !capturedPosition && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
+          <div className="absolute inset-0 pointer-events-none z-[5] flex items-center justify-center">
+            <div className="relative">
+              {/* Crosshair lines */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-px h-3 bg-white/60" />
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-px h-3 bg-white/60" />
+              <div className="absolute -left-4 top-1/2 -translate-y-1/2 h-px w-3 bg-white/60" />
+              <div className="absolute -right-4 top-1/2 -translate-y-1/2 h-px w-3 bg-white/60" />
+              {/* Center dot */}
+              <div className="w-1.5 h-1.5 rounded-full bg-red-500/70 ring-1 ring-white/40" />
+            </div>
+          </div>
+        )}
+
+        {/* CAPTURE BUTTON - compact at bottom */}
+        {status === 'ready' && !capturedPosition && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5">
             {/* Live position indicator */}
             {livePosition ? (
-              <div className="px-4 py-2 bg-gray-900/80 text-green-400 text-sm font-mono rounded-lg flex items-center gap-2">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                Pointer: {livePosition.x.toFixed(2)}, {livePosition.y.toFixed(2)}, {livePosition.z.toFixed(2)}
+              <div className="px-3 py-1 bg-black/60 text-green-400 text-xs font-mono rounded-full flex items-center gap-1.5 backdrop-blur-sm">
+                <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+                {livePosition.x.toFixed(2)}, {livePosition.y.toFixed(2)}, {livePosition.z.toFixed(2)}
               </div>
             ) : currentPose ? (
-              <div className="px-4 py-2 bg-gray-900/80 text-amber-400 text-sm font-mono rounded-lg flex items-center gap-2">
-                <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
-                Camera: {currentPose.position.x.toFixed(2)}, {currentPose.position.y.toFixed(2)}, {currentPose.position.z.toFixed(2)}
+              <div className="px-3 py-1 bg-black/60 text-amber-400 text-xs font-mono rounded-full flex items-center gap-1.5 backdrop-blur-sm">
+                <span className="w-1.5 h-1.5 bg-amber-400 rounded-full"></span>
+                {currentPose.position.x.toFixed(2)}, {currentPose.position.y.toFixed(2)}, {currentPose.position.z.toFixed(2)}
               </div>
             ) : null}
             <button
               onClick={capturePosition}
               disabled={!livePosition && !currentPose}
-              className={`px-8 py-4 font-bold text-lg rounded-full shadow-2xl flex items-center gap-3 transition-all border-4 ${
+              className={`px-5 py-2.5 font-semibold text-sm rounded-full shadow-lg flex items-center gap-2 transition-all backdrop-blur-sm ${
                 livePosition || currentPose
-                  ? 'bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white border-amber-300 hover:scale-105 active:scale-95 cursor-pointer'
-                  : 'bg-gray-500 text-gray-300 border-gray-400 cursor-not-allowed'
+                  ? 'bg-amber-500/90 hover:bg-amber-600 active:bg-amber-700 text-white border-2 border-amber-300/50 hover:scale-105 active:scale-95 cursor-pointer'
+                  : 'bg-gray-500/60 text-gray-300 border-2 border-gray-400/30 cursor-not-allowed'
               }`}
             >
-              <Crosshair className="w-6 h-6" />
-              📍 CAPTURE THIS POSITION
+              <Crosshair className="w-4 h-4" />
+              CAPTURE
             </button>
           </div>
         )}
         
-        {/* Captured indicator */}
+        {/* Captured indicator - compact */}
         {status === 'ready' && capturedPosition && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-            <div className="px-6 py-4 bg-green-600 text-white font-bold rounded-full shadow-2xl flex items-center gap-3 border-4 border-green-300">
-              <Lock className="w-6 h-6" />
-              ✓ POSITION CAPTURED
-              <span className="font-mono text-sm bg-green-700 px-2 py-1 rounded">
-                ({capturedPosition.position.x.toFixed(2)}, {capturedPosition.position.y.toFixed(2)}, {capturedPosition.position.z.toFixed(2)})
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
+            <div className="px-4 py-2 bg-green-600/90 text-white font-semibold text-sm rounded-full shadow-lg flex items-center gap-2 backdrop-blur-sm border-2 border-green-300/50">
+              <Lock className="w-4 h-4" />
+              ✓ Captured
+              <span className="font-mono text-xs bg-green-700/80 px-1.5 py-0.5 rounded">
+                {capturedPosition.position.x.toFixed(2)}, {capturedPosition.position.y.toFixed(2)}, {capturedPosition.position.z.toFixed(2)}
               </span>
               <button
                 onClick={clearCapturedPosition}
-                className="ml-2 p-2 hover:bg-green-700 rounded-full bg-green-500"
-                title="Clear and capture again"
+                className="ml-1 p-1 hover:bg-green-700 rounded-full"
+                title="Clear"
               >
-                <X className="w-5 h-5" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>

@@ -341,9 +341,24 @@ export function useMattertags(sdk: MatterportSDK | null) {
     setTags(prev => prev.filter(t => t.sid !== sid));
   }, [sdk]);
   
-  const navigateToTag = useCallback(async (sid: string) => {
-    if (!sdk) return;
-    await sdk.Mattertag.navigateToTag(sid, { transition: 'fly' });
+  const navigateToTag = useCallback(async (sid: string): Promise<boolean> => {
+    if (!sdk) {
+      console.warn('[useTags] navigateToTag: SDK not available');
+      return false;
+    }
+    
+    if (!sdk.Mattertag?.navigateToTag) {
+      console.warn('[useTags] navigateToTag: Mattertag.navigateToTag not available');
+      return false;
+    }
+    
+    try {
+      await sdk.Mattertag.navigateToTag(sid, { transition: 'fly' });
+      return true;
+    } catch (err) {
+      console.error('[useTags] navigateToTag failed:', err);
+      return false;
+    }
   }, [sdk]);
   
   return { tags, addTag, removeTag, navigateToTag };
