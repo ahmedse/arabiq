@@ -27,9 +27,21 @@
       "currency": "EGP",
       "category": "Refrigerators",
       "category_ar": "ثلاجات",
+      "brand": "Tornado",
       "sku": "TRN-REF-450NF",
       "inStock": true,
-      "imageUrl": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=800&q=80"
+      "hotspotPosition": {
+        "x": -14.801,
+        "y": 3.252,
+        "z": -4.811,
+        "stemVector": {
+          "x": 0.2975,
+          "y": 0.1115,
+          "z": -0.0369
+        },
+        "nearestSweepId": "sbf3p26gpqzy68z1w3d905tzd",
+        "floorIndex": 1
+      }
     },
     {
       "name": "Sharp Microwave 25L with Grill",
@@ -40,9 +52,21 @@
       "currency": "EGP",
       "category": "Microwaves",
       "category_ar": "ميكروويف",
+      "brand": "Sharp",
       "sku": "SHP-MW-25G",
       "inStock": true,
-      "imageUrl": "https://images.unsplash.com/photo-1585659722983-3a675dabf23d?w=800&q=80"
+      "hotspotPosition": {
+        "x": -17.128,
+        "y": 0.156,
+        "z": 0.352,
+        "stemVector": {
+          "x": -0.1418,
+          "y": 0.2201,
+          "z": 0.2355
+        },
+        "nearestSweepId": "cnbqqcuas2045e4274gseut5d",
+        "floorIndex": 0
+      }
     },
     {
       "name": "LG Automatic Washing Machine 8KG",
@@ -53,9 +77,21 @@
       "currency": "EGP",
       "category": "Washing Machines",
       "category_ar": "غسالات",
+      "brand": "LG",
       "sku": "LG-WM-8KG-ST",
       "inStock": true,
-      "imageUrl": "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=800&q=80"
+      "hotspotPosition": {
+        "x": -22.693,
+        "y": 0.879,
+        "z": -6.238,
+        "stemVector": {
+          "x": -0.0093,
+          "y": 0.3968,
+          "z": 0.0425
+        },
+        "nearestSweepId": "bs59m91uyb3gn67x24nqe2fqa",
+        "floorIndex": 0
+      }
     },
     {
       "name": "Toshiba Gas Oven 60cm with Fan",
@@ -66,9 +102,21 @@
       "currency": "EGP",
       "category": "Ovens",
       "category_ar": "أفران",
+      "brand": "Toshiba",
       "sku": "TSB-OVEN-60F",
       "inStock": true,
-      "imageUrl": "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"
+      "hotspotPosition": {
+        "x": -10.867,
+        "y": 3.123,
+        "z": 2.084,
+        "stemVector": {
+          "x": 0.0141,
+          "y": 0.1,
+          "z": -0.2997
+        },
+        "nearestSweepId": "6q5mwsz07dnhcq97xg8bssryd",
+        "floorIndex": 1
+      }
     },
     {
       "name": "Fresh Electric Water Heater 50L",
@@ -79,9 +127,21 @@
       "currency": "EGP",
       "category": "Water Heaters",
       "category_ar": "سخانات",
+      "brand": "Fresh",
       "sku": "FRS-WH-50L",
       "inStock": true,
-      "imageUrl": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80"
+      "hotspotPosition": {
+        "x": -14.384,
+        "y": 0.607,
+        "z": 0.863,
+        "stemVector": {
+          "x": -0.2208,
+          "y": 0.1,
+          "z": 0.2027
+        },
+        "nearestSweepId": "gcdwxbgaydqz8fe8g2rwk6bua",
+        "floorIndex": 0
+      }
     },
     {
       "name": "Samsung 55\" 4K Smart TV Crystal UHD",
@@ -92,9 +152,21 @@
       "currency": "EGP",
       "category": "TVs",
       "category_ar": "تلفزيونات",
+      "brand": "Samsung",
       "sku": "SAM-TV-55CU",
       "inStock": true,
-      "imageUrl": "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=800&q=80"
+      "hotspotPosition": {
+        "x": -8.472,
+        "y": 2.955,
+        "z": 0.008,
+        "stemVector": {
+          "x": 0.0142,
+          "y": 0.1184,
+          "z": 0.2991
+        },
+        "nearestSweepId": "p9cuqxqszfkyss62t97xi3y3c",
+        "floorIndex": 1
+      }
     },
     {
       "name": "Midea Split Air Conditioner 1.5HP Cool/Heat",
@@ -105,9 +177,21 @@
       "currency": "EGP",
       "category": "Air Conditioners",
       "category_ar": "تكييفات",
+      "brand": "Midea",
       "sku": "MDA-AC-15INV",
       "inStock": true,
-      "imageUrl": "https://images.unsplash.com/photo-1631567091196-6ccdb0cf795b?w=800&q=80"
+      "hotspotPosition": {
+        "x": -23.572,
+        "y": 0.674,
+        "z": 5.327,
+        "stemVector": {
+          "x": 0.0006,
+          "y": 0.1,
+          "z": -0.2982
+        },
+        "nearestSweepId": "knnb69r5cnrn6dr2taesuya9c",
+        "floorIndex": 0
+      }
     },
     {
       "name": "Bosch Dishwasher 14 Place Settings",
@@ -118,9 +202,21 @@
       "currency": "EGP",
       "category": "Dishwashers",
       "category_ar": "غسالات أطباق",
+      "brand": "Bosch",
       "sku": "BSH-DW-14PS",
       "inStock": true,
-      "imageUrl": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80"
+      "hotspotPosition": {
+        "x": -19.386,
+        "y": 0.373,
+        "z": -5.98,
+        "stemVector": {
+          "x": -0.2995,
+          "y": 0.1,
+          "z": 0.0055
+        },
+        "nearestSweepId": "k7u100qhcsr5wzra0ragzd3zb",
+        "floorIndex": 0
+      }
     },
     {
       "name": "Zanussi Chest Freezer 300L",
@@ -131,9 +227,21 @@
       "currency": "EGP",
       "category": "Freezers",
       "category_ar": "فريزرات",
+      "brand": "Zanussi",
       "sku": "ZNS-FZ-300CH",
       "inStock": true,
-      "imageUrl": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=800&q=80"
+      "hotspotPosition": {
+        "x": -9.305,
+        "y": 2.535,
+        "z": -7.517,
+        "stemVector": {
+          "x": 0.0072,
+          "y": 0.3147,
+          "z": 0.2094
+        },
+        "nearestSweepId": "144uyyhgqba5wfnic2r50rw8d",
+        "floorIndex": 1
+      }
     },
     {
       "name": "Philips Blender 2L 700W with Grinder",
@@ -144,9 +252,21 @@
       "currency": "EGP",
       "category": "Small Appliances",
       "category_ar": "أجهزة صغيرة",
+      "brand": "Philips",
       "sku": "PHL-BL-2L700",
       "inStock": false,
-      "imageUrl": "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=800&q=80"
+      "hotspotPosition": {
+        "x": -11.642,
+        "y": 2.447,
+        "z": -3.353,
+        "stemVector": {
+          "x": 0.0011,
+          "y": 0.4,
+          "z": 0.003
+        },
+        "nearestSweepId": "af09in3u06hza8zmg8dnid3ud",
+        "floorIndex": 1
+      }
     }
   ]
 }

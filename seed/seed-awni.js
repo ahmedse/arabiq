@@ -74,12 +74,9 @@ async function seedAwniDemo() {
         currency: product.currency,
         category: product.category,
         sku: product.sku,
+        brand: product.brand || null,
         inStock: product.inStock,
-        hotspotPosition: {
-          x: product.hotspotPositionX || 0,
-          y: product.hotspotPositionY || 0,
-          z: product.hotspotPositionZ || 0,
-        },
+        hotspotPosition: product.hotspotPosition || { x: 0, y: 0, z: 0 },
         demo: demoDocumentId,
       });
       
