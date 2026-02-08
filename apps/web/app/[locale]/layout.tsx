@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { IBM_Plex_Sans_Arabic } from "next/font/google";
 import { getSiteSettings, getNavItems, type NavItem } from "@/lib/strapi";
+import { headers } from "next/headers";
 import { MobileNav } from "./mobile-nav";
 import { Header } from "./Header";
 import { setRequestLocale } from "next-intl/server";
@@ -157,6 +158,11 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   const displayFooterProducts = footerProducts.length > 0 ? footerProducts : defaultProductLinks;
   const displayFooterResources = footerResources.length > 0 ? footerResources : defaultResourceLinks;
 
+  // Check if this is a demo detail page (hide header/footer for immersive experience)
+  const headersList = await headers();
+  const pathname = headersList.get('x-pathname') || '';
+  const isDemoDetailPage = pathname.match(/\/demos\/[^/]+$/);
+
 return (
     <>
       {/* Preconnect for performance - load external resources faster */}
@@ -178,13 +184,15 @@ return (
         dir={dir}
         className={`min-h-screen bg-white text-slate-900 ${lang === "ar" ? ibmPlexArabic.variable : ""}`}
       >
-        <Header
-          locale={locale}
-          otherLocale={otherLocale}
-          headerNav={headerNav}
-          dir={dir}
-          lang={lang}
-        />
+        {!isDemoDetailPage && (
+          <Header
+            locale={locale}
+            otherLocale={otherLocale}
+            headerNav={headerNav}
+            dir={dir}
+            lang={lang}
+          />
+        )}
 
         <Toaster
           position="top-center"
@@ -215,7 +223,8 @@ return (
           </CartProvider>
         </main>
 
-        {/* Stripe-style footer - from Strapi */}
+        {/* Stripe-style footer - from Strapi (hidden on demo detail pages) */}
+        {!isDemoDetailPage && (
         <footer className="border-t border-slate-200 bg-slate-50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-start">
@@ -315,6 +324,7 @@ return (
             </div>
           </div>
         </footer>
+        )}
       </div>
     </>
   );

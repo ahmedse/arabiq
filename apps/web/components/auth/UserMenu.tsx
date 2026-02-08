@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { strapiLogout, getCurrentStrapiUser } from "@/lib/strapiAuth";
+import { strapiLogout } from "@/lib/strapiAuth";
 import { useRouter } from "next/navigation";
 
 interface UserMenuProps {
@@ -26,10 +26,14 @@ export function UserMenu({ locale }: UserMenuProps) {
 
   useEffect(() => {
     async function loadUser() {
-      const token = document.cookie.split('; ').find(row => row.startsWith('strapi_jwt='))?.split('=')[1];
-      if (token) {
-        const currentUser = await getCurrentStrapiUser(token);
-        setUser(currentUser);
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error('Failed to load user:', error);
       }
       setLoading(false);
     }

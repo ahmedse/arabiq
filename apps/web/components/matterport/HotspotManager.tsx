@@ -154,10 +154,11 @@ export function HotspotManager({ items, onItemClick, highlightedItemId }: Hotspo
           description: item.price 
             ? `${item.currency || 'EGP'} ${item.price.toLocaleString()}\n${item.description || 'Click to view details'}`
             : (item.description || 'Click to view details'),
-          anchorPosition: item.hotspotPosition!,
-          stemVector: { x: 0, y: 0.5, z: 0 }, // Taller stem for visibility
+          anchorPosition: item.hotspotData?.anchorPosition || item.hotspotPosition!,
+          stemVector: item.hotspotData?.stemVector || { x: 0, y: 0.5, z: 0 },
           color,
           stemHeight: 0.5, // Make stem taller
+          floorIndex: item.hotspotData?.floorIndex,
           // Add product image as media for visual appeal
           media: item.imageUrl ? {
             type: 'photo' as const,

@@ -3,27 +3,51 @@
 /**
  * AI Chat Drawer
  * Sliding panel with AI-powered chat interface for virtual tours
+ * Powered by the new AI Agent Engine (/api/ai-agent)
+ * 
  * Features:
- * - Product-aware AI responses
- * - Navigation commands to fly to products in the tour
+ * - Real CMS data loading
+ * - Intent classification
+ * - Model routing (local/standard/advanced)
+ * - Session memory (no need to send history)
+ * - Smart suggestions
+ * - Action buttons (navigate, WhatsApp, contact)
  * - Bilingual support (English/Arabic)
+ * - Rich markdown rendering (T5)
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Send, Bot, User, Loader2, Sparkles, Trash2, Navigation } from 'lucide-react';
+import { X, Send, Bot, User, Loader2, Sparkles, Trash2, Navigation, MessageCircle, Mail, BarChart3 } from 'lucide-react';
 import type { DemoConfig, TourItem } from '@/lib/matterport/types';
+
+// Response shape from /api/ai-agent
+interface AgentResponse {
+  message: string;
+  sessionId: string;
+  timestamp: string;
+  intent?: string;
+  actions?: AgentAction[];
+  suggestions?: string[];
+  usage?: {
+    model?: string;
+    tier: 'local' | 'standard' | 'advanced';
+    tokensEstimate?: number;
+  };
+  error?: string;
+}
+
+interface AgentAction {
+  type: 'flyTo' | 'showComparison' | 'openWhatsApp' | 'showContactForm' | 'showLeadForm';
+  payload: Record<string, any>;
+}
 
 interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  // Navigation command from AI
-  navigation?: {
-    action: 'flyTo';
-    itemId: number;
-    itemName: string;
-  };
+  actions?: AgentAction[];
+  usage?: AgentResponse['usage'];
 }
 
 interface AIChatDrawerProps {
@@ -32,16 +56,162 @@ interface AIChatDrawerProps {
   demo: DemoConfig;
   currentLocation?: string;
   locale: string;
-  // NEW: Items in the tour for AI context
+  // Items kept ONLY for local navigation lookup, NOT sent to server
   items?: TourItem[];
-  // NEW: Callback to navigate to an item
+  // Callback to navigate to an item
   onNavigateToItem?: (item: TourItem) => void;
 }
 
-export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, items = [], onNavigateToItem }: AIChatDrawerProps) {
+/**
+ * Lightweight Markdown Renderer for Chat Messages
+ * Supports: bold, italic, lists, links, line breaks
+ * Strips action markers: [[FLY_TO:...]], [[WHATSAPP:...]], etc.
+ */
+function renderMarkdown(text: string, isAssistant: boolean): React.ReactNode {
+  // Strip action markers first
+  const cleanText = text.replace(/\[\[(?:FLY_TO|WHATSAPP|LEAD|COMPARE|TOOL)[^\]]*\]\]/g, '');
+  
+  const lines = cleanText.split('\n');
+  const elements: React.ReactNode[] = [];
+  let listItems: string[] = [];
+  let listType: 'ul' | 'ol' | null = null;
+  
+  const flushList = () => {
+    if (listItems.length > 0 && listType) {
+      const ListTag = listType;
+      elements.push(
+        <ListTag key={`list-${elements.length}`} className="my-1 pl-5 space-y-0.5">
+          {listItems.map((item, i) => (
+            <li key={i}>{renderInline(item)}</li>
+          ))}
+        </ListTag>
+      );
+      listItems = [];
+      listType = null;
+    }
+  };
+  
+  const renderInline = (line: string): React.ReactNode => {
+    const parts: React.ReactNode[] = [];
+    let remaining = line;
+    let key = 0;
+    
+    // Process inline formatting: bold, italic, links
+    while (remaining.length > 0) {
+      // Bold: **text**
+      const boldMatch = remaining.match(/^\*\*(.+?)\*\*/);
+      if (boldMatch) {
+        parts.push(<strong key={key++} className="font-semibold">{boldMatch[1]}</strong>);
+        remaining = remaining.slice(boldMatch[0].length);
+        continue;
+      }
+      
+      // Italic: *text*
+      const italicMatch = remaining.match(/^\*(.+?)\*/);
+      if (italicMatch) {
+        parts.push(<em key={key++} className="italic opacity-90">{italicMatch[1]}</em>);
+        remaining = remaining.slice(italicMatch[0].length);
+        continue;
+      }
+      
+      // Links: [text](url)
+      const linkMatch = remaining.match(/^\[([^\]]+)\]\(([^\)]+)\)/);
+      if (linkMatch) {
+        const linkClass = isAssistant 
+          ? 'text-blue-300 hover:text-blue-200 underline'
+          : 'text-white underline opacity-90 hover:opacity-100';
+        parts.push(
+          <a 
+            key={key++} 
+            href={linkMatch[2]} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={linkClass}
+          >
+            {linkMatch[1]}
+          </a>
+        );
+        remaining = remaining.slice(linkMatch[0].length);
+        continue;
+      }
+      
+      // Regular text
+      parts.push(remaining[0]);
+      remaining = remaining.slice(1);
+    }
+    
+    return parts;
+  };
+  
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+    
+    // Bullet list: - item or • item
+    if (trimmed.match(/^[-•]\s+/)) {
+      if (listType !== 'ul') {
+        flushList();
+        listType = 'ul';
+      }
+      listItems.push(trimmed.replace(/^[-•]\s+/, ''));
+      return;
+    }
+    
+    // Numbered list: 1. item
+    if (trimmed.match(/^\d+\.\s+/)) {
+      if (listType !== 'ol') {
+        flushList();
+        listType = 'ol';
+      }
+      listItems.push(trimmed.replace(/^\d+\.\s+/, ''));
+      return;
+    }
+    
+    // Not a list - flush any pending list
+    flushList();
+    
+    // Empty line - preserve spacing
+    if (trimmed === '') {
+      elements.push(<br key={`br-${index}`} />);
+      return;
+    }
+    
+    // Regular paragraph
+    elements.push(
+      <span key={`p-${index}`}>
+        {renderInline(line)}
+        {index < lines.length - 1 && <br />}
+      </span>
+    );
+  });
+  
+  // Flush any remaining list
+  flushList();
+  
+  return <>{elements}</>;
+}
+
+export function AIChatDrawer({ 
+  isOpen, 
+  onClose, 
+  demo, 
+  currentLocation, 
+  locale, 
+  items = [], 
+  onNavigateToItem 
+}: AIChatDrawerProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  // Generate session ID (persists across renders, reset on clear)
+  const generateSessionId = useCallback(() => {
+    if (typeof window !== 'undefined' && typeof crypto !== 'undefined') {
+      return crypto.randomUUID();
+    }
+    return `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }, []);
+  const [sessionId, setSessionId] = useState(generateSessionId);
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   
@@ -73,28 +243,61 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, i
         content: welcomeMessage,
         timestamp: new Date(),
       }]);
+      
+      // Set initial suggestions
+      setSuggestions(getInitialSuggestions(demo.demoType, locale));
     }
   }, [isOpen, messages.length, demo.demoType, demo.title, locale, items.length]);
   
-  // Handle navigation command from AI
-  const handleNavigation = useCallback((navigation: ChatMessage['navigation']) => {
-    if (!navigation || !onNavigateToItem) return;
-    
-    const item = items.find(i => i.id === navigation.itemId);
-    if (item) {
-      onNavigateToItem(item);
+  // Handle action button click
+  const handleAction = useCallback((action: AgentAction) => {
+    switch (action.type) {
+      case 'flyTo':
+        if (onNavigateToItem) {
+          // Find the item in the items prop by ID
+          const itemId = String(action.payload.itemId);
+          const item = items.find(i => 
+            String(i.id) === itemId || 
+            i.documentId === itemId
+          );
+          if (item) {
+            onNavigateToItem(item);
+          }
+        }
+        break;
+        
+      case 'openWhatsApp':
+        const phone = action.payload.phone || action.payload.number;
+        if (phone) {
+          const cleanPhone = phone.replace(/[^0-9+]/g, '');
+          const message = action.payload.message || '';
+          const url = `https://wa.me/${cleanPhone}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
+          window.open(url, '_blank', 'noopener,noreferrer');
+        }
+        break;
+        
+      case 'showContactForm':
+      case 'showLeadForm':
+        // Future: open contact modal
+        console.log('Contact form requested:', action);
+        break;
+        
+      case 'showComparison':
+        // Future: open comparison view
+        console.log('Comparison requested:', action);
+        break;
     }
   }, [items, onNavigateToItem]);
   
-  const sendMessage = async () => {
-    const trimmedInput = input.trim();
-    if (!trimmedInput || isLoading) return;
+  const sendMessage = async (messageText?: string) => {
+    const text = (messageText || input).trim();
+    if (!text || isLoading) return;
     
-    // Add user message
+    // Add user message to UI
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: 'user',
-      content: trimmedInput,
+      content: text,
       timestamp: new Date(),
     };
     
@@ -102,62 +305,57 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, i
     setInput('');
     setIsLoading(true);
     
+    // Clear suggestions while loading
+    setSuggestions([]);
+    
     try {
-      // Prepare history (exclude welcome message)
-      const history = messages
-        .filter(m => m.id !== 'welcome')
-        .map(m => ({
-          role: m.role as 'user' | 'assistant',
-          content: m.content,
-        }));
-      
-      // Prepare items for AI context
-      const itemsContext = items.map(item => ({
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        currency: item.currency,
-        category: item.category,
-      }));
-      
-      const response = await fetch('/api/chat', {
+      const response = await fetch('/api/ai-agent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: trimmedInput,
-          demoId: demo.id,
-          demoType: demo.demoType,
-          demoTitle: demo.title,
-          businessName: demo.businessName,
-          currentLocation,
-          history,
+          message: text,
+          demoSlug: demo.slug,
+          sessionId,
           locale,
-          items: itemsContext, // Pass items for AI context
+          currentLocation,
         }),
       });
       
       if (!response.ok) {
-        throw new Error('Failed to get response');
+        throw new Error(`HTTP ${response.status}`);
       }
       
-      const data = await response.json();
+      const data: AgentResponse = await response.json();
       
-      // Add assistant message (with navigation if present)
+      // Handle error response
+      if (data.error) {
+        const errorMessage: ChatMessage = {
+          id: `assistant-${Date.now()}`,
+          role: 'assistant',
+          content: data.error,
+          timestamp: new Date(),
+        };
+        setMessages(prev => [...prev, errorMessage]);
+        return;
+      }
+      
+      // Add assistant message with actions
       const assistantMessage: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
         content: data.message,
         timestamp: new Date(),
-        navigation: data.navigation, // Navigation command from AI
+        actions: data.actions,
+        usage: data.usage,
       };
       
       setMessages(prev => [...prev, assistantMessage]);
       
-      // Auto-trigger navigation if AI suggested it
-      if (data.navigation) {
-        handleNavigation(data.navigation);
+      // Update suggestions for next message
+      if (data.suggestions && data.suggestions.length > 0) {
+        setSuggestions(data.suggestions);
       }
+      
     } catch (error) {
       console.error('Chat error:', error);
       
@@ -186,6 +384,8 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, i
   
   const clearChat = () => {
     setMessages([]);
+    setSuggestions([]);
+    setSessionId(generateSessionId()); // Reset session so server starts fresh
   };
   
   const labels = {
@@ -194,6 +394,10 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, i
     send: locale === 'ar' ? 'إرسال' : 'Send',
     clearChat: locale === 'ar' ? 'مسح المحادثة' : 'Clear chat',
     typing: locale === 'ar' ? 'جاري الكتابة...' : 'Typing...',
+    goTo: locale === 'ar' ? 'الذهاب إلى' : 'Go to',
+    chatWhatsApp: locale === 'ar' ? 'الدردشة عبر واتساب' : 'Chat on WhatsApp',
+    contactUs: locale === 'ar' ? 'اتصل بنا' : 'Contact us',
+    compare: locale === 'ar' ? 'عرض المقارنة' : 'View comparison',
   };
   
   return (
@@ -253,48 +457,81 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, i
         <div className="flex-1 overflow-y-auto p-4 h-[calc(100%-140px)]">
           <div className="space-y-4">
             {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
-              >
-                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                  message.role === 'user' 
-                    ? 'bg-blue-600' 
-                    : 'bg-gradient-to-br from-purple-500 to-blue-500'
-                }`}>
-                  {message.role === 'user' 
-                    ? <User className="w-4 h-4 text-white" />
-                    : <Bot className="w-4 h-4 text-white" />
-                  }
+              <div key={message.id}>
+                <div className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                    message.role === 'user' 
+                      ? 'bg-blue-600' 
+                      : 'bg-gradient-to-br from-purple-500 to-blue-500'
+                  }`}>
+                    {message.role === 'user' 
+                      ? <User className="w-4 h-4 text-white" />
+                      : <Bot className="w-4 h-4 text-white" />
+                    }
+                  </div>
+                  <div className={`flex-1 max-w-[80%]`}>
+                    <div className={`rounded-2xl px-4 py-2 ${
+                      message.role === 'user'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-800 text-gray-100'
+                    }`}>
+                      <div className="text-sm">
+                        {renderMarkdown(message.content, message.role === 'assistant')}
+                      </div>
+                      
+                      {/* Action buttons */}
+                      {message.actions && message.actions.length > 0 && (
+                        <div className="mt-3 space-y-2">
+                          {message.actions.map((action, idx) => (
+                            <ActionButton
+                              key={idx}
+                              action={action}
+                              onClick={() => handleAction(action)}
+                              labels={labels}
+                              items={items}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center justify-between mt-1">
+                        <p className="text-xs opacity-50">
+                          {message.timestamp.toLocaleTimeString(locale, { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                          })}
+                        </p>
+                        {/* Model tier badge */}
+                        {message.usage && (
+                          <span className="text-xs opacity-50" title={message.usage.model || message.usage.tier}>
+                            {message.usage.model === 'tool' && '🔧'}
+                            {message.usage.model !== 'tool' && message.usage.tier === 'advanced' && '✨'}
+                            {message.usage.model !== 'tool' && message.usage.tier === 'standard' && '🧠'}
+                            {message.usage.model !== 'tool' && message.usage.tier === 'local' && '⚡'}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                  message.role === 'user'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-800 text-gray-100'
-                }`}>
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                  
-                  {/* Navigation button if AI suggested to fly to a product */}
-                  {message.navigation && onNavigateToItem && (
-                    <button
-                      onClick={() => handleNavigation(message.navigation)}
-                      className="mt-2 flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-full text-xs text-white transition-colors"
-                    >
-                      <Navigation className="w-3 h-3" />
-                      {locale === 'ar' 
-                        ? `الذهاب إلى ${message.navigation.itemName}`
-                        : `Go to ${message.navigation.itemName}`
-                      }
-                    </button>
-                  )}
-                  
-                  <p className="text-xs opacity-50 mt-1">
-                    {message.timestamp.toLocaleTimeString(locale, { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
-                    })}
-                  </p>
-                </div>
+                
+                {/* Suggestion chips - only show after the last assistant message */}
+                {message.role === 'assistant' && 
+                 message.id === messages[messages.length - 1]?.id && 
+                 suggestions.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2 px-11">
+                    {suggestions.map((suggestion, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => sendMessage(suggestion)}
+                        disabled={isLoading}
+                        className="bg-gray-700/50 hover:bg-gray-700 text-gray-300 text-xs rounded-full px-3 py-1.5 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             
@@ -306,7 +543,11 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, i
                 </div>
                 <div className="bg-gray-800 rounded-2xl px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
+                    <div className="flex gap-1">
+                      <span className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
                     <span className="text-sm text-gray-400">{labels.typing}</span>
                   </div>
                 </div>
@@ -325,14 +566,14 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, i
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder={labels.placeholder}
               disabled={isLoading}
               className="flex-1 bg-gray-800 text-white rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
               dir={isRTL ? 'rtl' : 'ltr'}
             />
             <button
-              onClick={sendMessage}
+              onClick={() => sendMessage()}
               disabled={!input.trim() || isLoading}
               className="p-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-full transition-colors"
             >
@@ -345,40 +586,138 @@ export function AIChatDrawer({ isOpen, onClose, demo, currentLocation, locale, i
   );
 }
 
-// Welcome message based on demo type
+// Action Button Component
+function ActionButton({ 
+  action, 
+  onClick, 
+  labels, 
+  items 
+}: { 
+  action: AgentAction; 
+  onClick: () => void; 
+  labels: Record<string, string>;
+  items: TourItem[];
+}) {
+  switch (action.type) {
+    case 'flyTo':
+      const itemId = String(action.payload.itemId);
+      const item = items.find(i => String(i.id) === itemId || i.documentId === itemId);
+      const itemName = action.payload.title || action.payload.itemName || item?.name || 'item';
+      
+      return (
+        <button
+          onClick={onClick}
+          className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-3 py-1.5 text-xs transition-colors w-full justify-center"
+        >
+          <Navigation className="w-3 h-3" />
+          {labels.goTo} {itemName}
+        </button>
+      );
+      
+    case 'openWhatsApp':
+      return (
+        <button
+          onClick={onClick}
+          className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white rounded-full px-3 py-1.5 text-xs transition-colors w-full justify-center"
+        >
+          <MessageCircle className="w-3 h-3" />
+          {labels.chatWhatsApp}
+        </button>
+      );
+      
+    case 'showContactForm':
+    case 'showLeadForm':
+      return (
+        <button
+          onClick={onClick}
+          className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-full px-3 py-1.5 text-xs transition-colors w-full justify-center"
+        >
+          <Mail className="w-3 h-3" />
+          {labels.contactUs}
+        </button>
+      );
+      
+    case 'showComparison':
+      return (
+        <button
+          onClick={onClick}
+          disabled
+          className="flex items-center gap-1.5 bg-gray-600 text-gray-400 rounded-full px-3 py-1.5 text-xs cursor-not-allowed w-full justify-center"
+        >
+          <BarChart3 className="w-3 h-3" />
+          {labels.compare}
+        </button>
+      );
+      
+    default:
+      return null;
+  }
+}
+
+// Welcome message based on demo type (client-side only)
 function getWelcomeMessage(demoType: string, title: string, locale: string, itemCount: number = 0): string {
   const isArabic = locale === 'ar';
   
-  // Item count suffix
   const itemSuffix = itemCount > 0
     ? isArabic 
-      ? ` لدينا ${itemCount} عنصر متاح. اسألني عن أي شيء أو قل "أرني شيئاً" وسآخذك إليه في الجولة!`
-      : ` We have ${itemCount} items available. Ask me about anything or say "show me something" and I'll take you there in the tour!`
+      ? ` لدينا ${itemCount} عنصر متاح. اسألني عن أي شيء!`
+      : ` We have ${itemCount} items available. Ask me anything!`
     : '';
   
   const messages: Record<string, { en: string; ar: string }> = {
     ecommerce: {
-      en: `👋 Welcome to ${title}! I'm your smart shopping assistant.${itemSuffix || ' How can I help you find the perfect product today?'}`,
-      ar: `👋 مرحباً بك في ${title}! أنا مساعدك الذكي للتسوق.${itemSuffix || ' كيف يمكنني مساعدتك في العثور على المنتج المثالي اليوم؟'}`,
+      en: `👋 Welcome to ${title}! I'm your smart shopping assistant.${itemSuffix || ' How can I help you today?'}`,
+      ar: `👋 مرحباً بك في ${title}! أنا مساعدك الذكي للتسوق.${itemSuffix || ' كيف يمكنني مساعدتك اليوم؟'}`,
     },
     showroom: {
-      en: `✨ Welcome to ${title}! I'm your interior design consultant.${itemSuffix || ' Looking for something specific, or shall I show you our featured collections?'}`,
-      ar: `✨ مرحباً بك في ${title}! أنا مستشارك للتصميم الداخلي.${itemSuffix || ' هل تبحث عن شيء محدد، أم أعرض عليك مجموعاتنا المميزة؟'}`,
+      en: `✨ Welcome to ${title}! I'm your interior design consultant.${itemSuffix || ' What are you looking for?'}`,
+      ar: `✨ مرحباً بك في ${title}! أنا مستشارك للتصميم الداخلي.${itemSuffix || ' ماذا تبحث؟'}`,
     },
     cafe: {
-      en: `☕ Welcome to ${title}! I'm your friendly host.${itemSuffix || ' Would you like to hear about today\'s specials, or can I help you find something on our menu?'}`,
-      ar: `☕ مرحباً بك في ${title}! أنا مضيفك الودود.${itemSuffix || ' هل تريد معرفة عروض اليوم، أم يمكنني مساعدتك في اختيار شيء من قائمتنا؟'}`,
+      en: `☕ Welcome to ${title}! I'm your friendly host.${itemSuffix || ' What can I get you today?'}`,
+      ar: `☕ مرحباً بك في ${title}! أنا مضيفك الودود.${itemSuffix || ' ماذا يمكنني أن أحضر لك اليوم؟'}`,
     },
     hotel: {
-      en: `🏨 Welcome to ${title}! I'm your concierge.${itemSuffix || ' How may I assist you today? Looking for room information or ready to make a booking?'}`,
-      ar: `🏨 مرحباً بك في ${title}! أنا الكونسيرج الخاص بك.${itemSuffix || ' كيف يمكنني مساعدتك اليوم؟ هل تبحث عن معلومات الغرف أو جاهز للحجز؟'}`,
+      en: `🏨 Welcome to ${title}! I'm your concierge.${itemSuffix || ' How may I assist you?'}`,
+      ar: `🏨 مرحباً بك في ${title}! أنا الكونسيرج الخاص بك.${itemSuffix || ' كيف يمكنني مساعدتك؟'}`,
     },
     realestate: {
-      en: `🏠 Welcome to ${title}! I'm your property specialist.${itemSuffix || ' I\'m here to answer any questions about this property. What would you like to know?'}`,
-      ar: `🏠 مرحباً بك في ${title}! أنا متخصص العقارات الخاص بك.${itemSuffix || ' أنا هنا للإجابة على أي أسئلة حول هذا العقار. ماذا تريد أن تعرف؟'}`,
+      en: `🏠 Welcome to ${title}! I'm your property specialist.${itemSuffix || ' What would you like to know?'}`,
+      ar: `🏠 مرحباً بك في ${title}! أنا متخصص العقارات.${itemSuffix || ' ماذا تريد أن تعرف؟'}`,
     },
   };
   
   const message = messages[demoType] || messages.ecommerce;
   return isArabic ? message.ar : message.en;
+}
+
+// Initial suggestions based on demo type (client-side only)
+function getInitialSuggestions(demoType: string, locale: string): string[] {
+  const isArabic = locale === 'ar';
+  
+  const suggestions: Record<string, { en: string[]; ar: string[] }> = {
+    ecommerce: {
+      en: ['What products do you have?', 'Show me your best deals', 'How can I contact you?'],
+      ar: ['ما هي المنتجات المتوفرة؟', 'أرني أفضل العروض', 'كيف يمكنني الاتصال بكم؟'],
+    },
+    showroom: {
+      en: ['Show me your collections', 'What styles are available?', 'Can I see pricing?'],
+      ar: ['أرني مجموعاتكم', 'ما الأنماط المتاحة؟', 'هل يمكنني رؤية الأسعار؟'],
+    },
+    cafe: {
+      en: ["What's on the menu?", 'Any specials today?', 'I need recommendations'],
+      ar: ['ما في القائمة؟', 'هل لديكم عروض اليوم؟', 'أحتاج توصيات'],
+    },
+    hotel: {
+      en: ['Show me available rooms', 'What amenities do you have?', 'I want to book'],
+      ar: ['أرني الغرف المتاحة', 'ما المرافق لديكم؟', 'أريد الحجز'],
+    },
+    realestate: {
+      en: ['Tell me about this property', "What's the price?", 'Schedule a viewing'],
+      ar: ['أخبرني عن هذا العقار', 'ما السعر؟', 'حدد موعد معاينة'],
+    },
+  };
+  
+  const typeSuggestions = suggestions[demoType] || suggestions.ecommerce;
+  return isArabic ? typeSuggestions.ar : typeSuggestions.en;
 }

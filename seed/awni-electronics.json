@@ -82,6 +82,71 @@
       "sku": "FRS-WH-50L",
       "inStock": true,
       "imageUrl": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80"
+    },
+    {
+      "name": "Samsung 55\" 4K Smart TV Crystal UHD",
+      "name_ar": "تلفزيون سامسونج 55 بوصة 4K سمارت كريستال UHD",
+      "description": "Samsung 55 inch Crystal UHD 4K Smart TV with Crystal Processor 4K, HDR10+, PurColor technology. Built-in WiFi, multiple HDMI ports, and Tizen OS with streaming apps pre-installed.",
+      "description_ar": "تلفزيون سامسونج 55 بوصة كريستال UHD 4K سمارت مع معالج كريستال 4K، HDR10+، تقنية PurColor. واي فاي مدمج، منافذ HDMI متعددة، ونظام Tizen مع تطبيقات البث المثبتة مسبقاً.",
+      "price": 18500,
+      "currency": "EGP",
+      "category": "TVs",
+      "category_ar": "تلفزيونات",
+      "sku": "SAM-TV-55CU",
+      "inStock": true,
+      "imageUrl": "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=800&q=80"
+    },
+    {
+      "name": "Midea Split Air Conditioner 1.5HP Cool/Heat",
+      "name_ar": "تكييف ميديا سبليت 1.5 حصان بارد/ساخن",
+      "description": "Midea 1.5 HP inverter split air conditioner with cooling and heating. Energy class A++, R32 eco-friendly refrigerant, turbo mode, self-cleaning function, WiFi control via app.",
+      "description_ar": "تكييف ميديا 1.5 حصان انفرتر سبليت بارد وساخن. فئة طاقة A++، غاز R32 صديق للبيئة، وضع تيربو، خاصية التنظيف الذاتي، تحكم واي فاي عبر التطبيق.",
+      "price": 26000,
+      "currency": "EGP",
+      "category": "Air Conditioners",
+      "category_ar": "تكييفات",
+      "sku": "MDA-AC-15INV",
+      "inStock": true,
+      "imageUrl": "https://images.unsplash.com/photo-1631567091196-6ccdb0cf795b?w=800&q=80"
+    },
+    {
+      "name": "Bosch Dishwasher 14 Place Settings",
+      "name_ar": "غسالة أطباق بوش 14 فرد",
+      "description": "Bosch freestanding dishwasher with 14 place settings. 6 wash programs including eco mode, AquaStop leak protection, VarioSpeed for faster cycles, stainless steel finish.",
+      "description_ar": "غسالة أطباق بوش قائمة بذاتها 14 فرد. 6 برامج غسيل بما في ذلك الوضع الاقتصادي، حماية AquaStop من التسريب، VarioSpeed لدورات أسرع، لون ستانلس ستيل.",
+      "price": 19500,
+      "currency": "EGP",
+      "category": "Dishwashers",
+      "category_ar": "غسالات أطباق",
+      "sku": "BSH-DW-14PS",
+      "inStock": true,
+      "imageUrl": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80"
+    },
+    {
+      "name": "Zanussi Chest Freezer 300L",
+      "name_ar": "فريزر زانوسي أفقي 300 لتر",
+      "description": "Zanussi 300 liter chest freezer with fast freeze function. Low noise operation, adjustable thermostat, interior light, lock and key security. White finish with basket included.",
+      "description_ar": "فريزر زانوسي أفقي 300 لتر مع وظيفة التجميد السريع. تشغيل منخفض الضوضاء، ترموستات قابل للتعديل، إضاءة داخلية، قفل ومفتاح للأمان. لون أبيض مع سلة مرفقة.",
+      "price": 14200,
+      "currency": "EGP",
+      "category": "Freezers",
+      "category_ar": "فريزرات",
+      "sku": "ZNS-FZ-300CH",
+      "inStock": true,
+      "imageUrl": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=800&q=80"
+    },
+    {
+      "name": "Philips Blender 2L 700W with Grinder",
+      "name_ar": "خلاط فيليبس 2 لتر 700 واط مع مطحنة",
+      "description": "Philips 2 liter countertop blender with 700W motor. 5 speed settings with pulse, ProBlend crushing technology, includes dry mill for spices and coffee. Dishwasher safe jar.",
+      "description_ar": "خلاط فيليبس 2 لتر بمحرك 700 واط. 5 سرعات مع نبض، تقنية ProBlend للطحن، يشمل مطحنة جافة للتوابل والقهوة. إبريق آمن للغسيل في غسالة الأطباق.",
+      "price": 2800,
+      "currency": "EGP",
+      "category": "Small Appliances",
+      "category_ar": "أجهزة صغيرة",
+      "sku": "PHL-BL-2L700",
+      "inStock": false,
+      "imageUrl": "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=800&q=80"
     }
   ]
 }

@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { strapiRegister } from '@/lib/strapiAuth';
-import Cookies from 'js-cookie';
 import Link from 'next/link';
 
 export default function RegisterPage() {
@@ -54,30 +52,30 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const result = await strapiRegister({
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone,
-        country: formData.country || undefined,
-        company: formData.company || undefined,
-        salesContactAllowed: formData.salesContactAllowed,
-        displayName: formData.username,
+      // Use Next.js API route instead of calling Strapi directly
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          country: formData.country || undefined,
+          company: formData.company || undefined,
+          salesContactAllowed: formData.salesContactAllowed,
+          displayName: formData.username,
+        }),
       });
 
-      // Check if email confirmation is required
-      if ('message' in result) {
-        // Email confirmation required
-        router.push('/en/registration-success?confirmation=true');
-      } else if ('jwt' in result) {
-        // Immediate login
-        Cookies.set('strapi_jwt', result.jwt, {
-          expires: 7,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-        });
-        router.push('/en/account-pending');
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.error || 'Registration failed');
       }
+
+      // Registration successful - redirect to success page
+      router.push('/en/registration-success');
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please try again.');
     } finally {

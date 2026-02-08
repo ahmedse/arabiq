@@ -88,20 +88,23 @@ export async function fetchDemoItems(
   try {
     let endpoint: string;
     
+    // pagination[pageSize]=200 to override Strapi default of 25
+    const paginationParam = 'pagination[pageSize]=200';
+    
     switch (demoType) {
       case 'ecommerce':
       case 'showroom':
-        endpoint = `/api/demo-products?filters[demo][id][$eq]=${demoId}&locale=${locale}&populate=images`;
+        endpoint = `/api/demo-products?filters[demo][id][$eq]=${demoId}&locale=${locale}&populate=images&${paginationParam}`;
         break;
       case 'cafe':
-        endpoint = `/api/demo-menu-items?filters[demo][id][$eq]=${demoId}&locale=${locale}&populate=image`;
+        endpoint = `/api/demo-menu-items?filters[demo][id][$eq]=${demoId}&locale=${locale}&populate=image&${paginationParam}`;
         break;
       case 'hotel':
-        endpoint = `/api/demo-rooms?filters[demo][id][$eq]=${demoId}&locale=${locale}&populate=images`;
+        endpoint = `/api/demo-rooms?filters[demo][id][$eq]=${demoId}&locale=${locale}&populate=images&${paginationParam}`;
         break;
       case 'realestate':
       case 'training':
-        endpoint = `/api/demo-properties?filters[demo][id][$eq]=${demoId}&locale=${locale}&populate=images`;
+        endpoint = `/api/demo-properties?filters[demo][id][$eq]=${demoId}&locale=${locale}&populate=images&${paginationParam}`;
         break;
       default:
         return [];

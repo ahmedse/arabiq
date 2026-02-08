@@ -600,6 +600,159 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiAiAgentConfigAiAgentConfig
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'ai_agent_configs';
+  info: {
+    description: 'Per-demo AI agent configuration';
+    displayName: 'AI Agent Config';
+    pluralName: 'ai-agent-configs';
+    singularName: 'ai-agent-config';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    agentName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dailyMsgLimit: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<200>;
+    demo: Schema.Attribute.Relation<'oneToOne', 'api::demo.demo'>;
+    enableComparison: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    enableLeadCapture: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    enableNavigation: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    greeting: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::ai-agent-config.ai-agent-config'
+    >;
+    maxResponseLen: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<500>;
+    modelTier: Schema.Attribute.Enumeration<['local', 'standard', 'advanced']> &
+      Schema.Attribute.DefaultTo<'standard'>;
+    monthlyMsgLimit: Schema.Attribute.Integer &
+      Schema.Attribute.DefaultTo<6000>;
+    persona: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    suggestedPrompts: Schema.Attribute.JSON &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    temperature: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 1;
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0.7>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiAiKnowledgeEntryAiKnowledgeEntry
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'ai_knowledge_entries';
+  info: {
+    description: 'Knowledge base entries for AI agent';
+    displayName: 'AI Knowledge Entry';
+    pluralName: 'ai-knowledge-entries';
+    singularName: 'ai-knowledge-entry';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    answer: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    category: Schema.Attribute.Enumeration<
+      [
+        'faq',
+        'policy',
+        'info',
+        'hours',
+        'shipping',
+        'returns',
+        'warranty',
+        'custom',
+      ]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'faq'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    demo: Schema.Attribute.Relation<'manyToOne', 'api::demo.demo'>;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    keywords: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::ai-knowledge-entry.ai-knowledge-entry'
+    >;
+    priority: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 10;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<5>;
+    publishedAt: Schema.Attribute.DateTime;
+    question: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCaseStudiesPageCaseStudiesPage
   extends Struct.SingleTypeSchema {
   collectionName: 'case_studies_pages';
@@ -1192,6 +1345,12 @@ export interface ApiDemoProductDemoProduct extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
+    brand: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     category: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -3653,6 +3812,8 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::about-page.about-page': ApiAboutPageAboutPage;
+      'api::ai-agent-config.ai-agent-config': ApiAiAgentConfigAiAgentConfig;
+      'api::ai-knowledge-entry.ai-knowledge-entry': ApiAiKnowledgeEntryAiKnowledgeEntry;
       'api::case-studies-page.case-studies-page': ApiCaseStudiesPageCaseStudiesPage;
       'api::case-study.case-study': ApiCaseStudyCaseStudy;
       'api::contact-page.contact-page': ApiContactPageContactPage;

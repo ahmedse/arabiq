@@ -7,7 +7,9 @@ CMS_DIR="$ROOT_DIR/apps/cms"
 RUN_DIR="$ROOT_DIR/.run"
 LOG_DIR="$ROOT_DIR/.logs"
 
-mkdir -p "$RUN_DIR" "$LOG_DIR"
+BACKUP_DIR="$ROOT_DIR/backups/db"
+
+mkdir -p "$RUN_DIR" "$LOG_DIR" "$BACKUP_DIR"
 
 # Colors
 RED='\033[0;31m'
@@ -37,6 +39,7 @@ Commands:
   logs [cms|web] [opts]   View logs
   doctor                  Check environment & health
   seed                    Run CMS seeder
+  backup                  Backup database now
 
 Log options:
   -f, --follow            Follow log output
@@ -52,6 +55,7 @@ Examples:
   ./manage.sh logs web 200      # Last 200 lines of Web logs
   ./manage.sh doctor            # Full health check
   ./manage.sh seed              # Seed CMS data
+  ./manage.sh backup            # Manual DB backup
 
 Services:
   cms    Strapi CMS      → http://localhost:1337
@@ -635,7 +639,45 @@ do_logs() {
 # Service Wrappers
 #─────────────────────────────────────────────────────────────────────────────
 
+# Auto-backup database before CMS start (prevents data loss from Strapi v5 schema sync)
+auto_backup_db() {
+  # Source CMS env to get DB credentials properly (handles special chars in password)
+  local db_name="" db_user="" db_pass="" db_host="localhost"
+  if [[ -f "$CMS_DIR/.env" ]]; then
+    db_name=$(set -a && source "$CMS_DIR/.env" && echo "$DATABASE_NAME")
+    db_user=$(set -a && source "$CMS_DIR/.env" && echo "$DATABASE_USERNAME")
+    db_pass=$(set -a && source "$CMS_DIR/.env" && echo "$DATABASE_PASSWORD")
+    db_host=$(set -a && source "$CMS_DIR/.env" && echo "${DATABASE_HOST:-localhost}")
+  fi
+  
+  if [[ -z "$db_name" || -z "$db_user" || -z "$db_pass" ]]; then
+    log_warn "Cannot auto-backup: DB credentials not found in cms/.env"
+    return 0
+  fi
+  
+  # Check if database has any content worth backing up
+  local row_count
+  row_count=$(PGPASSWORD="$db_pass" psql -U "$db_user" -h "$db_host" -d "$db_name" -t -A -c "SELECT COUNT(*) FROM demos" 2>/dev/null || echo "0")
+  
+  if [[ "$row_count" -gt 0 ]]; then
+    local backup_file="$BACKUP_DIR/arabiq-pre-start-$(date +%Y%m%d-%H%M%S).sql.gz"
+    log_step "Auto-backup: $row_count demo rows found, backing up..."
+    if PGPASSWORD="$db_pass" pg_dump -U "$db_user" -h "$db_host" "$db_name" 2>/dev/null | gzip > "$backup_file"; then
+      log_info "Auto-backup saved: $backup_file ($(du -h "$backup_file" | cut -f1))"
+      # Keep only last 10 auto-backups to avoid disk bloat
+      ls -t "$BACKUP_DIR"/arabiq-pre-start-*.sql.gz 2>/dev/null | tail -n +11 | xargs rm -f 2>/dev/null || true
+    else
+      log_warn "Auto-backup failed (non-fatal, continuing)"
+    fi
+  else
+    log_info "Auto-backup: DB empty, skipping"
+  fi
+}
+
 start_cms() {
+  # Auto-backup before any CMS start
+  auto_backup_db
+  
   # Run build script first
   run_cms_build || return 1
   
@@ -1019,6 +1061,11 @@ main() {
     #───────────────────────────────────────────────────────────────────────
     seed)
       seed
+      ;;
+    
+    #───────────────────────────────────────────────────────────────────────
+    backup)
+      auto_backup_db
       ;;
     
     #───────────────────────────────────────────────────────────────────────

@@ -1,0 +1,93 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ai_agent_configs",
+  "info": {
+    "singularName": "ai-agent-config",
+    "pluralName": "ai-agent-configs",
+    "displayName": "AI Agent Config",
+    "description": "Per-demo AI agent configuration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "demo": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::demo.demo"
+    },
+    "agentName": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "persona": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "greeting": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "modelTier": {
+      "type": "enumeration",
+      "enum": ["local", "standard", "advanced"],
+      "default": "standard"
+    },
+    "dailyMsgLimit": {
+      "type": "integer",
+      "default": 200
+    },
+    "monthlyMsgLimit": {
+      "type": "integer",
+      "default": 6000
+    },
+    "enableLeadCapture": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableNavigation": {
+      "type": "boolean",
+      "default": true
+    },
+    "enableComparison": {
+      "type": "boolean",
+      "default": true
+    },
+    "suggestedPrompts": {
+      "type": "json",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "temperature": {
+      "type": "decimal",
+      "default": 0.7,
+      "min": 0,
+      "max": 1
+    },
+    "maxResponseLen": {
+      "type": "integer",
+      "default": 500
+    }
+  }
+}

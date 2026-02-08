@@ -4,8 +4,6 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { strapiLogin } from '@/lib/strapiAuth';
-import Cookies from 'js-cookie';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -32,20 +30,24 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { jwt, user } = await strapiLogin(identifier, password);
-      
-      // Store JWT in cookie
-      Cookies.set('strapi_jwt', jwt, {
-        expires: 7, // 7 days
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+      // Use Next.js API route instead of calling Strapi directly
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, password }),
       });
 
-      // Redirect based on account status
-      if (user.accountStatus === 'pending') {
-        router.push('/en/account-pending');
-      } else if (user.accountStatus === 'suspended') {
-        router.push('/en/account-suspended');
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.error || 'Login failed');
+      }
+
+      const { user, redirectTo } = data;
+
+      // Redirect based on account status or provided redirectTo
+      if (redirectTo) {
+        router.push(redirectTo);
       } else if (redirect) {
         router.push(redirect);
       } else {
